@@ -39,7 +39,7 @@ const CardImage = () => (
     // </IconButton>
 );
 
-const CardButtons = () => (
+const CardButtons = ({ isActive }) => (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <BasicButton
             text={'Balance Conversion (P - T)'}
@@ -47,12 +47,14 @@ const CardButtons = () => (
             variant={'outlined'}
             onClick={() => {alert('clicked Balance Conversion (P - T)')}}
             style={{ marginBottom: '10px' }}
+            disabled={!isActive}
         />
         <BasicButton
             text={'Ton Up'}
             width={'80%'}
             variant={'outlined'}
             onClick={() => {alert('clicked Ton Up')}}
+            disabled={!isActive}
         />
     </div>
 );
@@ -81,7 +83,7 @@ export default function UserCard({ data }) {
 
     return (
         <Paper style={commonPaperStyle}>
-            {!isActive && <Overlay />}
+            {status === 0 && <Overlay />}
             <Grid container spacing={2} style={{ zIndex: 2 }}>
                 <Grid item xs={8}>
                     <Typography variant="h7">{card_name}</Typography>
@@ -103,7 +105,7 @@ export default function UserCard({ data }) {
                     <CardImage />
                 </Grid>
             </Grid>
-            <CardButtons />
+            <CardButtons isActive={isActive} />
         </Paper>
     );
 }
