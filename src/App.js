@@ -8,18 +8,22 @@ import HomePage from './pages/Home/Home';
 import Community from './pages/Community/Community';
 import MyPage from './pages/MyPage/MyPage';
 import Map from './pages/Map/Map';
+import Box from '@mui/material/Box';
 
 const PageLayout = ({ children, menuName }) => {
     return (
-        <>
-            <Header
-                menuName={menuName}
-            />
-            <div>
+        <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '100vh',
+            paddingBottom: '70px', // Footer 높이만큼 패딩 추가
+        }}>
+            <Header menuName={menuName} />
+            <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
                 {children}
-            </div>
+            </Box>
             <Footer />
-        </>
+        </Box>
     );
 };
 
