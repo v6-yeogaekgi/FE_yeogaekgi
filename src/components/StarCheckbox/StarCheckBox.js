@@ -3,9 +3,10 @@ import Checkbox from "@mui/material/Checkbox";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 
-const StarCheckbox = ({ onClick }) => {
+const StarCheckbox = ({ onClick, checked }) => {
     return (
         <Checkbox
+            checked={checked}
             icon={<StarBorderIcon />}
             checkedIcon={<StarIcon />}
             sx={{
