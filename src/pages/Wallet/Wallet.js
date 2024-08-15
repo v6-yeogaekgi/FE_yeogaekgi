@@ -120,7 +120,6 @@ export default function Wallet(props) {
 
             <Box sx={{
                 position: 'absolute',
-                paddingTop: '500px',
                 bottom: 0,
                 left: 0,
                 width: '100%',
