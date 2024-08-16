@@ -12,7 +12,8 @@ const Footer = () => {
     const location = useLocation();
 
     const NavLink = ({ to, icon: IconComponent, label }) => {
-        const isActive = location.pathname === to || (to === '/home' && location.pathname === '/');
+        const isActive = location.pathname.startsWith(to) || (to === '/home' && location.pathname === '/');
+
         return (
             <Link to={to} className={`nav-link ${isActive ? 'active' : ''}`}>
                 <div>
@@ -24,6 +25,7 @@ const Footer = () => {
     };
 
     return (
+
         <nav className="nav-wrapper">
             <NavLink to="/home" icon={HomeIcon} label="Home" />
             <NavLink to="/wallet" icon={WalletIcon} label="Wallet" />

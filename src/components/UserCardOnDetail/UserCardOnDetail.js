@@ -14,7 +14,6 @@ const commonPaperStyle = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    cursor: 'pointer',
     position: 'relative',  // 추가: 오버레이 위치 기준점
 };
 
@@ -82,7 +81,7 @@ const Overlay = () => (
     </div>
 );
 
-export default function UserCard({ data, onCardClick }) {
+export default function UserCardOnDetail({ data, onCardClick }) {
     const { status, card_name, pay_balance, transit_balance, starred } = data;
     const isActive = status !== 0;
 
