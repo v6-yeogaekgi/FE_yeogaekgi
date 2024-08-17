@@ -5,14 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="93d74226-9d0d-46fc-b5e4-a5197d88f62f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/image/japan.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/image/korea.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/util.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Community/Main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/Main.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Community/components/CommentItem.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/CommentItem.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Community/components/CommentList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/CommentList.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +38,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "community",
+    "git-widget-placeholder": "comment__item",
     "last_opened_file_path": "D:/FE_yeogaekgi/src",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
