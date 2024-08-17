@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 
-const CommentItem = ({
+const PostItem = ({
                          postId,
                          memberId,
                          nickname,
@@ -39,4 +39,4 @@ const CommentItem = ({
     );
 };
 
-export default CommentItem;
+export default Post채ㅡㅡItem;

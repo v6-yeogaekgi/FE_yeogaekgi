@@ -39,7 +39,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "community",
+    "git-widget-placeholder": "community-postitem",
     "last_opened_file_path": "/Users/settong/WebstormProjects/FE_yeogaekgi/src/pages/Community",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -71,7 +71,7 @@
       <option name="presentableId" value="Default" />
       <updated>1723894483357</updated>
       <workItem from="1723894485371" duration="1071000" />
-      <workItem from="1723895615493" duration="4414000" />
+      <workItem from="1723895615493" duration="4542000" />
     </task>
     <servers />
   </component>
