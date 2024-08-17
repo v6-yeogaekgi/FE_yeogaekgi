@@ -1,5 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
+import { getCountryImgById } from '../../../util';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
 
 const CommentItem = ({
                          commentId,
@@ -19,19 +27,32 @@ const CommentItem = ({
 
     return (
         <div className="CommentItem">
-            <div
-                className={['img_section', `img_section_${countryId}`].join(
-                    ' ',
-                )}
-            >
-                <img
-                    alt={`country${countryId}`}
-                    src={getCountryImgById(countryId)}
-                />
-            </div>
-            <div className="info_section">
-                <div className="content_wrapper">{content.slice(0, 25)}</div>
-            </div>
+            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                <ListItem alignItems="flex-start">
+                    <ListItemAvatar>
+                        <Avatar alt="Remy Sharp" src={getCountryImgById(countryId)} />
+                    </ListItemAvatar>
+                    <ListItemText
+                        primary={nickname}
+                        secondary={
+                            <React.Fragment>
+                                <Typography
+                                    sx={{ display: 'inline' }}
+                                    component="span"
+                                    variant="body2"
+                                    color="text.primary"
+                                >
+                                    {comment}
+                                </Typography>
+
+                            </React.Fragment>
+                        }
+                    />
+                </ListItem>
+                <Divider variant="inset" component="li" />
+
+
+            </List>
         </div>
     );
 };
