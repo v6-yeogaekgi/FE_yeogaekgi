@@ -5,7 +5,7 @@ import Footer from "./layout/Footer/Footer";
 import Header from "./layout/Header/Header";
 import Wallet from './pages/Wallet/Wallet';
 import HomePage from './pages/Home/Home';
-import Community from './pages/Community/Community';
+import Community from './pages/Community/Main';
 import MyPage from './pages/MyPage/MyPage';
 import Map from './pages/Map/Map';
 import Box from '@mui/material/Box';

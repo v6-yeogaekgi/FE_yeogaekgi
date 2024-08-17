@@ -36,4 +36,4 @@ const CommentItem = ({
     );
 };
 
-export default React.memo(CommentItem);
+export default CommentItem;
