@@ -9,7 +9,8 @@ import Community from './pages/Community/Community';
 import MyPage from './pages/MyPage/MyPage';
 import Map from './pages/Map/Map';
 import Box from '@mui/material/Box';
-import CardDetail from './pages/Wallet/CardDetail';
+import CardDetail from './pages/CardDetail/CardDetail';
+
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -39,6 +40,7 @@ function App() {
                 <Route path={"/map"} element={<PageLayout menuName={'map'}><Map/></PageLayout>} />
                 <Route path={"/community"} element={<PageLayout menuName={'community'}><Community /></PageLayout>} />
                 <Route path={"/myPage"} element={<PageLayout menuName={'my page'}><MyPage /></PageLayout>} />
+                <Route path={"/wallet/card-detail"} element={<PageLayout menuName={'detail'}><CardDetail/></PageLayout>} />
             </Routes>
         </Router>
     );

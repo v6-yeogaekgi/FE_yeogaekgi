@@ -4,12 +4,11 @@ import UserCard from '../../components/UserCard/UserCard';
 import axios from 'axios';
 import { Paper } from '@mui/material';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import CardDetail from './CardDetail';
+import { useNavigate } from 'react-router-dom';
 
 const Registration = () => (
     <Paper
-        onClick={() => alert( 'Registration' )}
+        onClick={() => alert('Registration')}
         sx={{
             width: '90%', // 너비를 100%로 변경
             height: '150px',
@@ -40,10 +39,15 @@ const Registration = () => (
 );
 
 export default function Wallet(props) {
+    const navigate = useNavigate();
     const [data, setData] = useState(null);
     const [param, setParam] = useState({
         page: 1,
     });
+
+    const handleCardClick = (cardData) => {
+        navigate('card-detail', { state: { cardData } });
+    };
 
     const [error, setError] = useState(null);
 
@@ -65,6 +69,7 @@ export default function Wallet(props) {
         } else {
             setData([
                 {
+                    user_card_no: 0,
                     card_name: '예시 카드 1',
                     design: '디자인 예시',
                     pay_balance: 10000,
@@ -73,6 +78,7 @@ export default function Wallet(props) {
                     starred: 1,
                 },
                 {
+                    user_card_no: 1,
                     card_name: '예시 카드 2',
                     design: '디자인 예시',
                     pay_balance: 20000,
@@ -81,12 +87,13 @@ export default function Wallet(props) {
                     starred: 0,
                 },
                 {
+                    user_card_no: 2,
                     card_name: '예시 카드 3',
                     design: '디자인 예시',
                     pay_balance: 20000,
                     transit_balance: 7000,
                     status: 1,
-                    starred: 0
+                    starred: 0,
                 },
             ]);
         }
@@ -110,24 +117,19 @@ export default function Wallet(props) {
                     overflow: 'hidden', //
                 }}
             >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        width: '90%',
-                        margin: '0 auto',
-                        gap: 2,
-                        paddingTop: '20px',
-                        flexGrow: 1,
-                        paddingBottom: '150px', // 하단 여백 추가
-                    }}
-                >
-                    {data &&
-                        data.map((cardData, index) => (
-                            <UserCard key={index} data={cardData} />
-                        ))}
-                </Box>
+                {data && data.map((cardData, index) => (
+                    <UserCard key={index} data={cardData} onCardClick={handleCardClick} />
+                ))}
+            </Box>
+
+            <Box sx={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+            }}>
+                <Registration
+
 
                 <Box
                     sx={{
