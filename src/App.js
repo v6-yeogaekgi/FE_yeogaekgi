@@ -11,6 +11,7 @@ import Map from './pages/Map/Map';
 import Box from '@mui/material/Box';
 import CardDetail from './pages/CardDetail/CardDetail';
 
+
 const PageLayout = ({ children, menuName }) => {
     return (
         <Box sx={{
@@ -35,6 +36,7 @@ function App() {
                 <Route path={'/'} element={<PageLayout menuName={'home'}><HomePage /></PageLayout>} />
                 <Route path={"/home"} element={<PageLayout menuName={'home'}><HomePage /></PageLayout>} />
                 <Route path={"/wallet"} element={<PageLayout menuName={'wallet'}><Wallet /></PageLayout>} />
+                <Route path={"/wallet/cardDetail"} element={<CardDetail/>}/>
                 <Route path={"/map"} element={<PageLayout menuName={'map'}><Map/></PageLayout>} />
                 <Route path={"/community"} element={<PageLayout menuName={'community'}><Community /></PageLayout>} />
                 <Route path={"/myPage"} element={<PageLayout menuName={'my page'}><MyPage /></PageLayout>} />

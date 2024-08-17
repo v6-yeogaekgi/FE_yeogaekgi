@@ -100,26 +100,21 @@ export default function Wallet(props) {
     }, []);
 
     return (
-        <Box sx={{
-            minHeight: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            paddingBottom: '75px', //
-            position: 'relative', //
-            overflow: 'hidden', //
-        }}>
+        <div>
+            <div className="card_detail">
+                <Link to="/wallet/cardDetail?no=1">
+                    카드1 상세 테스트 페이지 이동하기
+                </Link>
+            </div>
             <Box
                 sx={{
+                    minHeight: '100vh',
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
-                    width: '90%',
-                    margin: '0 auto',
-                    gap: 2,
-                    paddingTop: '20px',
-                    flexGrow: 1,
-                    paddingBottom: '150px', // 하단 여백 추가
+                    justifyContent: 'space-between',
+                    paddingBottom: '75px', //
+                    position: 'relative', //
+                    overflow: 'hidden', //
                 }}
             >
                 {data && data.map((cardData, index) => (
@@ -135,8 +130,18 @@ export default function Wallet(props) {
             }}>
                 <Registration
 
-                />
+
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        width: '100%',
+                    }}
+                >
+                    <Registration />
+                </Box>
             </Box>
-        </Box>
+        </div>
     );
 }
