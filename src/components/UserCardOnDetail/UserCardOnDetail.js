@@ -4,10 +4,11 @@ import BasicButton from '../BasicButton/BasicButton';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import SettingsDrawer from '../SettingsDrawer/SettingsDrawer';
 
 const commonPaperStyle = {
     width: '90%',
-    height: '330px',
+    height: '250px',
     border: '1px solid #ccc',
     borderRadius: '10px',
     padding: '20px',
@@ -40,44 +41,25 @@ const CardImage = () => (
 );
 
 const CardButtons = ({ isActive }) => (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
         <BasicButton
-            text={'Balance Conversion (P - T)'}
-            width={'80%'}
+            text={'Transit Details'}
+            width={'45%'}
             variant={'outlined'}
             onClick={() => {
-                alert('clicked Balance Conversion (P - T)');
-            }}
-            style={{ marginBottom: '10px' }}
-            disabled={!isActive}
-        />
-        <BasicButton
-            text={'Ton Up'}
-            width={'80%'}
-            variant={'outlined'}
-            onClick={() => {
-                alert('clicked Ton Up');
+                alert('clicked Transit Details');
             }}
             disabled={!isActive}
         />
-    </div>
-);
-
-const Overlay = () => (
-    <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(128, 128, 128, 0.3)',
-        display: 'flex',
-        justifyContent: 'center',
-        // alignItems: 'center',
-        zIndex: 1,
-        borderRadius: '10px',
-    }}>
-        <Typography variant="h5" style={{ color: 'white' }}>Expiration</Typography>
+        <BasicButton
+            text={'Pays Details'}
+            width={'45%'}
+            variant={'outlined'}
+            onClick={() => {
+                alert('clicked Pays Details');
+            }}
+            disabled={!isActive}
+        />
     </div>
 );
 
@@ -92,33 +74,35 @@ export default function UserCardOnDetail({ data, onCardClick }) {
     };
 
     return (
-        <Paper
-            style={commonPaperStyle}
-            onClick={handleCardClick}
-        >
-            {status === 0 && <Overlay />}
-            <Grid container spacing={2} style={{ zIndex: 2 }}>
-                <Grid item xs={8}>
-                    <Typography variant="h7">{card_name}</Typography>
-                    <Typography>Pay Balance </Typography>
-                    <Typography variant="h5">{pay_balance.toLocaleString()}₩</Typography>
-                    <Typography>Transit Balance </Typography>
-                    <Typography variant="h5">{transit_balance.toLocaleString()}₩</Typography>
+        <>
+            <Paper
+                style={commonPaperStyle}
+                onClick={handleCardClick}
+            >
+                <Grid container spacing={2} style={{ zIndex: 2 }}>
+                    <Grid item xs={8}>
+                        <Typography variant="h7">{card_name}</Typography>
+                        <Typography>Pay Balance </Typography>
+                        <Typography variant="h5">{pay_balance.toLocaleString()}₩</Typography>
+                        <Typography>Transit Balance </Typography>
+                        <Typography variant="h5">{transit_balance.toLocaleString()}₩</Typography>
+                    </Grid>
+                    <Grid item xs={4} style={{ position: 'relative' }}>
+                        <div style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: '30%',
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}>
+                            <StarCheckbox checked={isActive && starred === 1} />
+                            <SettingsDrawer />
+                        </div>
+                        <CardImage />
+                    </Grid>
                 </Grid>
-                <Grid item xs={4} style={{ position: 'relative' }}>
-                    <div style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: '30%',
-                        display: 'flex',
-                        alignItems: 'center',
-                    }}>
-                        <StarCheckbox checked={isActive && starred === 1} />
-                    </div>
-                    <CardImage />
-                </Grid>
-            </Grid>
-            <CardButtons isActive={isActive} />
-        </Paper>
+                <CardButtons isActive={isActive} />
+            </Paper>
+        </>
     );
 }
