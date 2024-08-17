@@ -4,7 +4,7 @@ import UserCard from '../../components/UserCard/UserCard';
 import axios from 'axios';
 import { Paper } from '@mui/material';
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Registration = () => (
     <Paper
