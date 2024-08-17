@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="93d74226-9d0d-46fc-b5e4-a5197d88f62f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Community/components/CommentItem.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/CommentItem.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Community/Main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/Main.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Community/components/PostItem.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/PostItem.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,20 +36,20 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;community&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/settong/WebstormProjects/FE_yeogaekgi/src/pages/Community&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "community",
+    "last_opened_file_path": "/Users/settong/WebstormProjects/FE_yeogaekgi/src/pages/Community",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/pages/Community" />
@@ -71,7 +71,7 @@
       <option name="presentableId" value="Default" />
       <updated>1723894483357</updated>
       <workItem from="1723894485371" duration="1071000" />
-      <workItem from="1723895615493" duration="1239000" />
+      <workItem from="1723895615493" duration="4414000" />
     </task>
     <servers />
   </component>
