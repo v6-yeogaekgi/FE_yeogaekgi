@@ -5,14 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="93d74226-9d0d-46fc-b5e4-a5197d88f62f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/components/Community/CommentEditor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/CommentEditor.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Community/CommentItem.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/CommentItem.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Community/CommentList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/CommentList.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Community/CommentRegister.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/CommentRegister.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Community/PostEditor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/PostEditor.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Community/PostItem.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/PostItem.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Community/PostList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/PostList.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Community/PostNav.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/PostNav.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/image/japan.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/image/korea.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/util.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Community/Main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/Main.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Community/components/CommentItem.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/CommentItem.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Community/components/CommentList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/CommentList.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,12 +28,12 @@
     &quot;assignee&quot;: &quot;HwangSettong&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/v6-yeogaekgi/FE_yeogaekgi.git&quot;,
-    &quot;accountId&quot;: &quot;d8d86d3c-1de2-4ae7-8fef-94901d3b0409&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/v6-yeogaekgi/FE_yeogaekgi",
+    "accountId": "2b8e328d-8b54-41da-bed7-aa26d9e4e3c9"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -45,19 +45,24 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "community",
-    "last_opened_file_path": "/Users/settong/WebstormProjects/FE_yeogaekgi/src/pages/Community",
+    "last_opened_file_path": "D:/FE_yeogaekgi/src",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.lookFeel",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\FE_yeogaekgi\src" />
       <recent name="$PROJECT_DIR$/src/pages/Community" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\FE_yeogaekgi\src\image" />
     </key>
   </component>
   <component name="SharedIndexes">
