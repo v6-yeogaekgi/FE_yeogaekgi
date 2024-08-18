@@ -40,38 +40,56 @@ const CardImage = () => (
     // </IconButton>
 );
 
-const CardButtons = ({ isActive }) => (
-    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
-        <BasicButton
-            text={'Balance Conversion'}
-            width={'45%'}
-            variant={'outlined'}
-            onClick={() => {
-                alert('clicked Balance Conversion');
-            }}
-            disabled={!isActive}
-        />
-        <BasicButton
-            text={'Top Up'}
-            width={'45%'}
-            variant={'outlined'}
-            onClick={() => {
-                alert('clicked Top Up');
-            }}
-            disabled={!isActive}
-        />
-    </div>
-);
-
 export default function UserCardOnDetail({ data, onCardClick }) {
+    const navigate = useNavigate();
     const { status, card_name, pay_balance, transit_balance, starred } = data;
     const isActive = status !== 0;
 
-    const handleCardClick = () => {
-        if (onCardClick) {
-            onCardClick(data);
+    const handleCardClick = (e) => {
+        // 버튼 클릭 이벤트가 아닐 때만 카드 상세 페이지로 이동
+        if (!e.target.closest('button')) {
+            if (onCardClick) {
+                onCardClick(data);
+            }
         }
     };
+
+    const handleTopUpClick = (e) => {
+        e.stopPropagation(); // 이벤트 버블링 방지
+        navigate('/wallet/top-up', { state: { data } });
+    };
+
+    const handleBalanceConversionClick = (e) => {
+        e.stopPropagation(); // 이벤트 버블링 방지
+        alert('clicked Balance Conversion (P - T)');
+    };
+
+    const CardButtons = ({ isActive }) => (
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '10px',
+            }}
+        >
+            <BasicButton
+                text={'Balance Conversion'}
+                width={'45%'}
+                variant={'outlined'}
+                onClick={handleBalanceConversionClick}
+                disabled={!isActive}
+            />
+            <BasicButton
+                text={'Top Up'}
+                width={'45%'}
+                variant={'outlined'}
+                onClick={handleTopUpClick}
+                disabled={!isActive}
+            />
+        </div>
+    );
 
     return (
         <>
