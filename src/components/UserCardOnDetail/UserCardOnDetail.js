@@ -43,20 +43,20 @@ const CardImage = () => (
 const CardButtons = ({ isActive }) => (
     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
         <BasicButton
-            text={'Transit Details'}
+            text={'Balance Conversion'}
             width={'45%'}
             variant={'outlined'}
             onClick={() => {
-                alert('clicked Transit Details');
+                alert('clicked Balance Conversion');
             }}
             disabled={!isActive}
         />
         <BasicButton
-            text={'Pays Details'}
+            text={'Top Up'}
             width={'45%'}
             variant={'outlined'}
             onClick={() => {
-                alert('clicked Pays Details');
+                alert('clicked Top Up');
             }}
             disabled={!isActive}
         />

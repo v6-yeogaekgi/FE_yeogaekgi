@@ -53,7 +53,7 @@ const CardButtons = ({ isActive }) => (
             disabled={!isActive}
         />
         <BasicButton
-            text={'Ton Up'}
+            text={'Top Up'}
             width={'80%'}
             variant={'outlined'}
             onClick={() => {
