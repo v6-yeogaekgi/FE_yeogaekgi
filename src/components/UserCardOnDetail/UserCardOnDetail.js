@@ -64,7 +64,7 @@ const CardButtons = ({ isActive }) => (
 );
 
 export default function UserCardOnDetail({ data, onCardClick }) {
-    const { status, card_name, pay_balance, transit_balance, starred } = data;
+    const { status, card_name, pay_balance, transit_balance, starred, exp_date } = data;
     const isActive = status !== 0;
 
     const handleCardClick = () => {
@@ -96,7 +96,7 @@ export default function UserCardOnDetail({ data, onCardClick }) {
                             alignItems: 'center',
                         }}>
                             <StarCheckbox checked={isActive && starred === 1} />
-                            <SettingsDrawer />
+                            <SettingsDrawer data={data}/>
                         </div>
                         <CardImage />
                     </Grid>

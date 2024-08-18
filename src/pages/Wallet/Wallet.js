@@ -7,6 +7,8 @@ import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Registration = () => (
+    // TODO 
+    // exp_date 만료인 카드 처리 
     <Paper
         onClick={() => alert('Registration')}
         sx={{
@@ -76,6 +78,7 @@ export default function Wallet(props) {
                     transit_balance: 5000,
                     status: 1,
                     starred: 1,
+                    exp_date: new Date(),
                 },
                 {
                     user_card_no: 1,
@@ -85,6 +88,7 @@ export default function Wallet(props) {
                     transit_balance: 7000,
                     status: 0,
                     starred: 0,
+                    exp_date: new Date(),
                 },
                 {
                     user_card_no: 2,
@@ -94,6 +98,7 @@ export default function Wallet(props) {
                     transit_balance: 7000,
                     status: 1,
                     starred: 0,
+                    exp_date: new Date(),
                 },
             ]);
         }
