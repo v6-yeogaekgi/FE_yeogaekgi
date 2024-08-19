@@ -6,10 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="93d74226-9d0d-46fc-b5e4-a5197d88f62f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/LikeCheckbox/LikeCheckbox.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/LikeCheckbox/LikeCheckbox.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Community/Main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/Main.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Community/components/PostItem.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/PostItem.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Community/components/PostList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/PostList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Community/Post.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/Post.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Community/components/CommentList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/CommentList.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,15 +46,15 @@
   "keyToString": {
     "Node.js.PostItem.jsx.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "community-postitem",
+    "git-widget-placeholder": "comment__list",
     "last_opened_file_path": "D:/FE_yeogaekgi/src/img",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.general",
-    "ts.external.directory.path": "/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
