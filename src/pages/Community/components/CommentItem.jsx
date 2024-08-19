@@ -8,8 +8,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
-import Button from '@mui/material/Button';
 import TranslateIcon from '@mui/icons-material/Translate';
+import Button from '../../../components/BasicButton/BasicButton'
 
 
 const CommentItem = ({
@@ -48,8 +48,7 @@ const CommentItem = ({
                                     {comment}
                                 </Typography>
                                 <br/>
-
-                                <Button size="small" variant="contained" endIcon={<TranslateIcon />} >번역</Button>
+                                <Button size="small" variant="contained" text="번역" btnColor='#4653f9' textColor="ffffff" startIcon={<TranslateIcon />}/>
 
                             </React.Fragment>
                         }
