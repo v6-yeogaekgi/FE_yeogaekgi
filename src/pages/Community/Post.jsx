@@ -4,6 +4,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Header from '../../layout/Header/Header';
 import Footer from '../../layout/Footer/Footer';
+import PostItem from './components/PostItem';
 
 
 const PageLayout = ({ children, menuName }) => {
@@ -16,6 +17,7 @@ const PageLayout = ({ children, menuName }) => {
         }}>
             <Header menuName="post" />
             <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
+                <PostItem/>
                 <CommentList />
             {/* CommentRegister를 화면 하단에 고정 */}
             <Box sx={{
