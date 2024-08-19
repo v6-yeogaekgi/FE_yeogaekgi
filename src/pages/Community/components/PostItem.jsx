@@ -24,24 +24,26 @@ const Images = ({
         console.log("postID: " , postId)
         if(images.length == 1) {
                 return (
-                <ImageList sx={{ width: '348', height: '220px' }} cols={1} rowHeight={164}>
-                        <ImageListItem key={postId+"_"+"1"}>
-                            <img
-                                srcSet={`${images[0]}?w=348&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                src={`${images[0]}?w=348&h=164&fit=crop&auto=format`}
-                                loading="lazy"
-                            />
-                        </ImageListItem>
-                </ImageList>
+                    <ImageList sx={{ width: '380px', height: '164px', textAlign: 'center' }} cols={1} rowHeight={164}>
+                            <ImageListItem key={postId+"_"+"1"}>
+                                <img
+                                    srcSet={`${images[0]}?w=358&h=175&fit=clip&auto=format&dpr=2 2x`}
+                                    src={`${images[0]}`}
+                                    style={{ width: '358px', height: '175px', objectFit: 'cover' }}
+                                    loading="lazy"
+                                />
+                            </ImageListItem>
+                    </ImageList>
                 );
         } else {
             return (
-                <ImageList sx={{ width: '500', height: '220px'}} cols={3} rowHeight={164}>
+                <ImageList sx={{height: '175px', maxWidth: '512px', alignItems: 'center'}} cols={images.length} rowHeight={164}>
                     {images.map((item,idx) => (
                         <ImageListItem  key={postId+"_"+idx}>
                             <img
-                                srcSet={`${item}?w=164&h=164&fit=clip&auto=format&dpr=2 2x`}
-                                src={`${item}?w=164&h=164&fit=clip&auto=format`}
+                                srcSet={`${item}?w=175&h=175&fit=clip&auto=format&dpr=2 2x`}
+                                src={`${item}`}
+                                style={{ width: '164px', height: '164px', objectFit: 'cover' }}
                                 loading="lazy"
                             />
                         </ImageListItem>
@@ -101,7 +103,8 @@ const PostItem = ({
                             {content}
                         </Typography>
                     </CardContent>
-                    <div className="imageArea" style={{overflow:'auto'}}>
+                    <div className="imageArea" style={{width:"380px", maxHeight:"220px", overflow:"auto", textAlign:"center"}}>
+
                         <Images images={images}
                                 postId={postId}
                         ></Images>
