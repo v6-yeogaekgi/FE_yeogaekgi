@@ -50,8 +50,8 @@ const PostList = () => {
     return (
         <div className="PostList">
             {dummyPosts.map((post) => (
-                <PostItem
-                    postId={post.id}
+                <PostItem key={post.postId}
+                    postId={post.postId}
                     memberId={post.memberId}
                     nickname={post.nickname}
                     countryId={post.countryId}
