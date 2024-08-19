@@ -47,6 +47,7 @@ const dummyComments = [
 const CommentList = () => {
     return (
         <div className="CommentList">
+
             {dummyComments.map((comment) => (
                 <CommentItem
                     key={comment.commentId}
