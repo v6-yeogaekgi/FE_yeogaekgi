@@ -39,7 +39,7 @@ function App() {
                 <Route path={"/wallet/cardDetail"} element={<CardDetail/>}/>
                 <Route path={"/map"} element={<PageLayout menuName={'map'}><Map/></PageLayout>} />
                 <Route path={"/community"} element={<PageLayout menuName={'community'}><Main /></PageLayout>} />
-                <Route path={"/community/post"} element={<PageLayout menuName={'post'}><Post /></PageLayout>}/>
+                <Route path={"/community/post"} element={<Post />}/>
                 <Route path={"/myPage"} element={<PageLayout menuName={'my page'}><MyPage /></PageLayout>} />
             </Routes>
         </Router>

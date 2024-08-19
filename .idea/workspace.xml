@@ -9,6 +9,7 @@
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Community/Post.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/Post.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Community/components/CommentList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/CommentList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Community/components/CommentRegister.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/CommentRegister.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +47,7 @@
   "keyToString": {
     "Node.js.PostItem.jsx.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "comment__list",
+    "git-widget-placeholder": "comment__regster",
     "last_opened_file_path": "D:/FE_yeogaekgi/src/img",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
