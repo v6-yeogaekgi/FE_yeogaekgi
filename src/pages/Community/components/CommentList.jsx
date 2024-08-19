@@ -20,7 +20,7 @@ const dummyComments = [
         postId: 101,
         memberId: 1001,
         nickname: '서석환',
-        countryId: 1,
+        countryId: 2,
     },
     {
         commentId: 2,
@@ -30,7 +30,7 @@ const dummyComments = [
         postId: 102,
         memberId: 1002,
         nickname: '이봉욱',
-        countryId: 1,
+        countryId: 2,
     },
     {
         commentId: 3,
@@ -40,7 +40,7 @@ const dummyComments = [
         postId: 102,
         memberId: 1002,
         nickname: '카즈하',
-        countryId: 2,
+        countryId: 1,
     },
 ];
 

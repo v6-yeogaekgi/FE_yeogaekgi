@@ -10,6 +10,7 @@ import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import TranslateIcon from '@mui/icons-material/Translate';
 import Button from '../../../components/BasicButton/BasicButton'
+import EditIcon from '@mui/icons-material/Edit';
 
 
 const CommentItem = ({
@@ -31,9 +32,9 @@ const CommentItem = ({
     return (
         <div className="CommentItem">
             <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                <ListItem alignItems="flex-start">
+                <ListItem alignItems="flex-start" sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <ListItemAvatar>
-                        <Avatar alt="Remy Sharp" src={getCountryImgById(countryId)} />
+                        <Avatar alt="Country Flag" src={getCountryImgById(countryId)} />
                     </ListItemAvatar>
                     <ListItemText
                         primary={nickname}
@@ -47,16 +48,27 @@ const CommentItem = ({
                                 >
                                     {comment}
                                 </Typography>
-                                <br/>
-                                <Button size="small" variant="contained" text="번역" btnColor='#4653f9' textColor="ffffff" startIcon={<TranslateIcon />}/>
-
+                                <br />
+                                <Button
+                                    size="small"
+                                    variant="contained"
+                                    text="번역"
+                                    sx={{ mr: 1 }} // 버튼 사이의 마진
+                                    btnColor='#4653f9'
+                                    textColor="ffffff"
+                                    startIcon={<TranslateIcon />}
+                                />
                             </React.Fragment>
                         }
                     />
+                    <Button
+                        size="small"
+                        aria-label="edit"
+                        startIcon={<EditIcon />}
+                        sx={{ alignSelf: 'center' }} // 버튼을 세로 중앙에 정렬
+                    />
                 </ListItem>
                 <Divider variant="inset" component="li" />
-
-
             </List>
         </div>
     );
