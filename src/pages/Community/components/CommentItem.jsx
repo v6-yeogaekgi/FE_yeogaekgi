@@ -8,6 +8,9 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
+import Button from '@mui/material/Button';
+import TranslateIcon from '@mui/icons-material/Translate';
+
 
 const CommentItem = ({
                          commentId,
@@ -44,6 +47,9 @@ const CommentItem = ({
                                 >
                                     {comment}
                                 </Typography>
+                                <br/>
+
+                                <Button size="small" variant="contained" endIcon={<TranslateIcon />} >번역</Button>
 
                             </React.Fragment>
                         }

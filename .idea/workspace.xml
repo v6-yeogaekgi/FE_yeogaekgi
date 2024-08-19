@@ -5,13 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="93d74226-9d0d-46fc-b5e4-a5197d88f62f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/img/japan.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/img/korea.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/util.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Community/Main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/Main.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Community/components/CommentItem.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/CommentItem.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Community/components/CommentList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Community/components/CommentList.jsx" afterDir="false" />
     </list>
@@ -36,8 +30,8 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/v6-yeogaekgi/FE_yeogaekgi.git&quot;,
-    &quot;accountId&quot;: &quot;d8d86d3c-1de2-4ae7-8fef-94901d3b0409&quot;
+    &quot;url&quot;: &quot;https://github.com/v6-yeogaekgi/FE_yeogaekgi&quot;,
+    &quot;accountId&quot;: &quot;2b8e328d-8b54-41da-bed7-aa26d9e4e3c9&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -47,21 +41,22 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;comment__item&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/FE_yeogaekgi/src/img&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "comment__item",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/FE_yeogaekgi/src/img",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\FE_yeogaekgi\src\img" />
@@ -86,6 +81,8 @@
       <updated>1723894483357</updated>
       <workItem from="1723894485371" duration="1071000" />
       <workItem from="1723895615493" duration="1239000" />
+      <workItem from="1723943718534" duration="16000" />
+      <workItem from="1724026250288" duration="1421000" />
     </task>
     <servers />
   </component>
