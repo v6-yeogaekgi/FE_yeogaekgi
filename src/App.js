@@ -11,6 +11,7 @@ import Map from './pages/Map/Map';
 import Box from '@mui/material/Box';
 import CardDetail from './pages/Wallet/CardDetail';
 import Post from './pages/Community/Post';
+import EditComment from './pages/Community/EditComment';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -40,6 +41,7 @@ function App() {
                 <Route path={"/map"} element={<PageLayout menuName={'map'}><Map/></PageLayout>} />
                 <Route path={"/community"} element={<PageLayout menuName={'community'}><Main /></PageLayout>} />
                 <Route path={"/community/post"} element={<Post />}/>
+                <Route path={"/community/comment/edit"} element={<PageLayout menuName={'comment edit'}><EditComment /></PageLayout>} />
                 <Route path={"/myPage"} element={<PageLayout menuName={'my page'}><MyPage /></PageLayout>} />
             </Routes>
         </Router>
