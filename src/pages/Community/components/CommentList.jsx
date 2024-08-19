@@ -51,6 +51,7 @@ const dummyComments = [
 
 const CommentList = () => {
     return (
+
         <List
             sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
             component="nav"
@@ -61,6 +62,7 @@ const CommentList = () => {
                 </ListSubheader>
             }
         >
+
             {dummyComments.map((comment) => (
                 <CommentItem
                     key={comment.commentId}
