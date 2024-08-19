@@ -1,9 +1,9 @@
 import { Grid, Typography, Paper, IconButton } from '@mui/material';
 import StarCheckbox from '../StarCheckbox/StarCheckBox';
 import BasicButton from '../BasicButton/BasicButton';
-import { Image } from '@mui/icons-material';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const commonPaperStyle = {
     width: '90%',
@@ -14,6 +14,7 @@ const commonPaperStyle = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
+    cursor: 'pointer',
     position: 'relative',  // 추가: 오버레이 위치 기준점
 };
 
@@ -26,7 +27,7 @@ const CardImage = () => (
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: '10px',
-        marginTop: '30px'
+        marginTop: '30px',
     }}>
         Card Image
     </div>
@@ -39,25 +40,29 @@ const CardImage = () => (
     // </IconButton>
 );
 
-const CardButtons = ({ isActive }) => (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <BasicButton
-            text={'Balance Conversion (P - T)'}
-            width={'80%'}
-            variant={'outlined'}
-            onClick={() => {alert('clicked Balance Conversion (P - T)')}}
-            style={{ marginBottom: '10px' }}
-            disabled={!isActive}
-        />
-        <BasicButton
-            text={'Ton Up'}
-            width={'80%'}
-            variant={'outlined'}
-            onClick={() => {alert('clicked Ton Up')}}
-            disabled={!isActive}
-        />
-    </div>
-);
+// const CardButtons = ({ isActive }) => (
+//     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+//         <BasicButton
+//             text={'Balance Conversion (P - T)'}
+//             width={'80%'}
+//             variant={'outlined'}
+//             onClick={() => {
+//                 alert('clicked Balance Conversion (P - T)');
+//             }}
+//             style={{ marginBottom: '10px' }}
+//             disabled={!isActive}
+//         />
+//         <BasicButton
+//             text={'Top Up'}
+//             width={'80%'}
+//             variant={'outlined'}
+//             onClick={() => {
+//                 alert('clicked Ton Up');
+//             }}
+//             disabled={!isActive}
+//         />
+//     </div>
+// );
 
 const Overlay = () => (
     <div style={{
@@ -77,20 +82,69 @@ const Overlay = () => (
     </div>
 );
 
-export default function UserCard({ data }) {
+export default function UserCard({ data, onCardClick }) {
+    const navigate = useNavigate();
     const { status, card_name, pay_balance, transit_balance, starred } = data;
     const isActive = status !== 0;
 
+    const handleCardClick = (e) => {
+        // 버튼 클릭 이벤트가 아닐 때만 카드 상세 페이지로 이동
+        if (!e.target.closest('button')) {
+            if (onCardClick) {
+                onCardClick(data);
+            }
+        }
+    };
+
+    const handleTopUpClick = (e) => {
+        e.stopPropagation(); // 이벤트 버블링 방지
+        navigate('/wallet/top-up', {state: {data}});
+    };
+
+    const handleBalanceConversionClick = (e) => {
+        e.stopPropagation(); // 이벤트 버블링 방지
+        alert('clicked Balance Conversion (P - T)');
+    };
+
+    const CardButtons = ({ isActive }) => (
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}
+        >
+            <BasicButton
+                text={'Balance Conversion (P - T)'}
+                width={'80%'}
+                variant={'outlined'}
+                onClick={handleBalanceConversionClick}
+                style={{ marginBottom: '10px' }}
+                disabled={!isActive}
+            />
+            <BasicButton
+                text={'Top Up'}
+                width={'80%'}
+                variant={'outlined'}
+                onClick={handleTopUpClick}
+                disabled={!isActive}
+            />
+        </div>
+    );
+
     return (
-        <Paper style={commonPaperStyle}>
+        <Paper
+            style={commonPaperStyle}
+            onClick={handleCardClick}
+        >
             {status === 0 && <Overlay />}
             <Grid container spacing={2} style={{ zIndex: 2 }}>
                 <Grid item xs={8}>
                     <Typography variant="h7">{card_name}</Typography>
                     <Typography>Pay Balance </Typography>
-                    <Typography variant="h5">{pay_balance}₩</Typography>
+                    <Typography variant="h5">{pay_balance.toLocaleString()}₩</Typography>
                     <Typography>Transit Balance </Typography>
-                    <Typography variant="h5">{transit_balance}₩</Typography>
+                    <Typography variant="h5">{transit_balance.toLocaleString()}₩</Typography>
                 </Grid>
                 <Grid item xs={4} style={{ position: 'relative' }}>
                     <div style={{
@@ -98,7 +152,7 @@ export default function UserCard({ data }) {
                         top: 0,
                         left: '30%',
                         display: 'flex',
-                        alignItems: 'center'
+                        alignItems: 'center',
                     }}>
                         <StarCheckbox checked={isActive && starred === 1} />
                     </div>
