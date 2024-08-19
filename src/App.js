@@ -5,6 +5,7 @@ import Footer from "./layout/Footer/Footer";
 import Header from "./layout/Header/Header";
 import Wallet from './pages/Wallet/Wallet';
 import HomePage from './pages/Home/Home';
+import CardDetail from './pages/CardDetail/CardDetail';
 
 import Main from './pages/Community/Main';
 import MyPage from './pages/MyPage/MyPage';
@@ -22,6 +23,7 @@ const PageLayout = ({ children, menuName }) => {
             display: 'flex',
             flexDirection: 'column',
             minHeight: '100vh',
+            paddingTop: '70px', // header 높이만큼 패딩 추가
             paddingBottom: '70px', // Footer 높이만큼 패딩 추가
         }}>
             <Header menuName={menuName} />
