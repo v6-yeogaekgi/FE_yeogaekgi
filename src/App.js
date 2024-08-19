@@ -10,7 +10,6 @@ import Main from './pages/Community/Main';
 import MyPage from './pages/MyPage/MyPage';
 import Map from './pages/Map/Map';
 import Box from '@mui/material/Box';
-import CardDetail from './pages/Wallet/CardDetail';
 import Post from './pages/Community/Post';
 import EditComment from './pages/Community/EditComment';
 import ImageDetail from "./pages/Community/ImageDetail";
