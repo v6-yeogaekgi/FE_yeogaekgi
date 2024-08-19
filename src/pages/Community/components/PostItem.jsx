@@ -22,36 +22,37 @@ const Images = ({
     if(images && images.length >= 1 ){
         console.log(images.length, images)
         console.log("postID: " , postId)
-        if(images.length == 1) {
-                return (
-                    <ImageList sx={{ width: '380px', height: '164px', textAlign: 'center' }} cols={1} rowHeight={164}>
-                            <ImageListItem key={postId+"_"+"1"}>
-                                <img
-                                    srcSet={`${images[0]}?w=358&h=175&fit=clip&auto=format&dpr=2 2x`}
-                                    src={`${images[0]}`}
-                                    style={{ width: '358px', height: '175px', objectFit: 'cover' }}
-                                    loading="lazy"
-                                />
-                            </ImageListItem>
-                    </ImageList>
-                );
-        } else {
-            return (
-                <ImageList sx={{height: '175px', maxWidth: '512px', alignItems: 'center'}} cols={images.length} rowHeight={164}>
-                    {images.map((item,idx) => (
-                        <ImageListItem  key={postId+"_"+idx}>
-                            <img
-                                srcSet={`${item}?w=175&h=175&fit=clip&auto=format&dpr=2 2x`}
-                                src={`${item}`}
-                                style={{ width: '164px', height: '164px', objectFit: 'cover' }}
-                                loading="lazy"
-                            />
-                        </ImageListItem>
-                    ))}
-                </ImageList>
-            );
+        const width = images.length == 1? 348 : 165;
 
-        }
+        return (
+            <ImageList sx={{
+                justifyContent: 'space-between',  // Center items horizontally
+                display: 'flex',  // Use flexbox for layout
+                alignItems: 'center',  // Center items vertically
+                width: `348px`,
+                height: '165px',
+                overflow:"scroll",
+            }} cols={images.length} rowHeight={165}>
+                {images.map((item,idx) => (
+                    <ImageListItem key={postId+"_"+idx}
+                        sx={{
+                        width: `${width}px`,
+                        height: '165px',
+                        justifyContent: 'center',
+                        alignItems: 'center'}}
+                    >
+                        <img
+                            srcSet={`${item}?w=${width}&h=165&fit=clip&auto=format&dpr=2 2x`}
+                            src={`${item}`}
+                            style={{ width: `${width}px`, height: '165px', objectFit: 'cover' }}
+                            loading="lazy"
+                        />
+                    </ImageListItem>
+                ))}
+            </ImageList>
+        );
+
+
     } else {
         return <div></div>;
     }
@@ -103,12 +104,9 @@ const PostItem = ({
                             {content}
                         </Typography>
                     </CardContent>
-                    <div className="imageArea" style={{width:"380px", maxHeight:"220px", overflow:"auto", textAlign:"center"}}>
-
-                        <Images images={images}
-                                postId={postId}
-                        ></Images>
-                    </div>
+                    <CardContent className="imageArea" style={{width:"348px", maxHeight:"220px"}}>
+                        <Images images={images} postId={postId}></Images>
+                    </CardContent>
                 </CardActionArea>
                 <CardActions className="post-footer">
                     <div style={{ display: "flex", alignItems: "center", flexDirection: "row" }}>
