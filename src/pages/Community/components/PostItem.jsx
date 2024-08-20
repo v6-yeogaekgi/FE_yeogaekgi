@@ -1,20 +1,18 @@
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import { ImageList, ImageListItem } from '@mui/material';
-
-import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
+import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
+import TranslateIcon from '@mui/icons-material/Translate';
 
-import LikeCheckbox from '../../../components/LikeCheckbox/LikeCheckbox'
-
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-
+import LikeCheckbox from '../../../components/LikeCheckbox/LikeCheckbox';
 import { getCountryImgById } from '../../../util';
+import BasicButton from '../../../components/BasicButton/BasicButton';
+
 
 const Images = ({
   images, postId
@@ -108,12 +106,23 @@ const PostItem = ({
                         <Images images={images} postId={postId}></Images>
                     </CardContent>
                 </CardActionArea>
-                <CardActions className="post-footer">
+                <CardActions className="post-footer" sx={{display:"flex", justifyContent:"space-between"}}>
                     <div style={{ display: "flex", alignItems: "center", flexDirection: "row" }}>
                         <LikeCheckbox className="likeCheck" checked={likeState==0?false:true}></LikeCheckbox>
                         <Typography className="likeCnt" variant="body2" color="text.secondary">{likeCnt}</Typography>
                         <SmsOutlinedIcon color="disabled" sx={{marginLeft:"15px", marginRight:"5px"}}></SmsOutlinedIcon>
                         <Typography  className="commentCnt" variant="body2" color="text.secondary">{commentCnt}</Typography>
+                    </div>
+                    <div>
+                        <Button
+                            size="small"
+                            variant="text"
+                            btnColor='#4653f9'
+                            textColor="ffffff"
+                        >
+                            <TranslateIcon/>
+                        </Button>
+
                     </div>
                 </CardActions>
             </Card>
