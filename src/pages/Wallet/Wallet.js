@@ -48,7 +48,7 @@ export default function Wallet(props) {
     });
 
     const handleCardClick = (cardData) => {
-        navigate('card-detail', { state: { cardData } });
+        navigate('detail', { state: { cardData } });
     };
 
     const [error, setError] = useState(null);
@@ -73,7 +73,7 @@ export default function Wallet(props) {
                 {
                     user_card_no: 0,
                     card_name: '예시 카드 1',
-                    design: '디자인 예시',
+                    design: 'https://yeogaekgi.s3.ap-northeast-2.amazonaws.com/Design.png',
                     pay_balance: 10000,
                     transit_balance: 5000,
                     status: 1,
@@ -83,7 +83,7 @@ export default function Wallet(props) {
                 {
                     user_card_no: 1,
                     card_name: '예시 카드 2',
-                    design: '디자인 예시',
+                    design: 'https://yeogaekgi.s3.ap-northeast-2.amazonaws.com/Design.png',
                     pay_balance: 20000,
                     transit_balance: 7000,
                     status: 0,
@@ -93,7 +93,7 @@ export default function Wallet(props) {
                 {
                     user_card_no: 2,
                     card_name: '예시 카드 3',
-                    design: '디자인 예시',
+                    design: 'https://yeogaekgi.s3.ap-northeast-2.amazonaws.com/Design.png',
                     pay_balance: 20000,
                     transit_balance: 7000,
                     status: 1,
