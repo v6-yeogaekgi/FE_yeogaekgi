@@ -1,25 +1,12 @@
 /* global naver */
 import React, { useEffect } from 'react';
+import { useKiosk } from '../../pages/Kiosk/KioskContext';
+import './KioskNaverMap.css';
 
-const NaverMap = () => {
-    const kioskLocations = [
-        { lat: 37.556049, lng: 126.92312, location: 'Hongdae Exit 1' },
-        { lat: 37.556477, lng: 126.923539, location: 'Hongdae Exit 2' },
-        { lat: 37.556069, lng: 126.922655, location: 'Hongdae Exit 4' },
-        { lat: 37.557281, lng: 126.924343, location: 'Hongdae Exit 8' },
-        { lat: 37.557752, lng: 126.923708, location: 'Hongdae Exit 11' },
-    ];
+const KioskNaverMap = () => {
+    const { locations } = useKiosk();
 
     useEffect(() => {
-        console.log(
-            'NAVER_MAP_CLIENT_ID:',
-            process.env.REACT_APP_NAVER_MAP_CLIENT_ID,
-        );
-        console.log(
-            'NAVER_MAP_OPTIONS:',
-            process.env.REACT_APP_NAVER_MAP_OPTIONS,
-        );
-
         const loadMap = () => {
             const script = document.createElement('script');
             script.src = `https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.REACT_APP_NAVER_MAP_CLIENT_ID}&submodules=geocoder&language=en`;
@@ -33,9 +20,15 @@ const NaverMap = () => {
                             const userLat = position.coords.latitude;
                             const userLng = position.coords.longitude;
 
+                            console.log('Initial Position:', {
+                                userLat,
+                                userLng,
+                            });
+
                             const mapOptions = {
                                 center: new naver.maps.LatLng(userLat, userLng),
                                 zoom: 15,
+                                lang: 'en',
                             };
 
                             const map = new naver.maps.Map('map', mapOptions);
@@ -46,7 +39,10 @@ const NaverMap = () => {
                                     userLng,
                                 ),
                                 map,
-                                location: 'YOU',
+                                icon: {
+                                    content: `<div class="user-marker"></div>`,
+                                    anchor: new naver.maps.Point(10, 10),
+                                },
                             });
 
                             navigator.geolocation.watchPosition(
@@ -75,15 +71,35 @@ const NaverMap = () => {
                                 },
                             );
 
-                            kioskLocations.forEach((kiosk) => {
-                                new naver.maps.Marker({
+                            locations.forEach((kiosk) => {
+                                const marker = new naver.maps.Marker({
                                     position: new naver.maps.LatLng(
                                         kiosk.lat,
                                         kiosk.lng,
                                     ),
                                     map,
-                                    location: kiosk.location,
+                                    title: kiosk.name,
                                 });
+
+                                const infoWindow = new naver.maps.InfoWindow({
+                                    content: `
+                                        <div style="padding: 15px; width: 300px; max-width: 400px; height: 250px; text-align: center;">
+                                            <h4 style="font-size: 16px; margin-bottom: 10px;">${kiosk.name}</h4>
+                                        </div>
+                                    `,
+                                });
+
+                                naver.maps.Event.addListener(
+                                    marker,
+                                    'click',
+                                    () => {
+                                        if (infoWindow.getMap()) {
+                                            infoWindow.close();
+                                        } else {
+                                            infoWindow.open(map, marker);
+                                        }
+                                    },
+                                );
                             });
                         },
                         (error) => {
@@ -94,7 +110,7 @@ const NaverMap = () => {
                         },
                     );
                 } else {
-                    console.error('실시간을 위치를 지원하지 않습니다.');
+                    console.error('실시간 위치를 지원하지 않습니다.');
                 }
             };
         };
@@ -107,9 +123,9 @@ const NaverMap = () => {
             );
             if (script) document.body.removeChild(script);
         };
-    }, []);
+    }, [locations]);
 
     return <div id="map" style={{ width: '100%', height: '400px' }} />;
 };
 
-export default NaverMap;
+export default KioskNaverMap;
