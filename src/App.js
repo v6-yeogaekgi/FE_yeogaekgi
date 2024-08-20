@@ -10,7 +10,7 @@ import Main from './pages/Community/Main';
 import MyPage from './pages/MyPage/MyPage';
 import Map from './pages/Map/Map';
 import Box from '@mui/material/Box';
-import CardDetail from './pages/Wallet/CardDetail';
+// import CardDetail from './pages/Wallet/CardDetail';
 import Post from './pages/Community/Post';
 import EditComment from './pages/Community/EditComment';
 import ImageDetail from "./pages/Community/ImageDetail";
@@ -47,7 +47,7 @@ function App() {
                 <Route path={"/community/comment/edit"} element={<PageLayout menuName={'comment edit'}><EditComment /></PageLayout>} />
                 <Route path={"/community/imageDetail"} element={<ImageDetail />} />
                 <Route path={"/myPage"} element={<PageLayout menuName={'my page'}><MyPage /></PageLayout>} />
-                <Route path={"/wallet/card-detail"} element={<PageLayout menuName={'detail'}><CardDetail/></PageLayout>} />
+                {/*<Route path={"/wallet/card-detail"} element={<PageLayout menuName={'detail'}><CardDetail/></PageLayout>} />*/}
                 <Route path={"/wallet/top-up"} element={<PageLayout menuName={'top-up'}><TopUp/></PageLayout>}/>
             </Routes>
         </Router>

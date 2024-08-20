@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import TranslateIcon from '@mui/icons-material/Translate';
-import Button from '../../../components/BasicButton/BasicButton'
+import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 
 
@@ -36,6 +36,7 @@ const CommentItem = ({
                     <ListItemAvatar>
                         <Avatar alt="Country Flag" src={getCountryImgById(countryId)} />
                     </ListItemAvatar>
+
                     <ListItemText
                         primary={nickname}
                         secondary={
@@ -49,29 +50,64 @@ const CommentItem = ({
                                     {comment}
                                 </Typography>
                                 <br />
-                                <Button
-                                    size="small"
-                                    variant="contained"
-                                    text="번역"
-                                    sx={{ mr: 1 }} // 버튼 사이의 마진
-                                    btnColor='#4653f9'
-                                    textColor="ffffff"
-                                    startIcon={<TranslateIcon />}
-                                />
+                                <div style={{
+                                    marginTop: '8px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    justifyContent: 'flex-end'
+                                }}>
+                                    <Button
+                                        id="edit-button"
+                                        size="small"
+                                        aria-label="edit"
+                                        startIcon={<EditIcon />}
+                                        sx={{
+                                            color: '#4653f9',
+                                            padding: '4px 8px',
+                                            fontSize: '0.75rem',
+                                            height: '24px',
+                                            minWidth: '32px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            textAlign: 'center',
+                                            '& .MuiButton-startIcon': {
+                                                marginRight: 0,
+                                            },
+                                        }}
+                                    />
+                                    <Button
+                                        id="translate-button"
+                                        size="small"
+                                        aria-label="translate"
+                                        startIcon={<TranslateIcon />}
+                                        sx={{
+                                            color: '#4653f9',
+                                            padding: '4px 8px',
+                                            fontSize: '0.75rem',
+                                            height: '24px',
+                                            minWidth: '32px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            textAlign: 'center',
+                                            '& .MuiButton-startIcon': {
+                                                marginRight: 0,
+                                            },
+                                        }}
+                                    />
+                                </div>
                             </React.Fragment>
                         }
                     />
-                    <Button
-                        size="small"
-                        aria-label="edit"
-                        startIcon={<EditIcon />}
-                        sx={{ alignSelf: 'center' }} // 버튼을 세로 중앙에 정렬
-                    />
+
                 </ListItem>
                 <Divider variant="inset" component="li" />
             </List>
         </div>
     );
 };
+
 
 export default CommentItem;

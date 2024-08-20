@@ -2,14 +2,7 @@ import * as React from 'react';
 import { useLocation } from 'react-router';
 import UserCardOnDetail from '../../components/UserCardOnDetail/UserCardOnDetail';
 import Box from '@mui/material/Box';
-import { Grid, Icon, IconButton, Paper, Typography } from '@mui/material';
-import BasicButton from '../../components/BasicButton/BasicButton';
 import { useState } from 'react';
-import CustomizedSwitches from '../../components/CustomizedSwitches/CustomizedSwitches';
-import RemoveIcon from '@mui/icons-material/Remove';
-import AddIcon from '@mui/icons-material/Add';
-import Divider from '@mui/material/Divider';
-import axios from 'axios';
 import PaymentHistory from '../../components/PaymentHistory/PaymentHistory';
 
 
