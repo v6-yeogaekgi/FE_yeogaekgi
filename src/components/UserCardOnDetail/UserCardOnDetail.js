@@ -114,7 +114,7 @@ export default function UserCardOnDetail({ data, onCardClick }) {
                             alignItems: 'center',
                         }}>
                             <StarCheckbox checked={isActive && starred === 1} />
-                            <SettingsDrawer />
+                            <SettingsDrawer data={data}/>
                         </div>
                         <CardImage />
                     </Grid>
