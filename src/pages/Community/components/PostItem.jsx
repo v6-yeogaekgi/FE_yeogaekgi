@@ -1,20 +1,18 @@
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import { ImageList, ImageListItem } from '@mui/material';
-
-import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
+import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
+import TranslateIcon from '@mui/icons-material/Translate';
 
-import LikeCheckbox from '../../../components/LikeCheckbox/LikeCheckbox'
-
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-
+import LikeCheckbox from '../../../components/LikeCheckbox/LikeCheckbox';
 import { getCountryImgById } from '../../../util';
+import BasicButton from '../../../components/BasicButton/BasicButton';
+
 
 const Images = ({
   images, postId
@@ -22,34 +20,37 @@ const Images = ({
     if(images && images.length >= 1 ){
         console.log(images.length, images)
         console.log("postID: " , postId)
-        if(images.length == 1) {
-                return (
-                <ImageList sx={{ width: '348', height: '220px' }} cols={1} rowHeight={164}>
-                        <ImageListItem key={postId+"_"+"1"}>
-                            <img
-                                srcSet={`${images[0]}?w=348&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                src={`${images[0]}?w=348&h=164&fit=crop&auto=format`}
-                                loading="lazy"
-                            />
-                        </ImageListItem>
-                </ImageList>
-                );
-        } else {
-            return (
-                <ImageList sx={{ width: '500', height: '220px'}} cols={3} rowHeight={164}>
-                    {images.map((item,idx) => (
-                        <ImageListItem  key={postId+"_"+idx}>
-                            <img
-                                srcSet={`${item}?w=164&h=164&fit=clip&auto=format&dpr=2 2x`}
-                                src={`${item}?w=164&h=164&fit=clip&auto=format`}
-                                loading="lazy"
-                            />
-                        </ImageListItem>
-                    ))}
-                </ImageList>
-            );
+        const width = images.length == 1? 348 : 165;
 
-        }
+        return (
+            <ImageList sx={{
+                justifyContent: 'space-between',  // Center items horizontally
+                display: 'flex',  // Use flexbox for layout
+                alignItems: 'center',  // Center items vertically
+                width: `348px`,
+                height: '165px',
+                overflow:"scroll",
+            }} cols={images.length} rowHeight={165}>
+                {images.map((item,idx) => (
+                    <ImageListItem key={postId+"_"+idx}
+                        sx={{
+                        width: `${width}px`,
+                        height: '165px',
+                        justifyContent: 'center',
+                        alignItems: 'center'}}
+                    >
+                        <img
+                            srcSet={`${item}?w=${width}&h=165&fit=clip&auto=format&dpr=2 2x`}
+                            src={`${item}`}
+                            style={{ width: `${width}px`, height: '165px', objectFit: 'cover' }}
+                            loading="lazy"
+                        />
+                    </ImageListItem>
+                ))}
+            </ImageList>
+        );
+
+
     } else {
         return <div></div>;
     }
@@ -101,18 +102,27 @@ const PostItem = ({
                             {content}
                         </Typography>
                     </CardContent>
-                    <div className="imageArea" style={{overflow:'auto'}}>
-                        <Images images={images}
-                                postId={postId}
-                        ></Images>
-                    </div>
+                    <CardContent className="imageArea" style={{width:"348px", maxHeight:"220px"}}>
+                        <Images images={images} postId={postId}></Images>
+                    </CardContent>
                 </CardActionArea>
-                <CardActions className="post-footer">
+                <CardActions className="post-footer" sx={{display:"flex", justifyContent:"space-between"}}>
                     <div style={{ display: "flex", alignItems: "center", flexDirection: "row" }}>
                         <LikeCheckbox className="likeCheck" checked={likeState==0?false:true}></LikeCheckbox>
                         <Typography className="likeCnt" variant="body2" color="text.secondary">{likeCnt}</Typography>
                         <SmsOutlinedIcon color="disabled" sx={{marginLeft:"15px", marginRight:"5px"}}></SmsOutlinedIcon>
                         <Typography  className="commentCnt" variant="body2" color="text.secondary">{commentCnt}</Typography>
+                    </div>
+                    <div>
+                        <Button
+                            size="small"
+                            variant="text"
+                            btnColor='#4653f9'
+                            textColor="ffffff"
+                        >
+                            <TranslateIcon/>
+                        </Button>
+
                     </div>
                 </CardActions>
             </Card>
