@@ -9,11 +9,14 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import useAlertDialog from '../../hooks/useAlertDialog/useAlertDialog';
+import { useNavigate } from 'react-router-dom';
 
 const SettingsDrawer = ({ data }) => {
     const [state, setState] = React.useState({
         bottom: false,
     });
+
+    const navigate = useNavigate();
 
     const { openAlertDialog, AlertDialog } = useAlertDialog();
 
@@ -42,13 +45,27 @@ const SettingsDrawer = ({ data }) => {
                 // onKeyDown={toggleDrawer(false)}
             >
                 <List>
-                    {['주카드 설정', '충전', '환급', '잔액 전환'].map((text) => (
-                        <ListItem key={text} disablePadding>
-                            <ListItemButton>
-                                <ListItemText primary={text} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
+                    {/*{['주카드 설정', '충전', '환급', '잔액 전환'].map((text) => (*/}
+                    <ListItem key={'주카드 설정'} disablePadding>
+                        <ListItemButton>
+                            <ListItemText primary={'주카드 설정'} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key={'충전'} disablePadding>
+                        <ListItemButton>
+                            <ListItemText primary={'충전'} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key={'환급'} disablePadding onClick={() => navigate('refund', { state: { data } })}>
+                        <ListItemButton>
+                            <ListItemText primary={'환급'} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key={'잔액 전환'} disablePadding>
+                        <ListItemButton>
+                            <ListItemText primary={'잔액 전환'} />
+                        </ListItemButton>
+                    </ListItem>
                 </List>
                 <Divider />
                 <List>
@@ -72,7 +89,7 @@ const SettingsDrawer = ({ data }) => {
                                 <b>Card Number</b>
                             </ListItem>
                             <ListItem disablePadding>
-                                 {data.user_card_no}
+                                {data.user_card_no}
                             </ListItem>
                             <ListItem disablePadding>
                                 <b>Validity</b>
