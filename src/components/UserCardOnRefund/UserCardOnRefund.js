@@ -42,7 +42,7 @@ const CardImage = ({ imageUrl }) => (
 
 export default function UserCardOnRefund({ data }) {
     const navigate = useNavigate();
-    const { card_name, pay_balance, transit_balance, starred } = data;
+    const { cardName, payBalance, transitBalance, starred } = data;
 
     return (
         <Paper
@@ -50,11 +50,11 @@ export default function UserCardOnRefund({ data }) {
         >
             <Grid container spacing={2} style={{ zIndex: 2 }}>
                 <Grid item xs={8} marginTop={'10px'}>
-                    <Typography variant="h7">{card_name}</Typography>
+                    <Typography variant="h7">{cardName}</Typography>
                     <Typography marginTop={'30px'}>Pay Balance </Typography>
-                    <Typography variant="h5">{pay_balance.toLocaleString()}₩</Typography>
+                    <Typography variant="h5">{payBalance.toLocaleString()}₩</Typography>
                     {/*<Typography>Transit Balance </Typography>*/}
-                    {/*<Typography variant="h5">{transit_balance.toLocaleString()}₩</Typography>*/}
+                    {/*<Typography variant="h5">{transitBalance.toLocaleString()}₩</Typography>*/}
                 </Grid>
                 <Grid item xs={4} style={{ position: 'relative' }}>
                     <div style={{

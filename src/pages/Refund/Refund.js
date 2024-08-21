@@ -33,7 +33,7 @@ export default function Refund() {
     //                     user_card_no: 0,
     //                     card_name: '예시 카드 1',
     //                     design: '디자인 예시',
-    //                     pay_balance: 10000,
+    //                     payBalance: 10000,
     //                     transit_balance: 5000,
     //                     status: 1,
     //                     starred: 1,
@@ -72,13 +72,13 @@ export default function Refund() {
                     <div style={{ width : '100%' }}>
                         <Grid container spacing={2} sx={{maxWidth: '100%', margin: 'auto', paddingTop: '20px'}}>
                             <Grid item xs={12}>
-                                <Typography component="h1" variant="h5">잔액 <b>{data.pay_balance.toLocaleString()} ₩</b></Typography>
+                                <Typography component="h1" variant="h5">잔액 <b>{data.payBalance.toLocaleString()} ₩</b></Typography>
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography component="h1" variant="h5">수수료 <b>{fee.toLocaleString()} ₩</b></Typography>
                             </Grid>
                             <Grid item xs={12}>
-                                <Typography component="h1" variant="h5"><b>{(data.pay_balance-fee).toLocaleString()} ₩</b></Typography>
+                                <Typography component="h1" variant="h5"><b>{(data.payBalance-fee).toLocaleString()} ₩</b></Typography>
                             </Grid>
                             <Grid item xs={9}>
                                 {/* 환율 API 적용 */}

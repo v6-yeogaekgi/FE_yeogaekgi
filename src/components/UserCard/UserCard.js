@@ -85,7 +85,7 @@ const Overlay = () => (
 
 export default function UserCard({ data, onCardClick }) {
     const navigate = useNavigate();
-    const { status, card_name, pay_balance, transit_balance, starred } = data;
+    const { status, cardName, payBalance, transitBalance, starred } = data;
     const isActive = status !== 0;
 
     console.log(data.design);
@@ -143,11 +143,11 @@ export default function UserCard({ data, onCardClick }) {
             {status === 0 && <Overlay />}
             <Grid container spacing={2} style={{ zIndex: 2 }}>
                 <Grid item xs={8}>
-                    <Typography variant="h7">{card_name}</Typography>
+                    <Typography variant="h7">{cardName}</Typography>
                     <Typography>Pay Balance </Typography>
-                    <Typography variant="h5">{pay_balance.toLocaleString()}₩</Typography>
+                    <Typography variant="h5">{payBalance.toLocaleString()}₩</Typography>
                     <Typography>Transit Balance </Typography>
-                    <Typography variant="h5">{transit_balance.toLocaleString()}₩</Typography>
+                    <Typography variant="h5">{transitBalance.toLocaleString()}₩</Typography>
                 </Grid>
                 <Grid item xs={4} style={{ position: 'relative' }}>
                     <div style={{

@@ -89,13 +89,14 @@ const SettingsDrawer = ({ data }) => {
                                 <b>Card Number</b>
                             </ListItem>
                             <ListItem disablePadding>
-                                {data.user_card_no}
+                                {/*// todo 수정*/}
+                                {data.userCardId}
                             </ListItem>
                             <ListItem disablePadding>
                                 <b>Validity</b>
                             </ListItem>
                             <ListItem disablePadding>
-                                {data.exp_date.toString()}
+                                {data.expiryDate}
                             </ListItem>
                         </List>
                     </>
