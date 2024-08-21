@@ -20,8 +20,9 @@ const CommentRegister = () => {
     const onSubmit = (e) => {
         e.preventDefault(); // 폼 제출 시 새로고침 방지
 
-        if(!content){
+        if(!content.trim()){
             inputRef.current.focus();
+            alert("댓글을 입력해주세요.")
             return;
         }
         onCreate(content);
@@ -55,6 +56,7 @@ const CommentRegister = () => {
                     value={content}
                     onChange={onChangeContent}
                     onKeyDown={onKeyDown}
+                    inputRef={inputRef}
 
                 />
                 <IconButton type="button" sx={{ p: '10px' }} onClick={onSubmit} >

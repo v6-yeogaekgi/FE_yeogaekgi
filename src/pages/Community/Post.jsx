@@ -30,8 +30,9 @@ const mockComment = [
         postNo: 1,
         email: 'user1@test.com',
         nickname: 'test1',
-        content: 'cotent...1',
+        content: 'cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1',
         regDate: new Date().getTime(),
+        modDate: new Date().getTime(),
         countryId: 2,
 
     },
@@ -65,11 +66,18 @@ const mockComment = [
     },
 ];
 
+const mockCurrentMemberEmail = [
+    {
+        currentMemberEmail : "user2@test.com",
+    }
+];
+
 export const CommentStateContext = React.createContext();
 export const CommentDispatchContext = React.createContext();
 
 const Post = () => {
     const [comment, setComment] = useState(mockComment);
+    const [currentMemberEmail, setCurrentMemberEmail] = useState(mockCurrentMemberEmail);
     const commentIdRef = useRef(5);
 
 
@@ -120,7 +128,7 @@ const Post = () => {
     } else {
         return (
             <PageLayout menuName="post">
-                <CommentStateContext.Provider value={{comment}}>
+                <CommentStateContext.Provider value={{comment,currentMemberEmail}}>
                     <CommentDispatchContext.Provider value={memoizedDispatch}>
                         <PostItem />
                         <CommentList />

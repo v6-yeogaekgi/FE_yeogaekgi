@@ -6,13 +6,12 @@ import CommentItem from './CommentItem';
 import { CommentDispatchContext, CommentStateContext } from '../Post';
 
 const CommentList = () => {
-
     const { comment } = useContext(CommentStateContext);
     const { onUpdate, onDelete } = useContext(CommentDispatchContext);
 
     return (
         <List
-            sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+            sx={{ width: '100%', maxWidth: 400, bgcolor: 'background.paper' }}
             component="nav"
             aria-labelledby="nested-list-subheader"
             subheader={
@@ -22,9 +21,12 @@ const CommentList = () => {
             }
         >
             {comment.map((it) => (
-                <CommentItem {...it} key={it.id}/>
+                <CommentItem
+                    {...it}
+                    key={it.id}
+                    onDelete={onDelete}
+                />
             ))}
-
         </List>
     );
 };
