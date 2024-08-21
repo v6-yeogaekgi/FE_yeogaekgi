@@ -5,7 +5,6 @@ import Footer from "./layout/Footer/Footer";
 import Header from "./layout/Header/Header";
 import Wallet from './pages/Wallet/Wallet';
 import HomePage from './pages/Home/Home';
-import CardDetail from './pages/CardDetail/CardDetail';
 
 import Main from './pages/Community/Main';
 import MyPage from './pages/MyPage/MyPage';
@@ -50,10 +49,9 @@ function App() {
                 <Route path={"/community/regist"} element={<PageLayout menuName={'Community'}><NewPost/></PageLayout>}/>
                 <Route path={"/community/modify"} element={<PageLayout menuName={'Community'}><EditPost/></PageLayout>}/>
                 <Route path={"/community/post"} element={<Post />}/>
-                <Route path={"/community/comment/edit"} element={<PageLayout menuName={'comment edit'}><EditComment /></PageLayout>} />
+                <Route path={"/community/comment/edit/:commentId"} element={<PageLayout menuName={'comment edit'}><EditComment /></PageLayout>} />
                 <Route path={"/community/imageDetail"} element={<ImageDetail />} />
                 <Route path={"/myPage"} element={<PageLayout menuName={'my page'}><MyPage /></PageLayout>} />
-                <Route path={"/wallet/card-detail"} element={<PageLayout menuName={'detail'}><CardDetail/></PageLayout>} />
                 <Route path={"/wallet/top-up"} element={<PageLayout menuName={'top-up'}><TopUp/></PageLayout>}/>
             </Routes>
         </Router>
