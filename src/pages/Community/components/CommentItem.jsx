@@ -1,68 +1,43 @@
-import { useNavigate } from 'react-router-dom';
-import React from 'react';
+import React, { useContext } from 'react';
 import { getCountryImgById } from '../../../util';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
+
 import Avatar from '@mui/material/Avatar';
-import ListItemText from '@mui/material/ListItemText';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import List from '@mui/material/List';
+
 import TranslateIcon from '@mui/icons-material/Translate';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
-import { Grid, Paper } from '@mui/material';
-import Box from '@mui/material/Box';
-import { styled } from '@mui/material/styles';
-
-
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-}));
+import { Delete } from '@mui/icons-material';
+import { CommentDispatchContext } from '../Post';
+import { useNavigate } from 'react-router-dom';
 
 
 const CommentItem = ({
-                         commentId, nickname, content, regDate, modDate,countryId
+                         commentId, email, nickname, content, regDate, modDate, countryId,
                      }) => {
+
+    const { onDelete } = useContext(CommentDispatchContext);
+
+
+    const onClickDeleteComment = () => {
+        onDelete(commentId, email);
+    };
+
     const navigate = useNavigate();
 
-    // const goEdit = () => {
-    //     navigate(`/edit/${id}`);
-    // };
+    const goEdit = () =>{
+        navigate(`/community/comment/edit/${commentId}`);
+    }
+
 
     return (
         <div className="CommentItem">
+            국적 : <Avatar alt="Country Flag" src={getCountryImgById(countryId)} /> <br />
+            등록날짜 : {new Date(regDate).toLocaleDateString()} <br />
+            내용 : {content} <br />
+            email : {email} <br />
+            닉네임 : {nickname} <br />
+            수정날짜 : {new Date(modDate).toLocaleDateString()} <br />
 
-            return (
-            <Box sx={{ flexGrow: 1 }}>
-                <Grid container spacing={2}>
-                    <Grid xs={8}>
-                        <Item>xs=8</Item>
-                    </Grid>
-                    <Grid xs={4}>
-                        <Item>xs=4</Item>
-                    </Grid>
-                    <Grid xs={4}>
-                        <Item>xs=4</Item>
-                    </Grid>
-                    <Grid xs={8}>
-                        <Item>xs=8</Item>
-                    </Grid>
-                </Grid>
-            </Box>
-
-
-
-
-
-
-            {new Date(regDate).toLocaleDateString()}
-            {content}
-            <Avatar alt="Country Flag" src={getCountryImgById(countryId)} />
 
             <Button
                 id="edit-button"
@@ -83,6 +58,7 @@ const CommentItem = ({
                         marginRight: 0,
                     },
                 }}
+                onClick={goEdit}
             />
             <Button
                 id="translate-button"
@@ -103,6 +79,29 @@ const CommentItem = ({
                         marginRight: 0,
                     },
                 }}
+
+
+            />
+            <Button
+                id="Delete-button"
+                size="small"
+                aria-label="translate"
+                startIcon={<Delete />}
+                sx={{
+                    color: '#4653f9',
+                    padding: '4px 8px',
+                    fontSize: '0.75rem',
+                    height: '24px',
+                    minWidth: '32px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                    '& .MuiButton-startIcon': {
+                        marginRight: 0,
+                    },
+                }}
+                onClick={onClickDeleteComment}
 
             />
         </div>

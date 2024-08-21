@@ -1,45 +1,39 @@
 import * as React from 'react';
 import CommentEditor from './components/CommentEditor';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-
+import { useParams } from 'react-router-dom';
+import useComment from './hooks/useComment';
 
 
 const EditComment = () => {
-    return (
-        <>
-            <Box>
-                <CommentEditor />
-                <Box sx={{marginTop: 2}}>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button
-                            text="edit"
-                            variant="contained"
-                            sx={{
-                                backgroundColor: '#4653f9',
-                                color: 'white',
-                                marginRight: 1, // 오른쪽 마진을 추가하여 버튼 간의 간격 조절
-                            }}
-                        >
-                            Edit
-                        </Button>
-                        <Button
-                            text="cancel"
-                            variant="contained"
-                            sx={{
-                                backgroundColor: 'gray',
-                                color: 'white',
-                            }}
-                        >
+    const { commentId } = useParams();
 
-                            Cancel
-                        </Button>
-                    </Box>
-                </Box>
-            </Box>
+    // const data = useComment(commentId);
 
 
-        </>
-    );
+    // if (!data) {
+    //     return <div>Loading...</div>;
+    // } else {
+        return (
+            <>
+                <div>{commentId}번 comment</div>
+
+                <CommentEditor
+                    initData={{
+                        commentId: 1,
+                        postNo: 1,
+                        email: 'user1@test.com',
+                        nickname: 'test1',
+                        content: 'test입니다.',
+                        regDate: new Date().getTime(),
+                        modDate: new Date().getTime(),
+                        countryId: 2,
+                    }}
+                    onSubmit={() => alert('Edit 버튼 클릭')}
+                />
+            </>
+        );
+    // }
+
+
 };
 export default EditComment;

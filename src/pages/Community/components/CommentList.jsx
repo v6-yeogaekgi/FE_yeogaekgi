@@ -1,10 +1,14 @@
 import ListSubheader from '@mui/material/ListSubheader';
 import List from '@mui/material/List';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import axios from 'axios';
 import CommentItem from './CommentItem';
+import { CommentDispatchContext, CommentStateContext } from '../Post';
 
-const CommentList = ({ comment }) => {
+const CommentList = () => {
+
+    const { comment } = useContext(CommentStateContext);
+    const { onUpdate, onDelete } = useContext(CommentDispatchContext);
 
     return (
         <List
@@ -17,8 +21,8 @@ const CommentList = ({ comment }) => {
                 </ListSubheader>
             }
         >
-            {comment.map((comment) => (
-                <CommentItem {...comment} key={comment.id} />
+            {comment.map((it) => (
+                <CommentItem {...it} key={it.id}/>
             ))}
 
         </List>

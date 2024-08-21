@@ -6,30 +6,31 @@ import SendIcon from '@mui/icons-material/Send';
 import Box from '@mui/material/Box';
 import { useContext, useRef, useState } from 'react';
 import axios from 'axios';
-import { PostDetailDispatchContext } from '../Post';
+import { CommentDispatchContext, PostDetailDispatchContext } from '../Post';
 
 
-const CommentRegister = ({onCreateComment}) => {
+const CommentRegister = () => {
     const [content, setContent] = useState("");
     const inputRef = useRef();
+    const { onCreate } = useContext(CommentDispatchContext);
 
     const onChangeContent = (e) => {
         setContent(e.target.value);
     }
-    const onSubmitComment = (e) => {
+    const onSubmit = (e) => {
         e.preventDefault(); // 폼 제출 시 새로고침 방지
 
         if(!content){
             inputRef.current.focus();
             return;
         }
-        onCreateComment(content);
+        onCreate(content);
         setContent("");
     }
 
     const onKeyDown = (e) => {
         if(e.KeyCode === 13){
-            onSubmitComment();
+            onSubmit();
         }
     };
 
@@ -46,7 +47,7 @@ const CommentRegister = ({onCreateComment}) => {
             <Paper
                 component="form"
                 sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 370 }}
-                onSubmit={onSubmitComment}
+                onSubmit={onSubmit}
             >
                 <InputBase
                     sx={{ ml: 1, flex: 1 }}
@@ -56,7 +57,7 @@ const CommentRegister = ({onCreateComment}) => {
                     onKeyDown={onKeyDown}
 
                 />
-                <IconButton type="button" sx={{ p: '10px' }} onClick={onSubmitComment} >
+                <IconButton type="button" sx={{ p: '10px' }} onClick={onSubmit} >
                     <SendIcon />
                 </IconButton>
 
