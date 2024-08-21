@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactHowler from 'react-howler';
 import IconButton from '@mui/material/IconButton';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -11,10 +11,22 @@ const MusicPlayer = () => {
         process.env.REACT_APP_SONG1_URL,
         process.env.REACT_APP_SONG2_URL,
         process.env.REACT_APP_SONG3_URL,
+        process.env.REACT_APP_SONG4_URL,
     ];
 
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
     const [playing, setPlaying] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        if (isLoaded) {
+            setPlaying(true);
+        }
+    }, [isLoaded]);
+
+    useEffect(() => {
+        setIsLoaded(false);
+    }, [currentSongIndex]);
 
     const togglePlay = () => {
         setPlaying(!playing);
@@ -38,6 +50,10 @@ const MusicPlayer = () => {
                 src={songs[currentSongIndex]}
                 playing={playing}
                 onEnd={handleNext}
+                onLoad={() => {
+                    setIsLoaded(true);
+                    setPlaying(true);
+                }}
             />
             <div>
                 <IconButton onClick={handlePrevious}>
