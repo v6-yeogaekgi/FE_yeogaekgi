@@ -55,10 +55,10 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [filteredData, setFilteredData] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [selectedItem, setSelectedItem] = useState(null);
+    const [selectedItem, setselectedItem] = useState(null);
 
     const handleItemClick = (item) => {
-        setSelectedItem(item);
+        setselectedItem(item);
         setDrawerOpen(true);
     };
 
@@ -158,7 +158,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
     React.useEffect(() => {
         if (data) {
             const filtered = data.filter(item => {
-                if (item.type === 0) { // 결제 내역
+                if (item.payment) { // 결제 내역
                     if (paymentType === 0) {
                         return item.payType === 0; // 페이 결제
                     } else {
@@ -245,22 +245,22 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                         >
                             <Grid item xs={12}>
                                 <Typography variant="body2" color="textSecondary">
-                                    {item.type === 0 ? `결제 번호: ${item.pno}` : `거래 번호: ${item.tno}`}
+                                    {item.payment ? `결제 번호: ${item.pno}` : `거래 번호: ${item.tno}`}
                                 </Typography>
                             </Grid>
                             <Grid item xs={1} sx={{ display: 'flex', alignItems: 'center' }}>
-                                {item.type === 0 ? <RemoveIcon /> : <AddIcon />}
+                                {item.payment ? <RemoveIcon /> : <AddIcon />}
                             </Grid>
                             <Grid item xs={3}>
                                 <Grid container direction="column" spacing={1}>
                                     <Grid item>
                                         <Typography variant="body2">
-                                            {item.type === 0 ? '결제' : '거래'}
+                                            {item.payment ? '결제' : '거래'}
                                         </Typography>
                                     </Grid>
                                     <Grid item>
                                         <Typography variant="body2" color="textSecondary">
-                                            {item.type === 0 ? item.serviceName :
+                                            {item.payment ? item.serviceName :
                                                 (item.tranType === 0 ? '전환' :
                                                     item.tranType === 1 ? '충전' : '환급')}
                                         </Typography>
@@ -275,7 +275,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                     </Grid>
                                     <Grid item>
                                         <Typography variant="body2" color="textSecondary">
-                                            {new Date(item.type === 0 ? item.datetime : item.datetime).toLocaleTimeString([], {
+                                            {new Date(item.payment ? item.datetime : item.datetime).toLocaleTimeString([], {
                                                 hour: '2-digit',
                                                 minute: '2-digit',
                                             })}
@@ -288,7 +288,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                 <Grid container direction="column" spacing={1} style={{ textAlign: 'right' }}>
                                     <Grid item>
                                         <Typography variant="body2" color="textSecondary">
-                                            {item.type === 0 ?
+                                            {item.payment ?
                                                 `- ${item.payPrice.toLocaleString()}₩` :
                                                 item.tranType === 0 ?
                                                     (paymentType === 0 ?
@@ -355,7 +355,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                 <ListItemText
                                     primary="거래 유형"
                                     secondary={
-                                        selectedItem.type === 0
+                                        selectedItem.payment
                                             ? '일반결제'
                                             : '기타거래'
                                     }
@@ -367,7 +367,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                     secondary={selectedItem.userCardNo}
                                 />
                             </ListItem>
-                            {selectedItem.type === 0 ? (
+                            {selectedItem.payment ? (
                                 <>
                                     <ListItem>
                                         <ListItemText primary="결제 유형"
