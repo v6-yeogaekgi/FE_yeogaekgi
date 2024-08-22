@@ -19,6 +19,8 @@ import Refund from './pages/Refund/Refund';
 
 import NewPost from './pages/Community/NewPost';
 import EditPost from './pages/Community/EditPost';
+import Conversion from './pages/Conversion/Conversion';
+import CardDetail from './pages/CardDetail/CardDetail';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -32,8 +34,9 @@ const PageLayout = ({ children, menuName }) => {
             }}
         >
             <Header menuName={menuName} />
+
             <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
-            <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
+
             <Footer />
         </Box>
     );
