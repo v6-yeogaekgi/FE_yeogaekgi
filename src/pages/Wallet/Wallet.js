@@ -7,6 +7,8 @@ import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Registration = () => (
+    // TODO 
+    // exp_date 만료인 카드 처리 
     <Paper
         onClick={() => alert('Registration')}
         sx={{
@@ -46,7 +48,7 @@ export default function Wallet(props) {
     });
 
     const handleCardClick = (cardData) => {
-        navigate('card-detail', { state: { cardData } });
+        navigate('detail', { state: { cardData } });
     };
 
     const [error, setError] = useState(null);
@@ -68,33 +70,45 @@ export default function Wallet(props) {
             getApi();
         } else {
             setData([
-                {
-                    user_card_no: 0,
-                    card_name: '예시 카드 1',
-                    design: '디자인 예시',
-                    pay_balance: 10000,
-                    transit_balance: 5000,
-                    status: 1,
+                { // api 응답 데이터
+                    userCardId: 1,
+                    expiryDate: "2024-11-04T02:24:10.496+00:00",
+                    payBalance: 10000,
+                    transitBalance: 10000,
                     starred: 1,
-                },
-                {
-                    user_card_no: 1,
-                    card_name: '예시 카드 2',
-                    design: '디자인 예시',
-                    pay_balance: 20000,
-                    transit_balance: 7000,
-                    status: 0,
-                    starred: 0,
-                },
-                {
-                    user_card_no: 2,
-                    card_name: '예시 카드 3',
-                    design: '디자인 예시',
-                    pay_balance: 20000,
-                    transit_balance: 7000,
                     status: 1,
-                    starred: 0,
+                    cardId: 1,
+                    design: "https://yeogaekgi.s3.ap-northeast-2.amazonaws.com/Design.png",
+                    area: "부산",
+                    cardName: "testCard1",
+                    memberId: 1,
                 },
+                {
+                    userCardId: 101,
+                    expiryDate: "2024-11-04T02:27:45.328+00:00",
+                    payBalance: 10000,
+                    transitBalance: 10000,
+                    starred: 1,
+                    status: 1,
+                    cardId: 1,
+                    design: "https://yeogaekgi.s3.ap-northeast-2.amazonaws.com/Design.png",
+                    area: "부산",
+                    cardName: "testCard1",
+                    memberId: 1
+                },
+                {
+                    userCardId: 201,
+                    expiryDate: "2024-11-04T02:43:04.450+00:00",
+                    payBalance: 10000,
+                    transitBalance: 10000,
+                    starred: 1,
+                    status: 1,
+                    cardId: 1,
+                    design: "https://yeogaekgi.s3.ap-northeast-2.amazonaws.com/Design.png",
+                    area: "부산",
+                    cardName: "testCard1",
+                    memberId: 1
+                }
             ]);
         }
     }, []);

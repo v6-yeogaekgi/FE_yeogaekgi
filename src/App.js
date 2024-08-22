@@ -1,11 +1,14 @@
 import './App.css';
 import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Footer from './layout/Footer/Footer';
+import Header from './layout/Header/Header';
 import Footer from './layout/Footer/Footer';
 import Header from './layout/Header/Header';
 import Wallet from './pages/Wallet/Wallet';
 import HomePage from './pages/Home/Home';
-
+import Kiosk from './pages/Kiosk/Kiosk';
 import Main from './pages/Community/Main';
 import MyPage from './pages/MyPage/MyPage';
 import Map from './pages/Map/Map';
@@ -13,8 +16,13 @@ import Box from '@mui/material/Box';
 import Post from './pages/Community/Post';
 import EditComment from './pages/Community/EditComment';
 import ImageDetail from './pages/Community/ImageDetail';
+import ImageDetail from './pages/Community/ImageDetail';
 import TopUp from './pages/TopUp/TopUp';
+import CardDetail from './pages/CardDetail/CardDetail';
+import Refund from './pages/Refund/Refund';
 
+import NewPost from './pages/Community/NewPost';
+import EditPost from './pages/Community/EditPost';
 import NewPost from './pages/Community/NewPost';
 import EditPost from './pages/Community/EditPost';
 
@@ -30,6 +38,7 @@ const PageLayout = ({ children, menuName }) => {
             }}
         >
             <Header menuName={menuName} />
+            <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
             <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
             <Footer />
         </Box>
@@ -122,6 +131,40 @@ function App() {
                     element={
                         <PageLayout menuName={'top-up'}>
                             <TopUp />
+                        </PageLayout>
+                    }
+                />
+
+                <Route
+                    path={'/wallet/detail'}
+                    element={
+                        <PageLayout menuName={'detail'}>
+                            <CardDetail />
+                        </PageLayout>
+                    }
+                />
+                <Route
+                    path={'/wallet/detail/refund'}
+                    element={
+                        <PageLayout menuName={'refund'}>
+                            <Refund />
+                        </PageLayout>
+                    }
+                />
+                <Route
+                    path={'/wallet/top-up'}
+                    element={
+                        <PageLayout menuName={'top-up'}>
+                            <TopUp />
+                        </PageLayout>
+                    }
+                />
+
+                <Route
+                    path={'/kiosk'}
+                    element={
+                        <PageLayout menuName={'kiosk'}>
+                            <Kiosk />
                         </PageLayout>
                     }
                 />
