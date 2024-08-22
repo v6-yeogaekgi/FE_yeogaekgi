@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Header from '../../layout/Header/Header';
 import Footer from '../../layout/Footer/Footer';
@@ -7,6 +7,7 @@ import CommentRegister from './components/CommentRegister';
 import PostItem from './components/PostItem';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { AllStateContext } from '../../App';
 
 const PageLayout = ({ menuName, children }) => (
     <Box
@@ -64,25 +65,17 @@ const mockComment = [
     },
 ];
 
-const mockCurrentMemberEmail = [
-    {
-        currentMemberEmail: 'user2@test.com',
-    },
-];
-
 export const CommentStateContext = React.createContext();
 export const CommentDispatchContext = React.createContext();
 
 const Post = () => {
     const [comment, setComment] = useState([]);
-    const [currentMemberEmail, setCurrentMemberEmail] = useState(
-        mockCurrentMemberEmail,
-    );
+    const { protocol, token } = useContext(AllStateContext);
 
     const { postId } = useParams();
-    const getApiUrl = 'http://localhost:8090/community/comment/';
-    const token =
-        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJib25nQGIuY29tIiwiZXhwIjoxNzI0ODk4NTY2LCJpYXQiOjE3MjQyOTM3NjZ9.2xXmRQnCuCYz-4W-61CYBp-2QoCvKJIh3NqNUxOBr8o';
+
+    const getApiUrl = protocol + 'community/comment/';
+
     //  api 호출 부분
     const postApi = (content) => {
         return axios
@@ -106,7 +99,7 @@ const Post = () => {
     };
 
     const getApi = () => {
-        axios.get(getApiUrl + postId).then((res) => {
+        axios.get(getApiUrl + 'all/' + postId).then((res) => {
             setComment(res.data);
         });
     };
@@ -115,14 +108,6 @@ const Post = () => {
         postApi(content).then(() => {
             getApi();
         });
-    };
-
-    const onUpdate = (targetId, newContent) => {
-        setComment(
-            comment.map((it) =>
-                it.commentId === targetId ? { ...it, content: newContent } : it,
-            ),
-        );
     };
 
     const onDelete = (targetId, targetEmail) => {
@@ -141,7 +126,7 @@ const Post = () => {
     }, []);
 
     const memoizedDispatch = useMemo(() => {
-        return { onCreate, onUpdate, onDelete, postApi, getApi };
+        return { onCreate, onDelete, postApi, getApi };
     }, []);
 
     if (!isDataLoaded) {

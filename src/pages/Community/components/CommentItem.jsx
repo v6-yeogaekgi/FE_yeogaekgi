@@ -18,6 +18,7 @@ import Divider from '@mui/material/Divider';
 const CommentItem = ({
     commentId,
     email,
+    memberId,
     nickname,
     content,
     regDate,
@@ -35,8 +36,8 @@ const CommentItem = ({
         navigate(`/community/comment/edit/${commentId}`);
     };
 
-    const currentMemberEmail = 'user2@test.com';
-    const shouldRenderButtons = currentMemberEmail === email;
+    const currentMemberNo = 402;
+    const shouldRenderButtons = currentMemberNo === memberId;
 
     return (
         <List sx={{ width: '95%', bgcolor: 'background.paper' }}>
