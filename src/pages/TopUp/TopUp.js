@@ -44,7 +44,7 @@ export default function TopUp({data}) {
                         gap: 2,
                         paddingTop: '20px',
                         flexGrow: 1,
-                        marginBottom: '150px',
+                        marginBottom: '100px',
                     }}
                 >
                     <UserCardOnDetail data={cardData} />

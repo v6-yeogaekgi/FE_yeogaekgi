@@ -19,6 +19,8 @@ import Refund from './pages/Refund/Refund';
 
 import NewPost from './pages/Community/NewPost';
 import EditPost from './pages/Community/EditPost';
+import Conversion from './pages/Conversion/Conversion';
+import CardDetail from './pages/CardDetail/CardDetail';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -32,7 +34,6 @@ const PageLayout = ({ children, menuName }) => {
             }}
         >
             <Header menuName={menuName} />
-            <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
             <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
             <Footer />
         </Box>
@@ -78,15 +79,16 @@ function App() {
                 <Route
                     path={'/community'}
                     element={
-                        <PageLayout menuName={'Community'}>
+                        <PageLayout menuName={'community'}>
                             <Main />
                         </PageLayout>
                     }
                 />
+
                 <Route
                     path={'/community/regist'}
                     element={
-                        <PageLayout menuName={'Community'}>
+                        <PageLayout menuName={'community'}>
                             <NewPost />
                         </PageLayout>
                     }
@@ -94,14 +96,15 @@ function App() {
                 <Route
                     path={'/community/modify'}
                     element={
-                        <PageLayout menuName={'Community'}>
+                        <PageLayout menuName={'community'}>
                             <EditPost />
                         </PageLayout>
                     }
                 />
-                <Route path={'/community/post/:postId'} element={<Post />} />
+
+                <Route path={'/community/post'} element={<Post />} />
                 <Route
-                    path={'/community/comment/edit/:commentId'}
+                    path={'/community/comment/edit'}
                     element={
                         <PageLayout menuName={'comment edit'}>
                             <EditComment />
@@ -120,15 +123,6 @@ function App() {
                         </PageLayout>
                     }
                 />
-                <Route
-                    path={'/wallet/top-up'}
-                    element={
-                        <PageLayout menuName={'top-up'}>
-                            <TopUp />
-                        </PageLayout>
-                    }
-                />
-
                 <Route
                     path={'/wallet/detail'}
                     element={

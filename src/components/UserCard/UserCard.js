@@ -106,7 +106,7 @@ export default function UserCard({ data, onCardClick }) {
 
     const handleBalanceConversionClick = (e) => {
         e.stopPropagation(); // 이벤트 버블링 방지
-        alert('clicked Balance Conversion (P - T)');
+        navigate('/wallet/conversion', {state: {data}});
     };
 
     const CardButtons = ({ isActive }) => (
