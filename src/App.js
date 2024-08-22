@@ -5,7 +5,6 @@ import Footer from './layout/Footer/Footer';
 import Header from './layout/Header/Header';
 import Wallet from './pages/Wallet/Wallet';
 import HomePage from './pages/Home/Home';
-import CardDetail from './pages/CardDetail/CardDetail';
 
 import Main from './pages/Community/Main';
 import MyPage from './pages/MyPage/MyPage';
