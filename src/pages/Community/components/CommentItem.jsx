@@ -17,6 +17,7 @@ import Divider from '@mui/material/Divider';
 
 const CommentItem = ({
     commentId,
+    postId,
     email,
     memberId,
     nickname,
@@ -27,7 +28,10 @@ const CommentItem = ({
     onDelete,
 }) => {
     const onClickDeleteComment = () => {
-        onDelete(commentId, email);
+        const isConfirmed = window.confirm('댓글을 삭제하시겠습니까?');
+        if (isConfirmed) {
+            onDelete(commentId, postId);
+        }
     };
 
     const navigate = useNavigate();
