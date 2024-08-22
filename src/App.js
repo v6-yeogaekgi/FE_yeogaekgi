@@ -19,6 +19,8 @@ import Refund from './pages/Refund/Refund';
 
 import NewPost from './pages/Community/NewPost';
 import EditPost from './pages/Community/EditPost';
+import Conversion from './pages/Conversion/Conversion';
+import CardDetail from './pages/CardDetail/CardDetail';
 
 
 const PageLayout = ({ children, menuName }) => {
@@ -59,6 +61,7 @@ function App() {
                 {/* <Route path={"/wallet/card-detail"} element={<PageLayout menuName={'detail'}><CardDetail/></PageLayout>} /> */}
                 <Route path={"/wallet/top-up"} element={<PageLayout menuName={'top-up'}><TopUp/></PageLayout>}/>
                 <Route path={"/kiosk"} element={<PageLayout menuName={'kiosk'}><Kiosk /></PageLayout>} />
+                <Route path={"/wallet/conversion"} element={<PageLayout menuName={'Conversion'}><Conversion /></PageLayout>} />
             </Routes>
         </Router>
     );
