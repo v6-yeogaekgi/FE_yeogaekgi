@@ -1,23 +1,29 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import MenuIcon from "@mui/icons-material/Menu";
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import MenuIcon from '@mui/icons-material/Menu';
+import useAlertDialog from '../../hooks/useAlertDialog/useAlertDialog';
+import { useNavigate } from 'react-router-dom';
 
-const SettingsDrawer = () => {
+const SettingsDrawer = ({ data }) => {
     const [state, setState] = React.useState({
         bottom: false,
     });
 
+    const navigate = useNavigate();
+
+    const { openAlertDialog, AlertDialog } = useAlertDialog();
+
     const toggleDrawer = (open) => (event) => {
         if (
-            event.type === "keydown" &&
-            (event.key === "Tab" || event.key === "Shift")
+            event.type === 'keydown' &&
+            (event.key === 'Tab' || event.key === 'Shift')
         ) {
             return;
         }
@@ -26,37 +32,77 @@ const SettingsDrawer = () => {
     };
 
     const list = () => (
-        <Box
-            sx={{
-                width: 400,
-                margin: '0 auto',
-                backgroundColor: 'white',
-                boxShadow: 'rgba(100, 100, 100, 0.2) 0px 7px 29px 0px',
-            }}
-            role="presentation"
-            onClick={toggleDrawer(false)}
-            onKeyDown={toggleDrawer(false)}
-        >
-            <List>
-                {["주카드 설정", "충전", "환급", "잔액 전환"].map((text) => (
-                    <ListItem key={text} disablePadding>
+        <>
+            <Box
+                sx={{
+                    width: 400,
+                    margin: '0 auto',
+                    backgroundColor: 'white',
+                    boxShadow: 'rgba(100, 100, 100, 0.2) 0px 7px 29px 0px',
+                }}
+                role="presentation"
+                // onClick={toggleDrawer(false)}
+                // onKeyDown={toggleDrawer(false)}
+            >
+                <List>
+                    {/*{['주카드 설정', '충전', '환급', '잔액 전환'].map((text) => (*/}
+                    <ListItem key={'주카드 설정'} disablePadding>
                         <ListItemButton>
-                            <ListItemText primary={text} />
+                            <ListItemText primary={'주카드 설정'} />
                         </ListItemButton>
                     </ListItem>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {["카드 상세", "카드 삭제"].map((text) => (
-                    <ListItem key={text} disablePadding>
+                    <ListItem key={'충전'} disablePadding>
                         <ListItemButton>
-                            <ListItemText primary={text} />
+                            <ListItemText primary={'충전'} />
                         </ListItemButton>
                     </ListItem>
-                ))}
-            </List>
-        </Box>
+                    <ListItem key={'환급'} disablePadding onClick={() => navigate('refund', { state: { data } })}>
+                        <ListItemButton>
+                            <ListItemText primary={'환급'} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key={'잔액 전환'} disablePadding>
+                        <ListItemButton>
+                            <ListItemText primary={'잔액 전환'} />
+                        </ListItemButton>
+                    </ListItem>
+                </List>
+                <Divider />
+                <List>
+                    <ListItem key={'카드 상세'} disablePadding onClick={openAlertDialog}>
+                        <ListItemButton>
+                            <ListItemText primary={'카드 상세'} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key={'카드 삭제'} disablePadding>
+                        <ListItemButton>
+                            <ListItemText primary={'카드 삭제'} />
+                        </ListItemButton>
+                    </ListItem>
+                </List>
+            </Box>
+            <AlertDialog
+                content={
+                    <>
+                        <List sx={{ color: 'black' }}>
+                            <ListItem disablePadding>
+                                <b>Card Number</b>
+                            </ListItem>
+                            <ListItem disablePadding>
+                                {/*// todo 수정*/}
+                                {data.userCardId}
+                            </ListItem>
+                            <ListItem disablePadding>
+                                <b>Validity</b>
+                            </ListItem>
+                            <ListItem disablePadding>
+                                {data.expiryDate}
+                            </ListItem>
+                        </List>
+                    </>
+                }
+            />
+        </>
     );
 
     return (
@@ -80,7 +126,7 @@ const SettingsDrawer = () => {
                 BackdropProps={{
                     sx: {
                         backgroundColor: 'transparent',
-                    }
+                    },
                 }}
             >
                 {list()}

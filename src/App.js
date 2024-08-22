@@ -10,21 +10,30 @@ import Main from './pages/Community/Main';
 import MyPage from './pages/MyPage/MyPage';
 import Map from './pages/Map/Map';
 import Box from '@mui/material/Box';
-// import CardDetail from './pages/Wallet/CardDetail';
 import Post from './pages/Community/Post';
 import EditComment from './pages/Community/EditComment';
 import ImageDetail from "./pages/Community/ImageDetail";
 import TopUp from './pages/TopUp/TopUp';
+import CardDetail from './pages/CardDetail/CardDetail';
+import Refund from './pages/Refund/Refund';
+
+import NewPost from './pages/Community/NewPost';
+import EditPost from './pages/Community/EditPost';
 
 
 const PageLayout = ({ children, menuName }) => {
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: '100vh',
-            paddingBottom: '70px', // Footer 높이만큼 패딩 추가
-        }}>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                minHeight: '100vh',
+
+                paddingTop: '64px', // header 높이만큼 패딩 추가
+
+                paddingBottom: '70px', // Footer 높이만큼 패딩 추가
+            }}
+        >
             <Header menuName={menuName} />
             <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
                 {children}
