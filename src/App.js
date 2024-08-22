@@ -1,9 +1,6 @@
 import './App.css';
 import React, { useState } from 'react';
-import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Footer from './layout/Footer/Footer';
-import Header from './layout/Header/Header';
 import Footer from './layout/Footer/Footer';
 import Header from './layout/Header/Header';
 import Wallet from './pages/Wallet/Wallet';
@@ -16,13 +13,10 @@ import Box from '@mui/material/Box';
 import Post from './pages/Community/Post';
 import EditComment from './pages/Community/EditComment';
 import ImageDetail from './pages/Community/ImageDetail';
-import ImageDetail from './pages/Community/ImageDetail';
 import TopUp from './pages/TopUp/TopUp';
 import CardDetail from './pages/CardDetail/CardDetail';
 import Refund from './pages/Refund/Refund';
 
-import NewPost from './pages/Community/NewPost';
-import EditPost from './pages/Community/EditPost';
 import NewPost from './pages/Community/NewPost';
 import EditPost from './pages/Community/EditPost';
 
