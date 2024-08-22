@@ -23,33 +23,33 @@ import Drawer from '@mui/material/Drawer';
 // 상세 날짜 추가
 
 // 예상 DTO 구조
-// 1.사용자 카드 번호 user_card_no
+// 1.사용자 카드 번호 userCardNo
 //     [결제 내역]
 // 1.결제 번호
-// 1.내역 종류 pay_type (0 : 결제, 1: 교통)
-// 1.결제 금액 pay_price
-// 1.결제 일자 (월별) pay_date(timestamp)
+// 1.내역 종류 payType (0 : 결제, 1: 교통)
+// 1.결제 금액 payPrice
+// 1.결제 일자 (월별) datetime(timestamp)
 // 1.결제 상태 status (0: 결제 취소, 1: 결제 완료)
-// 1.결제처 service_name
-// 1.결제후 페이 잔액 transit_balance_snap
-// 1.결제후 교통 잔액 pay_balance_snap
+// 1.결제처 serviceName
+// 1.결제후 페이 잔액 transitBalanceSnap
+// 1.결제후 교통 잔액 payBalanceSnap
 //
 // [거래 내역]
 // 1.거래 번호
-// 1.내역 종류 tran_type (0: 전환 1: 충전 2: 환급)
-// 1.거래 일자 (월별) tran_date
-// 1.방향 transfer_type (0: 페이에서 교통으로 금액 전환, 1: 교통에서 페이로 금액 전환)
-// 1.원화 금액 krw_amount (얼마나 충전, 환급했는지)
-// 1.외화 금액 foreign_amount (얼마나 충전, 환급했는지)
+// 1.내역 종류 tranType (0: 전환 1: 충전 2: 환급)
+// 1.거래 일자 (월별) datetime
+// 1.방향 transferType (0: 페이에서 교통으로 금액 전환, 1: 교통에서 페이로 금액 전환)
+// 1.원화 금액 krwAmount (얼마나 충전, 환급했는지)
+// 1.외화 금액 foreignAmount (얼마나 충전, 환급했는지)
 // 1.통화 종류 currency_type (0:USD 1:JPY 2:CNY 3:KRW )
-// 1.결제후 페이 잔액 transit_balance_snap
-// 1.결제후 교통 잔액 pay_balance_snap
+// 1.결제후 페이 잔액 transitBalanceSnap
+// 1.결제후 교통 잔액 payBalanceSnap
 //
 // 1.결제인지 거래인지[결제면 0 거래면1] type
 
 const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
-    // 실제 api 연동되었을 때 -> cardData.user_card_no
-    // const userCardNo = cardData.user_card_no;
+    // 실제 api 연동되었을 때 -> cardData.userCardNo
+    // const userCardNo = cardData.userCardNo;
     const userCardNo = '1';
     const [data, setData] = useState();
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -77,68 +77,73 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                 setData(
                     [
                         {
-                            user_card_no: '1234567890',
-                            type: 0, // 결제
-                            pay_type: 0, // 일반 결제
-                            pay_price: 15000,
-                            pay_no: '123',
-                            pay_date: '2024-08-15T10:30:00Z',
-                            status: 1, // 결제 완료
-                            service_name: '스타벅스',
-                            pay_balance_snap: 85000,
-                            transit_balance_snap: 10000,
+                            userCardNo: 17,
+                            datetime: "2024-08-19T03:30:47.331+00:00",
+                            transitBalanceSnap: 10000,
+                            payBalanceSnap: 20000,
+                            pno: null,
+                            payType: null,
+                            payPrice: null,
+                            status: null,
+                            serviceName: null,
+                            tno: 22,
+                            tranType: 1,
+                            transferType: null,
+                            krwAmount: 10000,
+                            foreignAmount: 1099,
+                            payment: false
                         },
                         {
-                            user_card_no: '1234567890',
-                            type: 0, // 결제
-                            pay_type: 1, // 교통
-                            pay_no: '124',
-                            pay_price: 1250,
-                            pay_date: '2024-08-15T08:15:00Z',
-                            status: 1, // 결제 완료
-                            service_name: '서울 지하철',
-                            pay_balance_snap: 100000,
-                            transit_balance_snap: 8750,
+                            userCardNo: 17,
+                            datetime: "2024-08-19T03:30:46.645+00:00",
+                            transitBalanceSnap: 10000,
+                            payBalanceSnap: 20000,
+                            pno: null,
+                            payType: null,
+                            payPrice: null,
+                            status: null,
+                            serviceName: null,
+                            tno: 15,
+                            tranType: 1,
+                            transferType: null,
+                            krwAmount: 10000,
+                            foreignAmount: 1099,
+                            payment: false
                         },
                         {
-                            user_card_no: '1234567890',
-                            type: 1, // 거래
-                            tran_no: '12345',
-                            tran_type: 1, // 충전
-                            tran_date: '2024-08-14T14:00:00Z',
-                            transfer_type: null, // 충전이므로 해당 없음
-                            krw_amount: 50000,
-                            foreign_amount: 5400,
-                            currency_type: 1, // JPY
-                            pay_balance_snap: 150000,
-                            transit_balance_snap: 8750,
+                            userCardNo: 17,
+                            datetime: "2024-08-19T02:43:01.258+00:00",
+                            transitBalanceSnap: 2000,
+                            payBalanceSnap: 5000,
+                            pno: 119,
+                            payType: 1,
+                            payPrice: 10000,
+                            status: 1,
+                            serviceName: "교통공사",
+                            tno: null,
+                            tranType: null,
+                            transferType: null,
+                            krwAmount: null,
+                            foreignAmount: null,
+                            payment: true
                         },
                         {
-                            user_card_no: '1234567890',
-                            type: 1, // 거래
-                            tran_type: 0, // 전환
-                            tran_no: '12346',
-                            tran_date: '2024-08-13T11:20:00Z',
-                            transfer_type: 0, // 페이에서 교통으로
-                            krw_amount: 10000,
-                            foreign_amount: 25,
-                            currency_type: 0, // USD
-                            pay_balance_snap: 140000,
-                            transit_balance_snap: 18750,
-                        },
-                        {
-                            user_card_no: '1234567890',
-                            type: 1, // 거래
-                            tran_type: 2, // 환급
-                            tran_no: '12347',
-                            tran_date: '2024-08-12T16:45:00Z',
-                            transfer_type: null, // 환급이므로 해당 없음
-                            krw_amount: 30000,
-                            foreign_amount: 0,
-                            currency_type: 3, // KRW
-                            pay_balance_snap: 110000,
-                            transit_balance_snap: 18750,
-                        },
+                            userCardNo: 17,
+                            datetime: "2024-08-19T02:27:40.568+00:00",
+                            transitBalanceSnap: 2000,
+                            payBalanceSnap: 5000,
+                            pno: 19,
+                            payType: 1,
+                            payPrice: 10000,
+                            status: 1,
+                            serviceName: "교통공사",
+                            tno: null,
+                            tranType: null,
+                            transferType: null,
+                            krwAmount: null,
+                            foreignAmount: null,
+                            payment: true
+                        }
                     ],
                 );
             });
@@ -155,15 +160,15 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
             const filtered = data.filter(item => {
                 if (item.type === 0) { // 결제 내역
                     if (paymentType === 0) {
-                        return item.pay_type === 0; // 페이 결제
+                        return item.payType === 0; // 페이 결제
                     } else {
-                        return item.pay_type === 1; // 교통 결제
+                        return item.payType === 1; // 교통 결제
                     }
                 } else { // 거래 내역
-                    if (item.tran_type === 0) { // 전환
+                    if (item.tranType === 0) { // 전환
                         return true; // 전환 내역은 페이, 교통에도 표시
                     } else if (paymentType === 0) {
-                        return item.tran_type === 1 || item.tran_type === 2; //충전 환급
+                        return item.tranType === 1 || item.tranType === 2; //충전 환급
                     } else {
                         return false;
                     }
@@ -240,7 +245,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                         >
                             <Grid item xs={12}>
                                 <Typography variant="body2" color="textSecondary">
-                                    {item.type === 0 ? `결제 번호: ${item.pay_no}` : `거래 번호: ${item.tran_no}`}
+                                    {item.type === 0 ? `결제 번호: ${item.pno}` : `거래 번호: ${item.tno}`}
                                 </Typography>
                             </Grid>
                             <Grid item xs={1} sx={{ display: 'flex', alignItems: 'center' }}>
@@ -255,9 +260,9 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                     </Grid>
                                     <Grid item>
                                         <Typography variant="body2" color="textSecondary">
-                                            {item.type === 0 ? item.service_name :
-                                                (item.tran_type === 0 ? '전환' :
-                                                    item.tran_type === 1 ? '충전' : '환급')}
+                                            {item.type === 0 ? item.serviceName :
+                                                (item.tranType === 0 ? '전환' :
+                                                    item.tranType === 1 ? '충전' : '환급')}
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -270,7 +275,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                     </Grid>
                                     <Grid item>
                                         <Typography variant="body2" color="textSecondary">
-                                            {new Date(item.type === 0 ? item.pay_date : item.tran_date).toLocaleTimeString([], {
+                                            {new Date(item.type === 0 ? item.datetime : item.datetime).toLocaleTimeString([], {
                                                 hour: '2-digit',
                                                 minute: '2-digit',
                                             })}
@@ -284,44 +289,44 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                     <Grid item>
                                         <Typography variant="body2" color="textSecondary">
                                             {item.type === 0 ?
-                                                `- ${item.pay_price.toLocaleString()}₩` :
-                                                item.tran_type === 0 ?
+                                                `- ${item.payPrice.toLocaleString()}₩` :
+                                                item.tranType === 0 ?
                                                     (paymentType === 0 ?
-                                                            (item.transfer_type === 0 ? `- ${item.krw_amount.toLocaleString()}₩` : `+ ${item.krw_amount.toLocaleString()}₩`) :
-                                                            (item.transfer_type === 0 ? `+ ${item.krw_amount.toLocaleString()}₩` : `- ${item.krw_amount.toLocaleString()}₩`)
+                                                            (item.transferType === 0 ? `- ${item.krwAmount.toLocaleString()}₩` : `+ ${item.krwAmount.toLocaleString()}₩`) :
+                                                            (item.transferType === 0 ? `+ ${item.krwAmount.toLocaleString()}₩` : `- ${item.krwAmount.toLocaleString()}₩`)
                                                     ) :
-                                                    `${item.krw_amount.toLocaleString()}₩`
+                                                    `${item.krwAmount.toLocaleString()}₩`
                                             }
                                         </Typography>
                                     </Grid>
                                     <Grid item>
                                         <Typography variant="body2" color="textSecondary">
-                                            {item.type === 1 && item.tran_type === 0 ? (
+                                            {item.type === 1 && item.tranType === 0 ? (
                                                 paymentType === 0 ? (
-                                                    item.transfer_type === 0 ? (
+                                                    item.transferType === 0 ? (
                                                         <>
-                                                            pay {(item.pay_balance_snap + item.krw_amount).toLocaleString()} -&gt; transit {item.transit_balance_snap.toLocaleString()}₩
+                                                            pay {(item.payBalanceSnap + item.krwAmount).toLocaleString()} -&gt; transit {item.transitBalanceSnap.toLocaleString()}₩
                                                         </>
                                                     ) : (
                                                         <>
-                                                            transit {(item.transit_balance_snap - item.krw_amount).toLocaleString()} -&gt; pay {item.pay_balance_snap.toLocaleString()}₩
+                                                            transit {(item.transitBalanceSnap - item.krwAmount).toLocaleString()} -&gt; pay {item.payBalanceSnap.toLocaleString()}₩
                                                         </>
                                                     )
                                                 ) : (
-                                                    item.transfer_type === 0 ? (
+                                                    item.transferType === 0 ? (
                                                         <>
-                                                            pay {(item.pay_balance_snap + item.krw_amount).toLocaleString()} -&gt; transit {item.transit_balance_snap.toLocaleString()}₩
+                                                            pay {(item.payBalanceSnap + item.krwAmount).toLocaleString()} -&gt; transit {item.transitBalanceSnap.toLocaleString()}₩
                                                         </>
                                                     ) : (
                                                         <>
-                                                            transit {(item.transit_balance_snap - item.krw_amount).toLocaleString()} -&gt; pay {item.pay_balance_snap.toLocaleString()}₩
+                                                            transit {(item.transitBalanceSnap - item.krwAmount).toLocaleString()} -&gt; pay {item.payBalanceSnap.toLocaleString()}₩
                                                         </>
                                                     )
                                                 )
                                             ) : (
                                                 `balance ${paymentType === 0 ?
-                                                    item.pay_balance_snap.toLocaleString() :
-                                                    item.transit_balance_snap.toLocaleString()}₩`
+                                                    item.payBalanceSnap.toLocaleString() :
+                                                    item.transitBalanceSnap.toLocaleString()}₩`
                                             )}
                                         </Typography>
                                     </Grid>
@@ -359,27 +364,27 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                             <ListItem>
                                 <ListItemText
                                     primary="카드번호"
-                                    secondary={selectedItem.user_card_no}
+                                    secondary={selectedItem.userCardNo}
                                 />
                             </ListItem>
                             {selectedItem.type === 0 ? (
                                 <>
                                     <ListItem>
                                         <ListItemText primary="결제 유형"
-                                                      secondary={selectedItem.pay_type === 0 ? '일반' : '교통'} />
+                                                      secondary={selectedItem.payType === 0 ? '일반' : '교통'} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="결제번호" secondary={selectedItem.pay_no} />
+                                        <ListItemText primary="결제번호" secondary={selectedItem.pno} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="결제 금액" secondary={selectedItem.pay_price.toLocaleString()} 원 />
+                                        <ListItemText primary="결제 금액" secondary={selectedItem.payPrice.toLocaleString()} 원 />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="결제 일시" secondary={selectedItem.pay_date} />
+                                        <ListItemText primary="결제 일시" secondary={selectedItem.datetime} />
                                     </ListItem>
                                     <ListItem>
                                         <ListItemText primary="거래 후 잔액" secondary={
-                                            paymentType === 0 ? selectedItem.pay_balance_snap : selectedItem.transit_balance_snap
+                                            paymentType === 0 ? selectedItem.payBalanceSnap : selectedItem.transitBalanceSnap
                                         } 원 />
                                     </ListItem>
                                     <ListItem>
@@ -387,41 +392,41 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                                       secondary={selectedItem.status === 1 ? '결제완료' : '취소완료'} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="가맹점" secondary={selectedItem.service_name} />
+                                        <ListItemText primary="가맹점" secondary={selectedItem.serviceName} />
                                     </ListItem>
                                 </>
                             ) : (
                                 <>
                                     <ListItem>
                                         <ListItemText primary="거래 유형"
-                                                      secondary={selectedItem.tran_type === 0 ? '전환' : selectedItem.tran_type === 1 ? '충전' : '환급'} />
+                                                      secondary={selectedItem.tranType === 0 ? '전환' : selectedItem.tranType === 1 ? '충전' : '환급'} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="거래 번호" secondary={selectedItem.tran_no} />
+                                        <ListItemText primary="거래 번호" secondary={selectedItem.tno} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="거래 일시" secondary={selectedItem.tran_date} />
+                                        <ListItemText primary="거래 일시" secondary={selectedItem.datetime} />
                                     </ListItem>
-                                    {selectedItem.transfer_type !== null && (
+                                    {selectedItem.transferType !== null && (
                                         <ListItem>
                                             <ListItemText primary="거래 방향"
-                                                          secondary={selectedItem.transfer_type === 0 ? '페이 -> 교통' : '교통 -> 페이'} />
+                                                          secondary={selectedItem.transferType === 0 ? '페이 -> 교통' : '교통 -> 페이'} />
                                         </ListItem>
                                     )}
                                     <ListItem>
-                                        <ListItemText primary="원화 금액" secondary={selectedItem.krw_amount.toLocaleString()+' ₩'}  />
+                                        <ListItemText primary="원화 금액" secondary={selectedItem.krwAmount.toLocaleString()+' ₩'}  />
                                     </ListItem>
-                                    {selectedItem.foreign_amount !== null && (
+                                    {selectedItem.foreignAmount !== null && (
                                         <ListItem>
                                             <ListItemText primary="외화 금액"
-                                                          secondary={`${selectedItem.foreign_amount.toLocaleString()} ${
+                                                          secondary={`${selectedItem.foreignAmount.toLocaleString()} ${
                                                               selectedItem.currency_type === 0 ? '달러' :
                                                                   selectedItem.currency_type === 1 ? '엔' : '위안'}`} />
                                         </ListItem>
                                     )}
                                     <ListItem>
                                         <ListItemText primary="거래 후 잔액" secondary={
-                                            paymentType === 0 ? selectedItem.pay_balance_snap.toLocaleString()+' ₩' : selectedItem.transit_balance_snap.toLocaleString()+' ₩'
+                                            paymentType === 0 ? selectedItem.payBalanceSnap.toLocaleString()+' ₩' : selectedItem.transitBalanceSnap.toLocaleString()+' ₩'
                                         } 원 />
                                     </ListItem>
                                 </>
