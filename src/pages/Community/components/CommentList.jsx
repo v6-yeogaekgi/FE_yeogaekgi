@@ -6,8 +6,22 @@ import CommentItem from './CommentItem';
 import { CommentDispatchContext, CommentStateContext } from '../Post';
 
 const CommentList = () => {
-    const { comment } = useContext(CommentStateContext);
+    const [comment, setComment] = useState([]);
     const { onUpdate, onDelete } = useContext(CommentDispatchContext);
+    const getApiUrl = 'http://localhost:8090/community/comment/';
+
+    //  api 호출 부분
+    const getApi = () => {
+        axios.get(getApiUrl + '1').then((res) => {
+            setComment(res.data);
+        });
+    };
+
+    useEffect(() => {
+        getApi();
+    }, []);
+
+    console.log(comment);
 
     return (
         <List
@@ -21,11 +35,7 @@ const CommentList = () => {
             }
         >
             {comment.map((it) => (
-                <CommentItem
-                    {...it}
-                    key={it.id}
-                    onDelete={onDelete}
-                />
+                <CommentItem {...it} key={it.id} onDelete={onDelete} />
             ))}
         </List>
     );
