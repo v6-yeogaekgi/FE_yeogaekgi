@@ -102,7 +102,7 @@ function App() {
                     }
                 />
 
-                <Route path={'/community/post'} element={<Post />} />
+                <Route path={'/community/post/:postId'} element={<Post />} />
                 <Route
                     path={'/community/comment/edit'}
                     element={
