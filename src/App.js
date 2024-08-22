@@ -20,7 +20,6 @@ import Refund from './pages/Refund/Refund';
 import NewPost from './pages/Community/NewPost';
 import EditPost from './pages/Community/EditPost';
 import Conversion from './pages/Conversion/Conversion';
-import CardDetail from './pages/CardDetail/CardDetail';
 
 const PageLayout = ({ children, menuName }) => {
     return (
