@@ -10,11 +10,12 @@ import Main from './pages/Community/Main';
 import MyPage from './pages/MyPage/MyPage';
 import Map from './pages/Map/Map';
 import Box from '@mui/material/Box';
-// import CardDetail from './pages/Wallet/CardDetail';
 import Post from './pages/Community/Post';
 import EditComment from './pages/Community/EditComment';
 import ImageDetail from './pages/Community/ImageDetail';
 import TopUp from './pages/TopUp/TopUp';
+import Conversion from './pages/Conversion/Conversion';
+import CardDetail from './pages/CardDetail/CardDetail';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -98,7 +99,14 @@ function App() {
                         </PageLayout>
                     }
                 />
-                {/* <Route path={"/wallet/card-detail"} element={<PageLayout menuName={'detail'}><CardDetail/></PageLayout>} /> */}
+                <Route
+                    path={'/wallet/card-detail'}
+                    element={
+                        <PageLayout menuName={'detail'}>
+                            <CardDetail />
+                        </PageLayout>
+                    }
+                />
                 <Route
                     path={'/wallet/top-up'}
                     element={
@@ -112,6 +120,14 @@ function App() {
                     element={
                         <PageLayout menuName={'kiosk'}>
                             <Kiosk />
+                        </PageLayout>
+                    }
+                />
+                <Route
+                    path={'/wallet/conversion'}
+                    element={
+                        <PageLayout menuName={'Conversion'}>
+                            <Conversion />
                         </PageLayout>
                     }
                 />
