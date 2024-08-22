@@ -5,7 +5,7 @@ import Footer from '../../layout/Footer/Footer';
 import CommentList from './components/CommentList';
 import CommentRegister from './components/CommentRegister';
 import PostItem from './components/PostItem';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AllStateContext } from '../../App';
 
@@ -73,6 +73,7 @@ const Post = () => {
     const { protocol, token } = useContext(AllStateContext);
 
     const { postId } = useParams();
+    const navigate = useNavigate();
 
     const getApiUrl = protocol + 'community/comment/';
 
@@ -90,11 +91,11 @@ const Post = () => {
                 },
             )
             .then((res) => {
-                return res; // Promise를 반환
+                return res;
             })
             .catch((error) => {
                 console.error('API 호출 오류:', error);
-                throw error; // 에러를 다시 throw
+                throw error;
             });
     };
 
@@ -110,18 +111,28 @@ const Post = () => {
         });
     };
 
-    const onDelete = (targetId, targetEmail) => {
-        setComment(
-            comment.filter(
-                (it) => it.email !== targetEmail && it.commentId !== targetId,
-            ),
-        );
+    const onDelete = (commentId, postId) => {
+        return axios
+            .delete(getApiUrl + commentId, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json', // 데이터 형식을 명시
+                },
+            })
+            .then((res) => {
+                alert('댓글이 삭제되었습니다.');
+                getApi();
+            })
+            .catch((error) => {
+                console.error('API 호출 오류:', error);
+                throw error;
+            });
     };
 
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     useEffect(() => {
-        setComment(mockComment);
+        setComment([]);
         setIsDataLoaded(true);
     }, []);
 
