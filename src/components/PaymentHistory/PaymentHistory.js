@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
 import * as React from 'react';
 import { Grid, Paper, Typography } from '@mui/material';
@@ -11,47 +11,14 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Drawer from '@mui/material/Drawer';
-import header from '../../layout/Header/Header';
+import { AllStateContext } from '../../App';
 
 // TODO
-// 결제내역 pay와 transit의 분리
+// 상세 날짜 추가, 환급시 통화종류 명시
 
-// TODO
-// 월 변경 시 getApi 호출
-// getApi의 로직을 '월' 데이터에 따라 받아오도록 재정의
-
-// TODO
-// 상세 날짜 추가
-
-// 예상 DTO 구조
-// 1.사용자 카드 번호 userCardNo
-//     [결제 내역]
-// 1.결제 번호
-// 1.내역 종류 payType (0 : 결제, 1: 교통)
-// 1.결제 금액 payPrice
-// 1.결제 일자 (월별) datetime(timestamp)
-// 1.결제 상태 status (0: 결제 취소, 1: 결제 완료)
-// 1.결제처 serviceName
-// 1.결제후 페이 잔액 transitBalanceSnap
-// 1.결제후 교통 잔액 payBalanceSnap
-//
-// [거래 내역]
-// 1.거래 번호
-// 1.내역 종류 tranType (0: 전환 1: 충전 2: 환급)
-// 1.거래 일자 (월별) datetime
-// 1.방향 transferType (0: 페이에서 교통으로 금액 전환, 1: 교통에서 페이로 금액 전환)
-// 1.원화 금액 krwAmount (얼마나 충전, 환급했는지)
-// 1.외화 금액 foreignAmount (얼마나 충전, 환급했는지)
-// 1.통화 종류 currency_type (0:USD 1:JPY 2:CNY 3:KRW )
-// 1.결제후 페이 잔액 transitBalanceSnap
-// 1.결제후 교통 잔액 payBalanceSnap
-//
-// 1.결제인지 거래인지[결제면 0 거래면1] type
 
 const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
-    // 실제 api 연동되었을 때 -> cardData.userCardNo
-    // const userCardNo = cardData.userCardNo;
-    const userCardNo = '1';
+    const userCardNo = cardData.userCardId;
     const [data, setData] = useState();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [filteredData, setFilteredData] = useState([]);
@@ -67,10 +34,11 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
         setDrawerOpen(false);
     };
 
-    const uri = 'http://localhost:8090/usercard/list'
-    const token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYmJAbmF2ZXIuY29tIiwiZXhwIjoxNzI0OTE1ODQyLCJpYXQiOjE3MjQzMTEwNDJ9.u-Cu9otW33MS9buc9InGP1v9dEU6NYHL_K3tFwI9jMw ";
+    const { protocol, token } = useContext(AllStateContext);
+    const uri = protocol + 'payTrack/list';
 
     const getApi = (userCardNo, year, month) => {
+
         axios
             .post(uri,
                 { userCardNo, year, month },
@@ -98,7 +66,8 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                         transferType: item.transferType,
                         krwAmount: item.krwAmount,
                         foreignAmount: item.foreignAmount,
-                        payment: item.isPayment, // 주의: isPayment를 payment로 변경
+                        currencyType: item.currencyType,
+                        payment: item.payment,
                     }));
 
                     setData(formattedData);
@@ -190,7 +159,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                     </Grid>
                 </Grid>
 
-                {filteredData && filteredData.map((item, index) => (
+                {filteredData && filteredData.length > 0 ? (filteredData.map((item, index) => (
                     <React.Fragment key={index}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -260,6 +229,10 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                                     ) :
                                                     `${item.krwAmount.toLocaleString()}₩`
                                             }
+                                            {(item.tranType === 1 || item.tranType === 2) && item.foreignAmount && item.currencyType ?
+                                                ` (${item.foreignAmount.toLocaleString()} ${item.currencyType === 0 ? 'USD' : item.currencyType === 1 ? 'JPY' : item.currencyType === 2 ? 'CNY' : item.currencyType === 3 ? 'KRW' : ''})` :
+                                                ''
+                                            }
                                         </Typography>
                                     </Grid>
                                     <Grid item>
@@ -297,7 +270,15 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                             </Grid>
                         </Grid>
                     </React.Fragment>
-                ))}
+                )))
+                    :(
+                        <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '200px' }}>
+                            <Typography variant="h6" color="textSecondary">
+                                No data
+                            </Typography>
+                        </Grid>
+                    )
+                }
             </Paper>
             <Drawer
                 anchor="bottom"
@@ -385,8 +366,8 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                         <ListItem>
                                             <ListItemText primary="외화 금액"
                                                           secondary={`${selectedItem.foreignAmount.toLocaleString()} ${
-                                                              selectedItem.currency_type === 0 ? '달러' :
-                                                                  selectedItem.currency_type === 1 ? '엔' : '위안'}`} />
+                                                              selectedItem.currencyType === 0 ? '달러' :
+                                                                  selectedItem.currencyType === 1 ? '엔' : '위안'}`} />
                                         </ListItem>
                                     )}
                                     <ListItem>

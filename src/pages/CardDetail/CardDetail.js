@@ -52,7 +52,7 @@ export default function CardDetail(props) {
                     right: 0,
                     flexGrow: 1,
                 }}>
-                    <PaymentHistory data={cardData} paymentType={paymentType} onSwitchChange={handleSwitchChange} />
+                    <PaymentHistory cardData={cardData} paymentType={paymentType} onSwitchChange={handleSwitchChange} />
                 </Box>
             </Box>
 
