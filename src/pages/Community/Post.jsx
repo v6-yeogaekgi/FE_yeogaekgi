@@ -6,20 +6,19 @@ import CommentList from './components/CommentList';
 import CommentRegister from './components/CommentRegister';
 import PostItem from './components/PostItem';
 import { useParams } from 'react-router-dom';
-import useComment from './hooks/useComment';
-
+import axios from 'axios';
 
 const PageLayout = ({ menuName, children }) => (
-    <Box sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        paddingBottom: '140px', // Footer 높이만큼 패딩 추가
-    }}>
+    <Box
+        sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '100vh',
+            paddingBottom: '140px', // Footer 높이만큼 패딩 추가
+        }}
+    >
         <Header menuName={menuName} />
-        <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
-            {children}
-        </Box>
+        <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
         <Footer />
     </Box>
 );
@@ -30,11 +29,11 @@ const mockComment = [
         postNo: 1,
         email: 'user1@test.com',
         nickname: 'test1',
-        content: 'cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1',
+        content:
+            'cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1',
         regDate: new Date().getTime(),
         modDate: new Date().getTime(),
         countryId: 2,
-
     },
     {
         commentId: 2,
@@ -44,8 +43,8 @@ const mockComment = [
         content: 'cotent...2.',
         regDate: new Date().getTime(),
         countryId: 1,
-
-    }, {
+    },
+    {
         commentId: 3,
         postNo: 2,
         email: 'user3@test.com',
@@ -53,8 +52,8 @@ const mockComment = [
         content: 'cotent...3',
         regDate: new Date().getTime(),
         countryId: 1,
-
-    }, {
+    },
+    {
         commentId: 4,
         postNo: 2,
         email: 'user4@test.com',
@@ -62,39 +61,60 @@ const mockComment = [
         content: 'cotent...4',
         regDate: new Date().getTime(),
         countryId: 2,
-
     },
 ];
 
 const mockCurrentMemberEmail = [
     {
-        currentMemberEmail : "user2@test.com",
-    }
+        currentMemberEmail: 'user2@test.com',
+    },
 ];
 
 export const CommentStateContext = React.createContext();
 export const CommentDispatchContext = React.createContext();
 
 const Post = () => {
-    const [comment, setComment] = useState(mockComment);
-    const [currentMemberEmail, setCurrentMemberEmail] = useState(mockCurrentMemberEmail);
-    const commentIdRef = useRef(5);
+    const [comment, setComment] = useState([]);
+    const [currentMemberEmail, setCurrentMemberEmail] = useState(
+        mockCurrentMemberEmail,
+    );
 
+    const { postId } = useParams();
+    const getApiUrl = 'http://localhost:8090/community/comment/';
+    const token =
+        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJib25nQGIuY29tIiwiZXhwIjoxNzI0ODk4NTY2LCJpYXQiOjE3MjQyOTM3NjZ9.2xXmRQnCuCYz-4W-61CYBp-2QoCvKJIh3NqNUxOBr8o';
+    //  api 호출 부분
+    const postApi = (content) => {
+        return axios
+            .post(
+                getApiUrl + postId,
+                { content },
+                {
+                    headers: {
+                        Authorization: token,
+                        'Content-Type': 'application/json', // 데이터 형식을 명시
+                    },
+                },
+            )
+            .then((res) => {
+                return res; // Promise를 반환
+            })
+            .catch((error) => {
+                console.error('API 호출 오류:', error);
+                throw error; // 에러를 다시 throw
+            });
+    };
 
+    const getApi = () => {
+        axios.get(getApiUrl + postId).then((res) => {
+            setComment(res.data);
+        });
+    };
 
     const onCreate = (content) => {
-        const newComment = {
-            commentId: commentIdRef.current,
-            content: content,
-            email: 'user' + commentIdRef.current + '@test.com',
-            nickname: 'test' + commentIdRef.current,
-            regDate: new Date().getTime(),
-            countryId: Math.random() < 0.5 ? 1 : 2,
-        };
-
-        setComment([newComment, ...comment]);
-
-        commentIdRef.current += 1;
+        postApi(content).then(() => {
+            getApi();
+        });
     };
 
     const onUpdate = (targetId, newContent) => {
@@ -106,9 +126,10 @@ const Post = () => {
     };
 
     const onDelete = (targetId, targetEmail) => {
-
         setComment(
-            comment.filter((it) => it.email !== targetEmail && it.commentId !== targetId),
+            comment.filter(
+                (it) => it.email !== targetEmail && it.commentId !== targetId,
+            ),
         );
     };
 
@@ -119,16 +140,16 @@ const Post = () => {
         setIsDataLoaded(true);
     }, []);
 
-    const memoizedDispatch = useMemo(()=>{
-        return {onCreate,onUpdate,onDelete};
-    },[]);
+    const memoizedDispatch = useMemo(() => {
+        return { onCreate, onUpdate, onDelete, postApi, getApi };
+    }, []);
 
     if (!isDataLoaded) {
         return <div>Loading...</div>;
     } else {
         return (
             <PageLayout menuName="post">
-                <CommentStateContext.Provider value={{comment,currentMemberEmail}}>
+                <CommentStateContext.Provider value={{ comment, postId }}>
                     <CommentDispatchContext.Provider value={memoizedDispatch}>
                         <PostItem />
                         <CommentList />
@@ -136,9 +157,7 @@ const Post = () => {
                     </CommentDispatchContext.Provider>
                 </CommentStateContext.Provider>
             </PageLayout>
-
         );
-
     }
 };
 
