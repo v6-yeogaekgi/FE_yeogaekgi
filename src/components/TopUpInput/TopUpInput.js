@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { Box, Typography, TextField, Divider, IconButton, Drawer } from '@mui/material';
+import { Box, Typography, TextField, Divider, IconButton, Drawer, Grid } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import ClearIcon from '@mui/icons-material/Clear';
+import korFlag from '../../img/korea.png';
+import japFlag from '../../img/japan.png';
+import BasicButton from '../BasicButton/BasicButton';
 
 export default function TopUpInput({cardData, memberData}) {
     // console.log(cardData);
@@ -60,15 +63,10 @@ export default function TopUpInput({cardData, memberData}) {
 
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                     <Box
-                        component="span"
-                        sx={{
-                            width: 24,
-                            height: 24,
-                            borderRadius: '50%',
-                            backgroundColor: 'red',
-                            display: 'inline-block',
-                            mr: 1,
-                        }}
+                        component="img"
+                        src={japFlag}
+                        alt="JPY"
+                        sx={{ width: 24, height: 24, mr: 1 }}
                     />
                     <Typography>JPY</Typography>
                 </Box>
@@ -85,10 +83,10 @@ export default function TopUpInput({cardData, memberData}) {
                             </IconButton>
                         ),
                     }}
-                    sx={{ mb: 2 }}
+                    sx={{ mb: 1 }}
                 />
 
-                <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', mb: 1 }}>
                     <IconButton>
                         <SwapVertIcon />
                     </IconButton>
@@ -97,7 +95,7 @@ export default function TopUpInput({cardData, memberData}) {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                     <Box
                         component="img"
-                        src="path_to_korean_flag.png"
+                        src={korFlag}
                         alt="KRW"
                         sx={{ width: 24, height: 24, mr: 1 }}
                     />
@@ -113,7 +111,10 @@ export default function TopUpInput({cardData, memberData}) {
                     sx={{ mb: 3 }}
                 />
 
-                <Divider sx={{ mb: 2 }} />
+                <BasicButton text={"Top Up"} variant={"contained"} btnColor={"#4653f9"} width={"100%"}>
+                </BasicButton>
+
+                <Divider sx={{ mt:2, mb: 2 }} />
 
                 <Box
                     onClick={openDrawer}
@@ -123,7 +124,7 @@ export default function TopUpInput({cardData, memberData}) {
                         alignItems: 'center',
                     }}
                 >
-                    <Typography>환불안내</Typography>
+                    <Typography>충전 안내</Typography>
                     <Typography>&gt;</Typography>
                 </Box>
             </Box>
@@ -136,13 +137,21 @@ export default function TopUpInput({cardData, memberData}) {
                     style: {
                         maxWidth: '400px',
                         width: '100%',
+                        height: '80%',
                         margin: '0 auto',
                     },
                 }}
             >
-                환불 안내 사항 환불 안내 사항 환불 안내 사항 환불 안내 사항 환불
-                안내 사항 환불 안내 사항 환불 안내 사항 환불 안내 사항 환불 안내
-                사항 환불 안내 사항 환불 안내 사항 환불 안내 사항
+                <Typography variant="h6" sx={{padding: 1, fontWeight: 'bold'}}>
+                    여객기 Terms and Conditions
+                </Typography>
+                <Divider sx={{ mb: 2, borderBottomWidth: 3 }}/>
+                <Typography sx={{ whiteSpace: 'pre-wrap' , padding: 1}} >
+                    ✅ Notices when topping up with 'Wire Transfer' in the app <br/><br/>
+                    ※ Wire Transfer can be topped up with a minimum of 1,000 won <br/><br/>
+                    ※ A full refund is available if you request a refund within 7 days without using the charged amount. <br/><br/>
+                    ※ For the amount that has passed 7 days after charging, you can only refund the amount remaining after using more than 60% of the final balance. (Excluding Card, Easy payment charging) <br/>
+                </Typography>   
             </Drawer>
         </>
     );

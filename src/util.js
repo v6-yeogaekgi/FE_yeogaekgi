@@ -1,14 +1,19 @@
-import korea from './img/korea.png';
-import japan from './img/japan.png';
-
+import KR from './img/korea.png';
+import JP from './img/japan.png';
+import US from './img/US.png';
+import CN from './img/CN.png';
 
 export const getCountryImgById = (CountryId) => {
     const targetCountryId = String(CountryId);
     switch (targetCountryId) {
-        case '1':
-            return japan;
-        case '2':
-            return korea;
+        case 'KR':
+            return KR;
+        case 'JP':
+            return JP;
+        case 'US':
+            return US;
+        case 'CN':
+            return CN;
         default:
             return null;
     }

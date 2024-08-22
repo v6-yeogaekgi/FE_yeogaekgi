@@ -1,44 +1,62 @@
 import * as React from 'react';
 import CommentEditor from './components/CommentEditor';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-
-
+import { useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import axios from 'axios';
+import { useContext } from 'react';
+import { AllStateContext } from '../../App';
+import { useEffect } from 'react';
 
 const EditComment = () => {
+    const [initialComment, setInitialComment] = useState([]);
+    const { protocol, token } = useContext(AllStateContext);
+    const navigate = useNavigate();
+
+    const { commentId } = useParams();
+    const getApiUrl = protocol + 'community/comment/';
+
+    //  api 호출 부분
+
+    // Api 호출 부분
+    const getOneCommentApi = () => {
+        axios.get(getApiUrl + commentId).then((res) => {
+            setInitialComment(res.data);
+        });
+    };
+
+    const onUpdate = (newContent) => {
+        console.log(newContent);
+        const postId = newContent.postId;
+        return axios
+            .put(getApiUrl + commentId, newContent, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json', // 데이터 형식을 명시
+                },
+            })
+            .then((res) => {
+                alert('댓글이 수정되었습니다.');
+                navigate('/community/post/' + postId);
+            })
+            .catch((error) => {
+                console.error('API 호출 오류:', error);
+                throw error;
+            });
+    };
+
+    // 처음 렌더링될 때 실행
+    useEffect(() => {
+        getOneCommentApi();
+    }, []);
+
     return (
         <>
-            <Box>
-                <CommentEditor />
-                <Box sx={{marginTop: 2}}>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button
-                            text="edit"
-                            variant="contained"
-                            sx={{
-                                backgroundColor: '#4653f9',
-                                color: 'white',
-                                marginRight: 1, // 오른쪽 마진을 추가하여 버튼 간의 간격 조절
-                            }}
-                        >
-                            Edit
-                        </Button>
-                        <Button
-                            text="cancel"
-                            variant="contained"
-                            sx={{
-                                backgroundColor: 'gray',
-                                color: 'white',
-                            }}
-                        >
+            <div>{commentId}번 comment</div>
 
-                            Cancel
-                        </Button>
-                    </Box>
-                </Box>
-            </Box>
-
-
+            <CommentEditor
+                initialComment={initialComment}
+                onUpdate={onUpdate}
+            />
         </>
     );
 };
