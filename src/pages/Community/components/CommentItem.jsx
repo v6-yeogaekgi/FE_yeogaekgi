@@ -15,12 +15,16 @@ import Typography from '@mui/material/Typography';
 import { ListItemAvatar } from '@mui/material';
 import Divider from '@mui/material/Divider';
 
-
 const CommentItem = ({
-                         commentId, email, nickname, content, regDate, modDate, countryId,onDelete
-                     }) => {
-
-
+    commentId,
+    email,
+    nickname,
+    content,
+    regDate,
+    modDate,
+    countryId,
+    onDelete,
+}) => {
     const onClickDeleteComment = () => {
         onDelete(commentId, email);
     };
@@ -31,15 +35,17 @@ const CommentItem = ({
         navigate(`/community/comment/edit/${commentId}`);
     };
 
-    const currentMemberEmail = "user2@test.com"
+    const currentMemberEmail = 'user2@test.com';
     const shouldRenderButtons = currentMemberEmail === email;
-    console.log(currentMemberEmail);
 
     return (
         <List sx={{ width: '95%', bgcolor: 'background.paper' }}>
             <ListItem alignItems="flex-start">
                 <ListItemAvatar>
-                    <Avatar alt="Country Flag" src={getCountryImgById(countryId)} />
+                    <Avatar
+                        alt="Country Flag"
+                        src={getCountryImgById(countryId)}
+                    />
                 </ListItemAvatar>
                 <div style={{ flex: 1 }}>
                     <Typography component="span" variant="h6">
@@ -69,7 +75,7 @@ const CommentItem = ({
                         sx={{
                             mt: 1,
                             mb: 1,
-                            wordWrap: 'break-word',  // 긴 단어가 있을 때 줄바꿈
+                            wordWrap: 'break-word', // 긴 단어가 있을 때 줄바꿈
                             wordBreak: 'break-word', // 줄바꿈시 단어 단위로 나눔
                             overflowWrap: 'break-word', // 긴 단어를 잘라서 줄바꿈
                         }}
@@ -77,8 +83,13 @@ const CommentItem = ({
                         {content}
                     </Typography>
 
-                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-
+                    <div
+                        style={{
+                            display: 'flex',
+                            gap: '8px',
+                            justifyContent: 'flex-end',
+                        }}
+                    >
                         <Button
                             id="translate-button"
                             size="small"

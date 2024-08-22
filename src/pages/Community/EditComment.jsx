@@ -10,7 +10,9 @@ const drawerBleeding = 56;
 const Root = styled('div')(({ theme }) => ({
     height: '100%',
     backgroundColor:
-        theme.palette.mode === 'light' ? grey[100] : theme.palette.background.default,
+        theme.palette.mode === 'light'
+            ? grey[100]
+            : theme.palette.background.default,
 }));
 
 const StyledBox = styled('div')(({ theme }) => ({
@@ -28,14 +30,8 @@ const Puller = styled('div')(({ theme }) => ({
 }));
 
 const EditComment = (props) => {
-
     const { window } = props;
     const [open, setOpen] = React.useState(false);
-
-    const toggleDrawer = (newOpen) => () => {
-        setOpen(newOpen);
-    };
-
 
     const { commentId } = useParams();
 
@@ -58,7 +54,5 @@ const EditComment = (props) => {
             />
         </>
     );
-
-
 };
 export default EditComment;
