@@ -18,11 +18,12 @@ import Divider from '@mui/material/Divider';
 const CommentItem = ({
     commentId,
     email,
+    memberId,
     nickname,
     content,
     regDate,
     modDate,
-    countryId,
+    code,
     onDelete,
 }) => {
     const onClickDeleteComment = () => {
@@ -35,17 +36,14 @@ const CommentItem = ({
         navigate(`/community/comment/edit/${commentId}`);
     };
 
-    const currentMemberEmail = 'user2@test.com';
-    const shouldRenderButtons = currentMemberEmail === email;
+    const currentMemberNo = 402;
+    const shouldRenderButtons = currentMemberNo === memberId;
 
     return (
         <List sx={{ width: '95%', bgcolor: 'background.paper' }}>
             <ListItem alignItems="flex-start">
                 <ListItemAvatar>
-                    <Avatar
-                        alt="Country Flag"
-                        src={getCountryImgById(countryId)}
-                    />
+                    <Avatar alt="Country Flag" src={getCountryImgById(code)} />
                 </ListItemAvatar>
                 <div style={{ flex: 1 }}>
                     <Typography component="span" variant="h6">
@@ -58,7 +56,7 @@ const CommentItem = ({
                         sx={{ marginLeft: '8px' }}
                     >
                         {new Date(regDate).toLocaleDateString()}
-                        {modDate && (
+                        {modDate && modDate !== regDate && (
                             <Typography
                                 component="span"
                                 variant="body2"
