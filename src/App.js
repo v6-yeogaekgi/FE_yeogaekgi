@@ -1,6 +1,9 @@
 import './App.css';
 import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Footer from './layout/Footer/Footer';
+import Header from './layout/Header/Header';
 import Footer from './layout/Footer/Footer';
 import Header from './layout/Header/Header';
 import Wallet from './pages/Wallet/Wallet';
@@ -13,10 +16,13 @@ import Box from '@mui/material/Box';
 import Post from './pages/Community/Post';
 import EditComment from './pages/Community/EditComment';
 import ImageDetail from './pages/Community/ImageDetail';
+import ImageDetail from './pages/Community/ImageDetail';
 import TopUp from './pages/TopUp/TopUp';
 import CardDetail from './pages/CardDetail/CardDetail';
 import Refund from './pages/Refund/Refund';
 
+import NewPost from './pages/Community/NewPost';
+import EditPost from './pages/Community/EditPost';
 import NewPost from './pages/Community/NewPost';
 import EditPost from './pages/Community/EditPost';
 
@@ -27,13 +33,12 @@ const PageLayout = ({ children, menuName }) => {
                 display: 'flex',
                 flexDirection: 'column',
                 minHeight: '100vh',
-
                 paddingTop: '64px', // header 높이만큼 패딩 추가
-
                 paddingBottom: '70px', // Footer 높이만큼 패딩 추가
             }}
         >
             <Header menuName={menuName} />
+            <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
             <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
             <Footer />
         </Box>
@@ -79,14 +84,11 @@ function App() {
                 <Route
                     path={'/community'}
                     element={
-
                         <PageLayout menuName={'Community'}>
-
                             <Main />
                         </PageLayout>
                     }
                 />
-
                 <Route
                     path={'/community/regist'}
                     element={
@@ -103,10 +105,9 @@ function App() {
                         </PageLayout>
                     }
                 />
-
-                <Route path={'/community/post'} element={<Post />} />
+                <Route path={'/community/post/:postId'} element={<Post />} />
                 <Route
-                    path={'/community/comment/edit'}
+                    path={'/community/comment/edit/:commentId'}
                     element={
                         <PageLayout menuName={'comment edit'}>
                             <EditComment />
@@ -126,17 +127,30 @@ function App() {
                     }
                 />
                 <Route
+                    path={'/wallet/top-up'}
+                    element={
+                        <PageLayout menuName={'top-up'}>
+                            <TopUp />
+                        </PageLayout>
+                    }
+                />
+
+                <Route
                     path={'/wallet/detail'}
                     element={
                         <PageLayout menuName={'detail'}>
                             <CardDetail />
-                        </PageLayout>} />
+                        </PageLayout>
+                    }
+                />
                 <Route
                     path={'/wallet/detail/refund'}
                     element={
                         <PageLayout menuName={'refund'}>
                             <Refund />
-                        </PageLayout>} />
+                        </PageLayout>
+                    }
+                />
                 <Route
                     path={'/wallet/top-up'}
                     element={
