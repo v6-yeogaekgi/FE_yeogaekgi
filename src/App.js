@@ -14,6 +14,11 @@ import Post from './pages/Community/Post';
 import EditComment from './pages/Community/EditComment';
 import ImageDetail from './pages/Community/ImageDetail';
 import TopUp from './pages/TopUp/TopUp';
+import CardDetail from './pages/CardDetail/CardDetail';
+import Refund from './pages/Refund/Refund';
+
+import NewPost from './pages/Community/NewPost';
+import EditPost from './pages/Community/EditPost';
 import Conversion from './pages/Conversion/Conversion';
 import CardDetail from './pages/CardDetail/CardDetail';
 
@@ -24,6 +29,9 @@ const PageLayout = ({ children, menuName }) => {
                 display: 'flex',
                 flexDirection: 'column',
                 minHeight: '100vh',
+
+                paddingTop: '64px', // header 높이만큼 패딩 추가
+
                 paddingBottom: '70px', // Footer 높이만큼 패딩 추가
             }}
         >
@@ -73,11 +81,31 @@ function App() {
                 <Route
                     path={'/community'}
                     element={
-                        <PageLayout menuName={'community'}>
+
+                        <PageLayout menuName={'Community'}>
+
                             <Main />
                         </PageLayout>
                     }
                 />
+
+                <Route
+                    path={'/community/regist'}
+                    element={
+                        <PageLayout menuName={'Community'}>
+                            <NewPost />
+                        </PageLayout>
+                    }
+                />
+                <Route
+                    path={'/community/modify'}
+                    element={
+                        <PageLayout menuName={'Community'}>
+                            <EditPost />
+                        </PageLayout>
+                    }
+                />
+
                 <Route path={'/community/post'} element={<Post />} />
                 <Route
                     path={'/community/comment/edit'}
@@ -100,13 +128,17 @@ function App() {
                     }
                 />
                 <Route
-                    path={'/wallet/card-detail'}
+                    path={'/wallet/detail'}
                     element={
                         <PageLayout menuName={'detail'}>
                             <CardDetail />
-                        </PageLayout>
-                    }
-                />
+                        </PageLayout>} />
+                <Route
+                    path={'/wallet/detail/refund'}
+                    element={
+                        <PageLayout menuName={'refund'}>
+                            <Refund />
+                        </PageLayout>} />
                 <Route
                     path={'/wallet/top-up'}
                     element={
@@ -115,6 +147,7 @@ function App() {
                         </PageLayout>
                     }
                 />
+
                 <Route
                     path={'/kiosk'}
                     element={

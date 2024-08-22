@@ -18,31 +18,32 @@ const commonPaperStyle = {
     position: 'relative',  // 추가: 오버레이 위치 기준점
 };
 
-const CardImage = () => (
+const CardImage = ({ imageUrl }) => (
     <div style={{
         width: '100%',
         height: '150px',
-        backgroundColor: '#f0f0f0',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: '10px',
         marginTop: '30px',
+        overflow: 'hidden',
     }}>
-        Card Image
+        <img
+            src={imageUrl}
+            alt="Card"
+            style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+            }}
+        />
     </div>
-    // <IconButton
-    //     onClick={() => {
-    //     //     상세 이동
-    //     }}
-    // >
-    // {/* 카드 이미지 임포트 */}
-    // </IconButton>
 );
 
 export default function UserCardOnDetail({ data, onCardClick }) {
     const navigate = useNavigate();
-    const { status, card_name, pay_balance, transit_balance, starred } = data;
+    const { status, cardName, payBalance, transitBalance, starred } = data;
     const isActive = status !== 0;
 
     const handleCardClick = (e) => {
@@ -99,11 +100,11 @@ export default function UserCardOnDetail({ data, onCardClick }) {
             >
                 <Grid container spacing={2} style={{ zIndex: 2 }}>
                     <Grid item xs={8}>
-                        <Typography variant="h7">{card_name}</Typography>
+                        <Typography variant="h7">{cardName}</Typography>
                         <Typography>Pay Balance </Typography>
-                        <Typography variant="h5">{pay_balance.toLocaleString()}₩</Typography>
+                        <Typography variant="h5">{payBalance.toLocaleString()}₩</Typography>
                         <Typography>Transit Balance </Typography>
-                        <Typography variant="h5">{transit_balance.toLocaleString()}₩</Typography>
+                        <Typography variant="h5">{transitBalance.toLocaleString()}₩</Typography>
                     </Grid>
                     <Grid item xs={4} style={{ position: 'relative' }}>
                         <div style={{
@@ -114,9 +115,9 @@ export default function UserCardOnDetail({ data, onCardClick }) {
                             alignItems: 'center',
                         }}>
                             <StarCheckbox checked={isActive && starred === 1} />
-                            <SettingsDrawer />
+                            <SettingsDrawer data={data}/>
                         </div>
-                        <CardImage />
+                        <CardImage imageUrl={data.design}/>
                     </Grid>
                 </Grid>
                 <CardButtons isActive={isActive} />
