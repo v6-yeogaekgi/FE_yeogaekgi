@@ -11,6 +11,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Drawer from '@mui/material/Drawer';
+import header from '../../layout/Header/Header';
 
 // TODO
 // 결제내역 pay와 transit의 분리
@@ -66,86 +67,48 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
         setDrawerOpen(false);
     };
 
+    const uri = 'http://localhost:8090/usercard/list'
+    const token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYmJAbmF2ZXIuY29tIiwiZXhwIjoxNzI0OTE1ODQyLCJpYXQiOjE3MjQzMTEwNDJ9.u-Cu9otW33MS9buc9InGP1v9dEU6NYHL_K3tFwI9jMw ";
+
     const getApi = (userCardNo, year, month) => {
         axios
-            .post('https://api.yeogaekgi.site', { params: { userCardNo, year, month } })
+            .post(uri,
+                { userCardNo, year, month },
+                {
+                    headers: {
+                        Authorization: token,
+                        'Content-Type': 'application/json',
+                    },
+                },
+            )
             .then((res) => {
-                setData(res.data.result.content);
+                if (Array.isArray(res.data) && res.data.length > 0) {
+                    const formattedData = res.data.map(item => ({
+                        userCardNo: item.userCardNo,
+                        datetime: item.datetime,
+                        transitBalanceSnap: item.transitBalanceSnap,
+                        payBalanceSnap: item.payBalanceSnap,
+                        pno: item.pno,
+                        payType: item.payType,
+                        payPrice: item.payPrice,
+                        status: item.status,
+                        serviceName: item.serviceName,
+                        tno: item.tno,
+                        tranType: item.tranType,
+                        transferType: item.transferType,
+                        krwAmount: item.krwAmount,
+                        foreignAmount: item.foreignAmount,
+                        payment: item.isPayment, // 주의: isPayment를 payment로 변경
+                    }));
+
+                    setData(formattedData);
+
+                } else {
+                    setData([]);
+                }
             })
             .catch((err) => {
                 console.error('API 요청 중 오류 발생:', err);
-                setData(
-                    [
-                        {
-                            userCardNo: 17,
-                            datetime: "2024-08-19T03:30:47.331+00:00",
-                            transitBalanceSnap: 10000,
-                            payBalanceSnap: 20000,
-                            pno: null,
-                            payType: null,
-                            payPrice: null,
-                            status: null,
-                            serviceName: null,
-                            tno: 22,
-                            tranType: 1,
-                            transferType: null,
-                            krwAmount: 10000,
-                            foreignAmount: 1099,
-                            payment: false
-                        },
-                        {
-                            userCardNo: 17,
-                            datetime: "2024-08-19T03:30:46.645+00:00",
-                            transitBalanceSnap: 10000,
-                            payBalanceSnap: 20000,
-                            pno: null,
-                            payType: null,
-                            payPrice: null,
-                            status: null,
-                            serviceName: null,
-                            tno: 15,
-                            tranType: 1,
-                            transferType: null,
-                            krwAmount: 10000,
-                            foreignAmount: 1099,
-                            payment: false
-                        },
-                        {
-                            userCardNo: 17,
-                            datetime: "2024-08-19T02:43:01.258+00:00",
-                            transitBalanceSnap: 2000,
-                            payBalanceSnap: 5000,
-                            pno: 119,
-                            payType: 1,
-                            payPrice: 10000,
-                            status: 1,
-                            serviceName: "교통공사",
-                            tno: null,
-                            tranType: null,
-                            transferType: null,
-                            krwAmount: null,
-                            foreignAmount: null,
-                            payment: true
-                        },
-                        {
-                            userCardNo: 17,
-                            datetime: "2024-08-19T02:27:40.568+00:00",
-                            transitBalanceSnap: 2000,
-                            payBalanceSnap: 5000,
-                            pno: 19,
-                            payType: 1,
-                            payPrice: 10000,
-                            status: 1,
-                            serviceName: "교통공사",
-                            tno: null,
-                            tranType: null,
-                            transferType: null,
-                            krwAmount: null,
-                            foreignAmount: null,
-                            payment: true
-                        }
-                    ],
-                );
             });
     };
 
@@ -377,7 +340,8 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                         <ListItemText primary="결제번호" secondary={selectedItem.pno} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="결제 금액" secondary={selectedItem.payPrice.toLocaleString()} 원 />
+                                        <ListItemText primary="결제 금액" secondary={selectedItem.payPrice.toLocaleString()}
+                                                      원 />
                                     </ListItem>
                                     <ListItem>
                                         <ListItemText primary="결제 일시" secondary={selectedItem.datetime} />
@@ -414,7 +378,8 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                         </ListItem>
                                     )}
                                     <ListItem>
-                                        <ListItemText primary="원화 금액" secondary={selectedItem.krwAmount.toLocaleString()+' ₩'}  />
+                                        <ListItemText primary="원화 금액"
+                                                      secondary={selectedItem.krwAmount.toLocaleString() + ' ₩'} />
                                     </ListItem>
                                     {selectedItem.foreignAmount !== null && (
                                         <ListItem>
@@ -426,7 +391,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                     )}
                                     <ListItem>
                                         <ListItemText primary="거래 후 잔액" secondary={
-                                            paymentType === 0 ? selectedItem.payBalanceSnap.toLocaleString()+' ₩' : selectedItem.transitBalanceSnap.toLocaleString()+' ₩'
+                                            paymentType === 0 ? selectedItem.payBalanceSnap.toLocaleString() + ' ₩' : selectedItem.transitBalanceSnap.toLocaleString() + ' ₩'
                                         } 원 />
                                     </ListItem>
                                 </>

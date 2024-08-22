@@ -53,9 +53,12 @@ export default function Wallet(props) {
 
     const [error, setError] = useState(null);
 
+    const uri = 'http://localhost:8090/payTrack/list'
+    const token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYmJAbmF2ZXIuY29tIiwiZXhwIjoxNzI0OTE1ODQyLCJpYXQiOjE3MjQzMTEwNDJ9.u-Cu9otW33MS9buc9InGP1v9dEU6NYHL_K3tFwI9jMw ";
+
     const getApi = () => {
         axios
-            .get('https://api.yeogaekgi.site', { params: param })
+            .post(uri, { params: param })
             .then((res) => {
                 setData(res.data.result.content);
             })
