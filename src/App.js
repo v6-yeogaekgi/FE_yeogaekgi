@@ -54,11 +54,15 @@ function App() {
                 <Route path={"/wallet"} element={<PageLayout menuName={'wallet'}><Wallet /></PageLayout>} />
                 <Route path={"/map"} element={<PageLayout menuName={'map'}><Map/></PageLayout>} />
                 <Route path={"/community"} element={<PageLayout menuName={'community'}><Main /></PageLayout>} />
+                <Route path={'/community/regist'} element={<PageLayout menuName={'Community'}><NewPost /></PageLayout>}/>
+                <Route path={'/community/modify'} element={<PageLayout menuName={'Community'}><EditPost /></PageLayout>}/>
                 <Route path={"/community/post"} element={<Post />}/>
                 <Route path={"/community/comment/edit"} element={<PageLayout menuName={'comment edit'}><EditComment /></PageLayout>} />
                 <Route path={"/community/imageDetail"} element={<ImageDetail />} />
                 <Route path={"/myPage"} element={<PageLayout menuName={'my page'}><MyPage /></PageLayout>} />
+                <Route path={'/wallet/detail'} element={<PageLayout menuName={'detail'}><CardDetail /></PageLayout>} />
                 {/* <Route path={"/wallet/card-detail"} element={<PageLayout menuName={'detail'}><CardDetail/></PageLayout>} /> */}
+                <Route path={'/wallet/detail/refund'} element={<PageLayout menuName={'refund'}><Refund /></PageLayout>} />
                 <Route path={"/wallet/top-up"} element={<PageLayout menuName={'top-up'}><TopUp/></PageLayout>}/>
                 <Route path={"/kiosk"} element={<PageLayout menuName={'kiosk'}><Kiosk /></PageLayout>} />
                 <Route path={"/wallet/conversion"} element={<PageLayout menuName={'Conversion'}><Conversion /></PageLayout>} />
