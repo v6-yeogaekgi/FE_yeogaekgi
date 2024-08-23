@@ -203,7 +203,15 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={1} sx={{ display: 'flex', alignItems: 'center' }}>
-                                            {item.payment ? <RemoveIcon /> : <AddIcon />}
+                                            {item.payment ? <RemoveIcon /> :
+                                                (item.tranType === 0 ?
+                                                        (paymentType === 0 ?
+                                                                (item.transferType === 0 ? <RemoveIcon /> : <AddIcon />) :
+                                                                (item.transferType === 0 ? <AddIcon /> : <RemoveIcon />)
+                                                        ) :
+                                                        (item.tranType === 1 ? <AddIcon /> : <RemoveIcon />)
+                                                )
+                                            }
                                         </Grid>
                                         <Grid item xs={3}>
                                             <Grid container direction="column" spacing={1}>
