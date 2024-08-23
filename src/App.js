@@ -129,7 +129,7 @@ function App() {
                         }
                     />
                     <Route
-                        path={'/community/imageDetail'}
+                        path={'/community/imageDetail/:postId'}
                         element={<ImageDetail />}
                     />
                     <Route
