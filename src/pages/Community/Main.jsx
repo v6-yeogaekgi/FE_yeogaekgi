@@ -26,6 +26,7 @@ export default function Main(props) {
             },
         }).then((res) => {
             setPosts(res.data);
+            console.log(res.data);
         }).catch((error) => {
             console.error('API 호출 오류:', error);
             throw error;

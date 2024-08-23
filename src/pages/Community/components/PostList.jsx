@@ -21,6 +21,7 @@ const PostList = ({ posts }) => {
                     modDate={post.modDate}
                     likeState={post.likeState}
                     parentPage={"list"}
+                    currentMemberId={post.currentMemberId}
                 />
             ))}
         </div>

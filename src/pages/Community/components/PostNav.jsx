@@ -6,7 +6,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import PersonIcon from '@mui/icons-material/Person';
 import InputAdornment from '@mui/material/InputAdornment';
-import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import axios from 'axios';
 
@@ -18,7 +17,7 @@ export default function PostNav({handleSearch}) {
 
     const navigate = useNavigate();
     const onClickMy=(event) =>{
-        //onClickMy event
+        handleSearch({'myPost':true});
     };
 
     // 해시태그/내용 검색어 입력
@@ -62,6 +61,7 @@ export default function PostNav({handleSearch}) {
                              onClick={() => {
                                  navigate('/community/regist'); // 네비게이션할 경로
                              }}
+                             btnColor={'#4653f9'}
                 ></BasicButton>
 
                 <BasicButton className={"my-btn"}
@@ -71,6 +71,7 @@ export default function PostNav({handleSearch}) {
                              size = {"small"}
                              text={"My Post"}
                              width={"45%"}
+                             btnColor={'#4653f9'}
                 ></BasicButton>
             </div>
 
