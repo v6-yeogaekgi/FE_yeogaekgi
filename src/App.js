@@ -20,6 +20,7 @@ import Refund from './pages/Refund/Refund';
 import NewPost from './pages/Community/NewPost';
 import EditPost from './pages/Community/EditPost';
 import Conversion from './pages/Conversion/Conversion';
+import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -49,6 +50,7 @@ function App() {
     return (
         <AllStateContext.Provider value={{ protocol, token }}>
             <Router>
+                <ScrollToTop />
                 <Routes>
                     <Route
                         path={'/'}

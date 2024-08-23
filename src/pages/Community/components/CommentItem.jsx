@@ -77,9 +77,9 @@ const CommentItem = ({
                         sx={{
                             mt: 1,
                             mb: 1,
-                            wordWrap: 'break-word', // 긴 단어가 있을 때 줄바꿈
-                            wordBreak: 'break-word', // 줄바꿈시 단어 단위로 나눔
-                            overflowWrap: 'break-word', // 긴 단어를 잘라서 줄바꿈
+                            wordWrap: 'break-word',
+                            wordBreak: 'break-word',
+                            overflowWrap: 'break-word',
                         }}
                     >
                         {content}

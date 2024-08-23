@@ -51,8 +51,7 @@ const EditComment = () => {
 
     return (
         <>
-            <div>{commentId}번 comment</div>
-
+            <br></br>
             <CommentEditor
                 initialComment={initialComment}
                 onUpdate={onUpdate}
