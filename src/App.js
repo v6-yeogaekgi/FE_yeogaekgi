@@ -20,6 +20,7 @@ import Refund from './pages/Refund/Refund';
 import NewPost from './pages/Community/NewPost';
 import EditPost from './pages/Community/EditPost';
 import Conversion from './pages/Conversion/Conversion';
+import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -42,13 +43,20 @@ const PageLayout = ({ children, menuName }) => {
 
 export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
-const token =
-    'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYmJAbmF2ZXIuY29tIiwiZXhwIjoxNzI0OTg1OTE0LCJpYXQiOjE3MjQzODExMTR9.chMmRUe2cHvyIOzHc--EnBWbnf_mHRz5gIo3qZgUZ9k';
-
+const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYmJAbmF2ZXIuY29tIiwiZXhwIjoxNzI0OTk4ODAzLCJpYXQiOjE3MjQzOTQwMDN9.tzXntTlo7R00IpLEcLOXCy2Dc5-r-LrmPUrJYw0THVs';
+const memberInfo = {
+    memberNo: 1396,
+    accountNumber: "1111-1111-1111-1111",
+    bank: "testBank",
+    email: "bbb@naver.com",
+    code: "KR",
+};    
+localStorage.setItem('member', JSON.stringify(memberInfo));
 function App() {
     return (
         <AllStateContext.Provider value={{ protocol, token }}>
             <Router>
+                <ScrollToTop />
                 <Routes>
                     <Route
                         path={'/'}
@@ -110,11 +118,7 @@ function App() {
 
                     <Route
                         path={'/community/post/:postId'}
-                        element={
-
-                            <PageLayout menuName={'comment edit'}>
-                                <Post />
-                            </PageLayout>}
+                        element={<Post />}
                     />
                     <Route
                         path={'/community/comment/edit/:commentId'}
@@ -125,7 +129,7 @@ function App() {
                         }
                     />
                     <Route
-                        path={'/community/imageDetail'}
+                        path={'/community/imageDetail/:postId'}
                         element={<ImageDetail />}
                     />
                     <Route
@@ -166,6 +170,14 @@ function App() {
                         element={
                             <PageLayout menuName={'kiosk'}>
                                 <Kiosk />
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/wallet/conversion'}
+                        element={
+                            <PageLayout menuName={'Conversion'}>
+                                <Conversion />
                             </PageLayout>
                         }
                     />
