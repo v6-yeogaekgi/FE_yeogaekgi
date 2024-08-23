@@ -18,8 +18,6 @@ const Images = ({
   images, postId
 }) => {
     if(images && images.length >= 1 ){
-        console.log(images.length, images)
-        console.log("postID: " , postId)
         const width = images.length == 1? 348 : 165;
 
         return (
@@ -28,9 +26,9 @@ const Images = ({
                 display: 'flex',  // Use flexbox for layout
                 alignItems: 'center',  // Center items vertically
                 width: `348px`,
-                height: '165px',
+                height: '175px',
                 overflow:"scroll",
-            }} cols={images.length} rowHeight={165}>
+            }} cols={images.length} rowHeight={175}>
                 {images.map((item,idx) => (
                     <ImageListItem key={postId+"_"+idx}
                         sx={{
@@ -70,7 +68,7 @@ const PostItem = ({
                       regDate,
                       modDate,
                       likeState,
-                      parentPage,
+                      parentPage="",
 
                   }) => {
     const navigate = useNavigate();
@@ -88,12 +86,29 @@ const PostItem = ({
                         <Avatar alt="Remy Sharp" src={getCountryImgById(countryId)} sx={{marginRight: "10px"}}/>
                         <Typography>{nickname}</Typography>
                     </div>
-                    <div className="regDate">
-                        <Typography variant="caption" color="text.secondary">{regDate}</Typography>
+                    <div className="regDate" style={{ display: 'block' }}>
+                        <Typography variant="caption"
+                            color="text.secondary"
+                        >
+                            {new Date(regDate).toLocaleDateString()}
+                        </Typography>
+                        {modDate && modDate !== regDate && (
+                            <Typography
+                                variant="caption"
+                                color="text.secondary"
+                            >
+                                (modified)
+                            </Typography>
+                        )}
+                        {/*<Typography variant="caption" color="text.secondary">{regDate}</Typography>*/}
                     </div>
 
                 </CardActions>
-                <CardActionArea className="post-content">
+                <CardActionArea className="post-content" onClick={() => {
+                    if(parentPage == "list") {
+                        navigate('/community/post/' + postId); // 네비게이션할 경로
+                    }
+                }}>
                     <CardContent>
                         <Typography className="hashtag" color="primary">
                             {hashtag}
@@ -117,8 +132,8 @@ const PostItem = ({
                         <Button
                             size="small"
                             variant="text"
-                            btnColor='#4653f9'
-                            textColor="ffffff"
+                            // btnColor='#4653f9'
+                            textColor="#4653f9"
                         >
                             <TranslateIcon/>
                         </Button>

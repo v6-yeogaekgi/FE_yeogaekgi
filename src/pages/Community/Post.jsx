@@ -75,9 +75,10 @@ const Post = () => {
     const { postId } = useParams();
     const navigate = useNavigate();
 
-    const getApiUrl = protocol + 'community/comment/';
 
-    //  api 호출 부분
+
+    // ================ comment api 호출 부분 ================
+    const getApiUrl = protocol + 'community/comment/';
     const postApi = (content) => {
         return axios
             .post(
@@ -144,7 +145,7 @@ const Post = () => {
         return <div>Loading...</div>;
     } else {
         return (
-            <PageLayout menuName="post">
+            // <PageLayout menuName="post">
                 <CommentStateContext.Provider value={{ comment, postId }}>
                     <CommentDispatchContext.Provider value={memoizedDispatch}>
                         <PostItem />
@@ -152,7 +153,7 @@ const Post = () => {
                         <CommentRegister />
                     </CommentDispatchContext.Provider>
                 </CommentStateContext.Provider>
-            </PageLayout>
+            // </PageLayout>
         );
     }
 };

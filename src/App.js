@@ -43,7 +43,7 @@ const PageLayout = ({ children, menuName }) => {
 export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
 const token =
-    'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJib25nQGIuY29tIiwiZXhwIjoxNzI0OTE2MjUwLCJpYXQiOjE3MjQzMTE0NTB9.i3GomjFf0OGipKzBKWg_kHAHo7C9yeZqptb-oyujU7M';
+    'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYmJAbmF2ZXIuY29tIiwiZXhwIjoxNzI0OTg1OTE0LCJpYXQiOjE3MjQzODExMTR9.chMmRUe2cHvyIOzHc--EnBWbnf_mHRz5gIo3qZgUZ9k';
 
 function App() {
     return (
@@ -110,7 +110,11 @@ function App() {
 
                     <Route
                         path={'/community/post/:postId'}
-                        element={<Post />}
+                        element={
+
+                            <PageLayout menuName={'comment edit'}>
+                                <Post />
+                            </PageLayout>}
                     />
                     <Route
                         path={'/community/comment/edit/:commentId'}
