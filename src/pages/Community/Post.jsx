@@ -70,6 +70,7 @@ export const CommentDispatchContext = React.createContext();
 
 const Post = () => {
     const [comment, setComment] = useState([]);
+    const [post, setPost] = useState({});
     const { protocol, token } = useContext(AllStateContext);
 
     const { postId } = useParams();
@@ -77,7 +78,7 @@ const Post = () => {
 
 
 
-    // ================ comment api 호출 부분 ================
+    // ================ [start] comment api 호출 부분 ================
     const getApiUrl = protocol + 'community/comment/';
     const postApi = (content) => {
         return axios
@@ -129,17 +130,30 @@ const Post = () => {
                 throw error;
             });
     };
+    // ================ [end] comment api 호출 부분 ================
+    // ================ [start] post api 호출 부분 ================
+    const getPostApiUrl = protocol + '/';
+    const getPostApi = () => {
+        axios.get(protocol + 'community/' + postId).then((res) => {
+            setPost(res.data);
+        });
+    };
+    // ================ [end] post api 호출 부분 ================
 
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     useEffect(() => {
         setComment([]);
         setIsDataLoaded(true);
+        getPostApi();
     }, []);
+    useEffect(() => {
+        getPostApi();
+    }, [comment]);
 
     const memoizedDispatch = useMemo(() => {
         return { onCreate, onDelete, postApi, getApi };
-    }, []);
+    }, [comment]);
 
     if (!isDataLoaded) {
         return <div>Loading...</div>;
@@ -148,7 +162,22 @@ const Post = () => {
             // <PageLayout menuName="post">
                 <CommentStateContext.Provider value={{ comment, postId }}>
                     <CommentDispatchContext.Provider value={memoizedDispatch}>
-                        <PostItem />
+                        <PostItem
+                            key={post.postId}
+                            postId={post.postId}
+                            memberId={post.memberId}
+                            nickname={post.nickname}
+                            countryId={post.countryId}
+                            images={post.images}
+                            content={post.content}
+                            hashtag={post.hashtag}
+                            likeCnt={post.likeCnt}
+                            commentCnt={post.commentCnt}
+                            regDate={post.regDate}
+                            modDate={post.modDate}
+                            likeState={post.likeState}
+                            currentMemberId={post.currentMemberId}
+                        />
                         <CommentList />
                         <CommentRegister />
                     </CommentDispatchContext.Provider>

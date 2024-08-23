@@ -43,7 +43,7 @@ const PageLayout = ({ children, menuName }) => {
 
 export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
-const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYmJAbmF2ZXIuY29tIiwiZXhwIjoxNzI0OTk4ODAzLCJpYXQiOjE3MjQzOTQwMDN9.tzXntTlo7R00IpLEcLOXCy2Dc5-r-LrmPUrJYw0THVs';
+const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYmJAbmF2ZXIuY29tIiwiZXhwIjoxNzI1MDQ1MDExLCJpYXQiOjE3MjQ0NDAyMTF9._VvRkz4BhLSU8H_od1mXIhC2HuB_LqLypzjzLh9Qrss';
 const memberInfo = {
     memberNo: 1396,
     accountNumber: "1111-1111-1111-1111",
@@ -93,7 +93,7 @@ function App() {
                     <Route
                         path={'/community'}
                         element={
-                            <PageLayout menuName={'community'}>
+                            <PageLayout menuName={'Community'}>
                                 <Main />
                             </PageLayout>
                         }
@@ -102,7 +102,7 @@ function App() {
                     <Route
                         path={'/community/regist'}
                         element={
-                            <PageLayout menuName={'community'}>
+                            <PageLayout menuName={'Community'}>
                                 <NewPost />
                             </PageLayout>
                         }
@@ -110,7 +110,7 @@ function App() {
                     <Route
                         path={'/community/modify'}
                         element={
-                            <PageLayout menuName={'community'}>
+                            <PageLayout menuName={'Community'}>
                                 <EditPost />
                             </PageLayout>
                         }
@@ -118,12 +118,12 @@ function App() {
 
                     <Route
                         path={'/community/post/:postId'}
-                        element={<Post />}
+                        element={<PageLayout menuName={'Community'}><Post /></PageLayout>}
                     />
                     <Route
                         path={'/community/comment/edit/:commentId'}
                         element={
-                            <PageLayout menuName={'comment edit'}>
+                            <PageLayout menuName={'Community'}>
                                 <EditComment />
                             </PageLayout>
                         }

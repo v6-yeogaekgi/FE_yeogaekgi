@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import { ImageList, ImageListItem } from '@mui/material';
 import Card from '@mui/material/Card';
@@ -26,8 +26,12 @@ const Images = ({ images, postId }) => {
                     display: 'flex', // Use flexbox for layout
                     alignItems: 'center', // Center items vertically
                     width: `348px`,
-                    height: '165px',
-                    overflow: 'scroll',
+                    height: '170px',
+                    overflowX: 'auto', // Enable horizontal scrolling
+                    overflowY: 'hidden', // Hide vertical scrolling
+                    '&::-webkit-scrollbar': {
+                        display: 'none', // Hide scrollbar in Webkit browsers
+                    },
                 }}
                 cols={images.length}
                 rowHeight={165}
@@ -66,7 +70,7 @@ const PostItem = ({
     memberId,
     nickname,
     countryId,
-    // images,
+    images,
     content,
     hashtag,
     likeCnt,
@@ -74,18 +78,28 @@ const PostItem = ({
     regDate,
     modDate,
     likeState,
-    parentPage,
+    parentPage="register",
+    currentMemberId
 }) => {
     const navigate = useNavigate();
+    const [viewContent, setViewContent] = useState(content);
+    const [translateInfo, setTranslateInfo] = useState({state:false, translateContent:null})
+    useEffect(() => {
+    }, [viewContent]);
+
+    // 번역 api
+    const translateApi = (e) => {
+        console.log(e.target.getAttribute('data-state')); // true면 번역 상태. false 면 원본 상태
+    }
 
     // const goEdit = () => {
     //     navigate(`/edit/${id}`);
     // };
-
-    const images = [
-        'https://yeogaekgi.s3.ap-northeast-2.amazonaws.com/cf2236af-21ae-4222-b08e-349ea4f4b59a.png',
-        'https://yeogaekgi.s3.ap-northeast-2.amazonaws.com/cec17c30-f39f-4ce7-b936-376c9bda55c5.png',
-    ];
+    //
+    // const images = [
+    //     'https://yeogaekgi.s3.ap-northeast-2.amazonaws.com/cf2236af-21ae-4222-b08e-349ea4f4b59a.png',
+    //     'https://yeogaekgi.s3.ap-northeast-2.amazonaws.com/cec17c30-f39f-4ce7-b936-376c9bda55c5.png',
+    // ];
 
     return (
         <div className="PostItem" style={{ marginBottom: '5px' }}>
@@ -115,12 +129,31 @@ const PostItem = ({
                         <Typography>{nickname}</Typography>
                     </div>
                     <div className="regDate">
-                        <Typography variant="caption" color="text.secondary">
-                            {regDate}
+                        <Typography
+                            component="span"
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ marginLeft: '8px' }}
+                        >
+                            {new Date(regDate).toLocaleDateString()}
+                            {modDate && modDate !== regDate && (
+                                <Typography
+                                    component="span"
+                                    variant="caption"
+                                    color="text.secondary"
+                                    sx={{ marginLeft: '4px' }}
+                                >
+                                    (modified)
+                                </Typography>
+                            )}
                         </Typography>
                     </div>
                 </CardActions>
-                <CardActionArea className="post-content">
+                <CardActionArea className="post-content" onClick={()=>{
+                    if(parentPage=='list') {
+                        navigate("/community/post/" + postId);
+                    }
+                }}>
                     <CardContent>
                         <Typography className="hashtag" color="primary">
                             {hashtag}
@@ -130,7 +163,7 @@ const PostItem = ({
                             variant="body2"
                             color="text.primary"
                         >
-                            {content}
+                            {viewContent}
                         </Typography>
                     </CardContent>
                     <CardContent
@@ -175,14 +208,14 @@ const PostItem = ({
                         </Typography>
                     </div>
                     <div>
-                        <Button
-                            size="small"
-                            variant="text"
-                            btnColor="#4653f9"
-                            textColor="ffffff"
-                        >
-                            <TranslateIcon />
-                        </Button>
+                        <TranslateIcon
+                            sx={{
+                                size:"small",
+                                color:"#4653f9"
+                            }}
+                            onClick={translateApi}
+                            data-state={translateInfo.state}
+                        />
                     </div>
                 </CardActions>
             </Card>
