@@ -1,20 +1,65 @@
 import * as React from 'react';
-import { useState } from 'react';
-import { Box, Typography, TextField, Divider, IconButton, Drawer } from '@mui/material';
+import { useState, useEffect, useContext } from 'react';
+import {
+    Box,
+    Typography,
+    TextField,
+    Divider,
+    IconButton,
+    Drawer,
+    Grid,
+} from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import ClearIcon from '@mui/icons-material/Clear';
+import korFlag from '../../img/korea.png';
+import japFlag from '../../img/japan.png';
+import BasicButton from '../BasicButton/BasicButton';
+import { useNavigate } from 'react-router-dom';
+import { AllStateContext } from '../../App';
+import axios from 'axios';
 
-export default function TopUpInput({cardData, memberData}) {
-    // console.log(cardData);
-    // console.log(memberData);
+export default function TopUpInput({ cardData }) {
+    const navigate = useNavigate();
+    const {userCardId} = cardData;
+    const [memberData, setMemberData] = useState(null);
+    const [data, setData] = useState(null);
+    const { protocol, token } = useContext(AllStateContext);
+    const topupUrl = protocol + 'transaction/toptup';
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [krwAmount, setKrwAmount] = useState();
     const [foreignAmount, setForeignAmount] = useState();
 
-    const handleForeignAmountChange = (e) => {
-        setForeignAmount(e.target.value);
+    useEffect(() => {
+        const getUser = localStorage.getItem("member");
+        if(getUser) {
+            try {
+                setMemberData(JSON.parse(getUser));
+            } catch (e) {
+                console.error("Failed to parse member data from localStorage", e);
+            }
+        }
+    }, []);
+
+    console.log(memberData);
+
+    if (!memberData) {
+        // 데이터가 아직 로드되지 않았을 때 로딩 메시지 표시
+        return <Typography>Loading...</Typography>;
+    }
+
+    const handleKrwAmountChange = (e) => {
+        let krInput = e.target.value;
+        let frOutput = krInput * 0.108;
+        setKrwAmount(krInput);
+        setForeignAmount(frOutput);
     }
 
     const currencyTable = [
+        {
+            no: 0,
+            country: 'US',
+            currency: 'USD',
+        },
         {
             no: 1,
             country: 'JP',
@@ -24,10 +69,11 @@ export default function TopUpInput({cardData, memberData}) {
             no: 2,
             country: 'CN',
             currency: 'CNY',
-        }
+        },
     ];
 
     const onClickClearIcon = (e) => {
+        setKrwAmount('');
         setForeignAmount('');
     };
 
@@ -39,6 +85,35 @@ export default function TopUpInput({cardData, memberData}) {
         setDrawerOpen(false);
     };
 
+    const onClickTopUp = () => {
+        axios.post(topupUrl,
+            {
+                "krwAmount": Number(krwAmount),
+                "currencyType": 1,
+                "userCardNo": userCardId,
+                "foreignAmount": Number(foreignAmount),
+            },
+            {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                }
+            })
+        .then(function(res) {
+            console.log(res);
+            if(res.ok) {
+                navigate('/wallet/detail', {state: {cardData}});
+            }
+        })
+        .catch(function(error) {
+            console.log("axios error");
+        })
+        .then(function() {
+            // always
+            navigate('/wallet/detail', {state: {cardData}});
+        })
+    }
+
     return (
         <>
             <Box sx={{ p: 2, backgroundColor: 'white' }}>
@@ -47,7 +122,7 @@ export default function TopUpInput({cardData, memberData}) {
                 </Typography>
                 <TextField
                     fullWidth
-                    value={memberData.account_number}
+                    value={memberData.accountNumber}
                     InputProps={{
                         readOnly: true,
                     }}
@@ -60,15 +135,10 @@ export default function TopUpInput({cardData, memberData}) {
 
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                     <Box
-                        component="span"
-                        sx={{
-                            width: 24,
-                            height: 24,
-                            borderRadius: '50%',
-                            backgroundColor: 'red',
-                            display: 'inline-block',
-                            mr: 1,
-                        }}
+                        component="img"
+                        src={japFlag}
+                        alt="JPY"
+                        sx={{ width: 24, height: 24, mr: 1 }}
                     />
                     <Typography>JPY</Typography>
                 </Box>
@@ -77,18 +147,13 @@ export default function TopUpInput({cardData, memberData}) {
                     fullWidth
                     placeholder="0"
                     value={foreignAmount}
-                    onChange={handleForeignAmountChange}
                     InputProps={{
-                        endAdornment: (
-                            <IconButton onClick={onClickClearIcon}>
-                                <ClearIcon />
-                            </IconButton>
-                        ),
+                        readOnly: true,
                     }}
-                    sx={{ mb: 2 }}
+                    sx={{ mb: 1 }}
                 />
 
-                <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', mb: 1 }}>
                     <IconButton>
                         <SwapVertIcon />
                     </IconButton>
@@ -97,7 +162,7 @@ export default function TopUpInput({cardData, memberData}) {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                     <Box
                         component="img"
-                        src="path_to_korean_flag.png"
+                        src={korFlag}
                         alt="KRW"
                         sx={{ width: 24, height: 24, mr: 1 }}
                     />
@@ -106,14 +171,28 @@ export default function TopUpInput({cardData, memberData}) {
 
                 <TextField
                     fullWidth
-                    value="000,000₩"
+                    placeholder='0'
+                    value={krwAmount}
+                    onChange={handleKrwAmountChange}
                     InputProps={{
-                        readOnly: true,
+                        endAdornment: (
+                            <IconButton onClick={onClickClearIcon}>
+                                <ClearIcon />
+                            </IconButton>
+                        ),
                     }}
                     sx={{ mb: 3 }}
                 />
 
-                <Divider sx={{ mb: 2 }} />
+                <BasicButton
+                    text={'Top Up'}
+                    variant={'contained'}
+                    btnColor={'#4653f9'}
+                    width={'100%'}
+                    onClick={onClickTopUp}
+                ></BasicButton>
+
+                <Divider sx={{ mt: 2, mb: 2 }} />
 
                 <Box
                     onClick={openDrawer}
@@ -123,7 +202,7 @@ export default function TopUpInput({cardData, memberData}) {
                         alignItems: 'center',
                     }}
                 >
-                    <Typography>환불안내</Typography>
+                    <Typography>충전 안내</Typography>
                     <Typography>&gt;</Typography>
                 </Box>
             </Box>
@@ -136,13 +215,33 @@ export default function TopUpInput({cardData, memberData}) {
                     style: {
                         maxWidth: '400px',
                         width: '100%',
+                        height: '80%',
                         margin: '0 auto',
                     },
                 }}
             >
-                환불 안내 사항 환불 안내 사항 환불 안내 사항 환불 안내 사항 환불
-                안내 사항 환불 안내 사항 환불 안내 사항 환불 안내 사항 환불 안내
-                사항 환불 안내 사항 환불 안내 사항 환불 안내 사항
+                <Typography
+                    variant="h6"
+                    sx={{ padding: 1, fontWeight: 'bold' }}
+                >
+                    여객기 Terms and Conditions
+                </Typography>
+                <Divider sx={{ mb: 2, borderBottomWidth: 3 }} />
+                <Typography sx={{ whiteSpace: 'pre-wrap', padding: 1 }}>
+                    ✅ Notices when topping up with 'Wire Transfer' in the app{' '}
+                    <br />
+                    <br />
+                    ※ Wire Transfer can be topped up with a minimum of 1,000 won{' '}
+                    <br />
+                    <br />
+                    ※ A full refund is available if you request a refund within
+                    7 days without using the charged amount. <br />
+                    <br />
+                    ※ For the amount that has passed 7 days after charging, you
+                    can only refund the amount remaining after using more than
+                    60% of the final balance. (Excluding Card, Easy payment
+                    charging) <br />
+                </Typography>
             </Drawer>
         </>
     );

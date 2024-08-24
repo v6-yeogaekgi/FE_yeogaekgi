@@ -1,39 +1,62 @@
 import * as React from 'react';
 import CommentEditor from './components/CommentEditor';
-import { useParams } from 'react-router-dom';
-import useComment from './hooks/useComment';
-
+import { useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import axios from 'axios';
+import { useContext } from 'react';
+import { AllStateContext } from '../../App';
+import { useEffect } from 'react';
 
 const EditComment = () => {
+    const [initialComment, setInitialComment] = useState([]);
+    const { protocol, token } = useContext(AllStateContext);
+    const navigate = useNavigate();
+
     const { commentId } = useParams();
+    const getApiUrl = protocol + 'community/comment/';
 
-    // const data = useComment(commentId);
+    //  api 호출 부분
 
+    // Api 호출 부분
+    const getOneCommentApi = () => {
+        axios.get(getApiUrl + commentId).then((res) => {
+            setInitialComment(res.data);
+        });
+    };
 
-    // if (!data) {
-    //     return <div>Loading...</div>;
-    // } else {
-        return (
-            <>
-                <div>{commentId}번 comment</div>
+    const onUpdate = (newContent) => {
+        console.log(newContent);
+        const postId = newContent.postId;
+        return axios
+            .put(getApiUrl + commentId, newContent, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json', // 데이터 형식을 명시
+                },
+            })
+            .then((res) => {
+                alert('댓글이 수정되었습니다.');
+                navigate('/community/post/' + postId);
+            })
+            .catch((error) => {
+                console.error('API 호출 오류:', error);
+                throw error;
+            });
+    };
 
-                <CommentEditor
-                    initData={{
-                        commentId: 1,
-                        postNo: 1,
-                        email: 'user1@test.com',
-                        nickname: 'test1',
-                        content: 'test입니다.',
-                        regDate: new Date().getTime(),
-                        modDate: new Date().getTime(),
-                        countryId: 2,
-                    }}
-                    onSubmit={() => alert('Edit 버튼 클릭')}
-                />
-            </>
-        );
-    // }
+    // 처음 렌더링될 때 실행
+    useEffect(() => {
+        getOneCommentApi();
+    }, []);
 
-
+    return (
+        <>
+            <br></br>
+            <CommentEditor
+                initialComment={initialComment}
+                onUpdate={onUpdate}
+            />
+        </>
+    );
 };
 export default EditComment;

@@ -15,14 +15,23 @@ import Typography from '@mui/material/Typography';
 import { ListItemAvatar } from '@mui/material';
 import Divider from '@mui/material/Divider';
 
-
 const CommentItem = ({
-                         commentId, email, nickname, content, regDate, modDate, countryId,onDelete
-                     }) => {
-
-
+    commentId,
+    postId,
+    email,
+    memberId,
+    nickname,
+    content,
+    regDate,
+    modDate,
+    code,
+    onDelete,
+}) => {
     const onClickDeleteComment = () => {
-        onDelete(commentId, email);
+        const isConfirmed = window.confirm('댓글을 삭제하시겠습니까?');
+        if (isConfirmed) {
+            onDelete(commentId, postId);
+        }
     };
 
     const navigate = useNavigate();
@@ -31,15 +40,14 @@ const CommentItem = ({
         navigate(`/community/comment/edit/${commentId}`);
     };
 
-    const currentMemberEmail = "user2@test.com"
-    const shouldRenderButtons = currentMemberEmail === email;
-    console.log(currentMemberEmail);
+    const currentMemberNo = 402;
+    const shouldRenderButtons = currentMemberNo === memberId;
 
     return (
         <List sx={{ width: '95%', bgcolor: 'background.paper' }}>
             <ListItem alignItems="flex-start">
                 <ListItemAvatar>
-                    <Avatar alt="Country Flag" src={getCountryImgById(countryId)} />
+                    <Avatar alt="Country Flag" src={getCountryImgById(code)} />
                 </ListItemAvatar>
                 <div style={{ flex: 1 }}>
                     <Typography component="span" variant="h6">
@@ -52,7 +60,7 @@ const CommentItem = ({
                         sx={{ marginLeft: '8px' }}
                     >
                         {new Date(regDate).toLocaleDateString()}
-                        {modDate && (
+                        {modDate && modDate !== regDate && (
                             <Typography
                                 component="span"
                                 variant="body2"
@@ -69,16 +77,21 @@ const CommentItem = ({
                         sx={{
                             mt: 1,
                             mb: 1,
-                            wordWrap: 'break-word',  // 긴 단어가 있을 때 줄바꿈
-                            wordBreak: 'break-word', // 줄바꿈시 단어 단위로 나눔
-                            overflowWrap: 'break-word', // 긴 단어를 잘라서 줄바꿈
+                            wordWrap: 'break-word',
+                            wordBreak: 'break-word',
+                            overflowWrap: 'break-word',
                         }}
                     >
                         {content}
                     </Typography>
 
-                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-
+                    <div
+                        style={{
+                            display: 'flex',
+                            gap: '8px',
+                            justifyContent: 'flex-end',
+                        }}
+                    >
                         <Button
                             id="translate-button"
                             size="small"

@@ -1,25 +1,25 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Header from '../../layout/Header/Header';
 import Footer from '../../layout/Footer/Footer';
 import CommentList from './components/CommentList';
 import CommentRegister from './components/CommentRegister';
 import PostItem from './components/PostItem';
-import { useParams } from 'react-router-dom';
-import useComment from './hooks/useComment';
-
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { AllStateContext } from '../../App';
 
 const PageLayout = ({ menuName, children }) => (
-    <Box sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        paddingBottom: '140px', // Footer 높이만큼 패딩 추가
-    }}>
+    <Box
+        sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '100vh',
+            paddingBottom: '140px', // Footer 높이만큼 패딩 추가
+        }}
+    >
         <Header menuName={menuName} />
-        <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
-            {children}
-        </Box>
+        <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
         <Footer />
     </Box>
 );
@@ -30,11 +30,11 @@ const mockComment = [
         postNo: 1,
         email: 'user1@test.com',
         nickname: 'test1',
-        content: 'cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1',
+        content:
+            'cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1',
         regDate: new Date().getTime(),
         modDate: new Date().getTime(),
         countryId: 2,
-
     },
     {
         commentId: 2,
@@ -44,8 +44,8 @@ const mockComment = [
         content: 'cotent...2.',
         regDate: new Date().getTime(),
         countryId: 1,
-
-    }, {
+    },
+    {
         commentId: 3,
         postNo: 2,
         email: 'user3@test.com',
@@ -53,8 +53,8 @@ const mockComment = [
         content: 'cotent...3',
         regDate: new Date().getTime(),
         countryId: 1,
-
-    }, {
+    },
+    {
         commentId: 4,
         postNo: 2,
         email: 'user4@test.com',
@@ -62,73 +62,90 @@ const mockComment = [
         content: 'cotent...4',
         regDate: new Date().getTime(),
         countryId: 2,
-
     },
-];
-
-const mockCurrentMemberEmail = [
-    {
-        currentMemberEmail : "user2@test.com",
-    }
 ];
 
 export const CommentStateContext = React.createContext();
 export const CommentDispatchContext = React.createContext();
 
 const Post = () => {
-    const [comment, setComment] = useState(mockComment);
-    const [currentMemberEmail, setCurrentMemberEmail] = useState(mockCurrentMemberEmail);
-    const commentIdRef = useRef(5);
+    const [comment, setComment] = useState([]);
+    const { protocol, token } = useContext(AllStateContext);
 
+    const { postId } = useParams();
+    const navigate = useNavigate();
 
+    const getApiUrl = protocol + 'community/comment/';
+
+    //  api 호출 부분
+    const postApi = (content) => {
+        return axios
+            .post(
+                getApiUrl + postId,
+                { content },
+                {
+                    headers: {
+                        Authorization: token,
+                        'Content-Type': 'application/json', // 데이터 형식을 명시
+                    },
+                },
+            )
+            .then((res) => {
+                return res;
+            })
+            .catch((error) => {
+                console.error('API 호출 오류:', error);
+                throw error;
+            });
+    };
+
+    const getApi = () => {
+        axios.get(getApiUrl + 'all/' + postId).then((res) => {
+            setComment(res.data);
+        });
+    };
 
     const onCreate = (content) => {
-        const newComment = {
-            commentId: commentIdRef.current,
-            content: content,
-            email: 'user' + commentIdRef.current + '@test.com',
-            nickname: 'test' + commentIdRef.current,
-            regDate: new Date().getTime(),
-            countryId: Math.random() < 0.5 ? 1 : 2,
-        };
-
-        setComment([newComment, ...comment]);
-
-        commentIdRef.current += 1;
+        postApi(content).then(() => {
+            getApi();
+        });
     };
 
-    const onUpdate = (targetId, newContent) => {
-        setComment(
-            comment.map((it) =>
-                it.commentId === targetId ? { ...it, content: newContent } : it,
-            ),
-        );
-    };
-
-    const onDelete = (targetId, targetEmail) => {
-
-        setComment(
-            comment.filter((it) => it.email !== targetEmail && it.commentId !== targetId),
-        );
+    const onDelete = (commentId, postId) => {
+        return axios
+            .delete(getApiUrl + commentId, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json', // 데이터 형식을 명시
+                },
+            })
+            .then((res) => {
+                alert('댓글이 삭제되었습니다.');
+                getApi();
+            })
+            .catch((error) => {
+                console.error('API 호출 오류:', error);
+                throw error;
+            });
     };
 
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     useEffect(() => {
-        setComment(mockComment);
+        setComment([]);
         setIsDataLoaded(true);
     }, []);
 
-    const memoizedDispatch = useMemo(()=>{
-        return {onCreate,onUpdate,onDelete};
-    },[]);
+    const memoizedDispatch = useMemo(() => {
+        return { onCreate, onDelete, postApi, getApi };
+    }, []);
 
     if (!isDataLoaded) {
         return <div>Loading...</div>;
     } else {
         return (
             <PageLayout menuName="post">
-                <CommentStateContext.Provider value={{comment,currentMemberEmail}}>
+                <CommentStateContext.Provider value={{ comment, postId }}>
                     <CommentDispatchContext.Provider value={memoizedDispatch}>
                         <PostItem />
                         <CommentList />
@@ -136,9 +153,7 @@ const Post = () => {
                     </CommentDispatchContext.Provider>
                 </CommentStateContext.Provider>
             </PageLayout>
-
         );
-
     }
 };
 

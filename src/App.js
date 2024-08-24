@@ -21,6 +21,8 @@ import NewPost from './pages/Community/NewPost';
 import EditPost from './pages/Community/EditPost';
 import { AddBoxSharp } from '@mui/icons-material';
 import First from './pages/First/First';
+import Conversion from './pages/Conversion/Conversion';
+import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -29,9 +31,7 @@ const PageLayout = ({ children, menuName }) => {
                 display: 'flex',
                 flexDirection: 'column',
                 minHeight: '100vh',
-
                 paddingTop: '64px', // header 높이만큼 패딩 추가
-
                 paddingBottom: '70px', // Footer 높이만큼 패딩 추가
             }}
         >
@@ -56,98 +56,157 @@ const FirstPage = ({ children }) => {
     );
 };
 
+export const AllStateContext = React.createContext();
+const protocol = process.env.REACT_APP_API_PROTOCOL;
+const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYmJAbmF2ZXIuY29tIiwiZXhwIjoxNzI0OTk4ODAzLCJpYXQiOjE3MjQzOTQwMDN9.tzXntTlo7R00IpLEcLOXCy2Dc5-r-LrmPUrJYw0THVs';
+const memberInfo = {
+    memberNo: 1396,
+    accountNumber: "1111-1111-1111-1111",
+    bank: "testBank",
+    email: "bbb@naver.com",
+    code: "KR",
+};    
+localStorage.setItem('member', JSON.stringify(memberInfo));
 function App() {
     return (
-        <Router>
-            <Routes>
-                <Route
-                    path={'/'}
-                    element={
-                        <PageLayout menuName={'home'}>
-                            <HomePage />
-                        </PageLayout>
-                    }
-                />
-                <Route
-                    path={'/home'}
-                    element={
-                        <PageLayout menuName={'home'}>
-                            <HomePage />
-                        </PageLayout>
-                    }
-                />
-                <Route
-                    path={'/wallet'}
-                    element={
-                        <PageLayout menuName={'wallet'}>
-                            <Wallet />
-                        </PageLayout>
-                    }
-                />
-                <Route
-                    path={'/map'}
-                    element={
-                        <PageLayout menuName={'map'}>
-                            <Map />
-                        </PageLayout>
-                    }
-                />
-                <Route
-                    path={'/community'}
-                    element={
-                        <PageLayout menuName={'community'}>
-                            <Main />
-                        </PageLayout>
-                    }
-                />
-                <Route path={'/community/post'} element={<Post />} />
-                <Route
-                    path={'/community/comment/edit'}
-                    element={
-                        <PageLayout menuName={'comment edit'}>
-                            <EditComment />
-                        </PageLayout>
-                    }
-                />
-                <Route
-                    path={'/community/imageDetail'}
-                    element={<ImageDetail />}
-                />
-                <Route
-                    path={'/myPage'}
-                    element={
-                        <PageLayout menuName={'my page'}>
-                            <MyPage />
-                        </PageLayout>
-                    }
-                />
-                {/* <Route path={"/wallet/card-detail"} element={<PageLayout menuName={'detail'}><CardDetail/></PageLayout>} /> */}
-                <Route
-                    path={'/wallet/top-up'}
-                    element={
-                        <PageLayout menuName={'top-up'}>
-                            <TopUp />
-                        </PageLayout>
-                    }
-                />
-                <Route
-                    path={'/kiosk'}
-                    element={
-                        <PageLayout menuName={'kiosk'}>
-                            <Kiosk />
-                        </PageLayout>
-                    }
-                />
-                <Route
-                    path={'/signup'}
-                    element={
-                        <FirstPage>
-                            <First />
+        <AllStateContext.Provider value={{ protocol, token }}>
+            <Router>
+                <ScrollToTop />
+                <Routes>
+                    <Route
+                        path={'/'}
+                        element={
+                            <PageLayout menuName={'home'}>
+                                <HomePage />
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/home'}
+                        element={
+                            <PageLayout menuName={'home'}>
+                                <HomePage />
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/wallet'}
+                        element={
+                            <PageLayout menuName={'wallet'}>
+                                <Wallet />
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/map'}
+                        element={
+                            <PageLayout menuName={'map'}>
+                                <Map />
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/community'}
+                        element={
+                            <PageLayout menuName={'community'}>
+                                <Main />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/community/regist'}
+                        element={
+                            <PageLayout menuName={'community'}>
+                                <NewPost />
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/community/modify'}
+                        element={
+                            <PageLayout menuName={'community'}>
+                                <EditPost />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/community/post/:postId'}
+                        element={<Post />}
+                    />
+                    <Route
+                        path={'/community/comment/edit/:commentId'}
+                        element={
+                            <PageLayout menuName={'comment edit'}>
+                                <EditComment />
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/community/imageDetail/:postId'}
+                        element={<ImageDetail />}
+                    />
+                    <Route
+                        path={'/myPage'}
+                        element={
+                            <PageLayout menuName={'my page'}>
+                                <MyPage />
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/wallet/detail'}
+                        element={
+                            <PageLayout menuName={'detail'}>
+                                <CardDetail />
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/wallet/detail/refund'}
+                        element={
+                            <PageLayout menuName={'refund'}>
+                                <Refund />
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/wallet/top-up'}
+                        element={
+                            <PageLayout menuName={'top-up'}>
+                                <TopUp />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/kiosk'}
+                        element={
+                            <PageLayout menuName={'kiosk'}>
+                                <Kiosk />
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/signup'}
+                        element={
+                            <FirstPage>
+                                <First />
                         </FirstPage>
                     }
                 />
-            </Routes>
-        </Router>
+                    <Route
+                        path={'/wallet/conversion'}
+                        element={
+                            <PageLayout menuName={'Conversion'}>
+                                <Conversion />
+                            </PageLayout>
+                        }
+                    />
+                </Routes>
+            </Router>
+        </AllStateContext.Provider>
     );
 }
 

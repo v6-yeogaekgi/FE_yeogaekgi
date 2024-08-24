@@ -1,10 +1,11 @@
 import Box from '@mui/material/Box';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import UserCard from '../../components/UserCard/UserCard';
 import axios from 'axios';
 import { Paper } from '@mui/material';
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AllStateContext } from '../../App';
 
 const Registration = () => (
     // TODO 
@@ -53,12 +54,39 @@ export default function Wallet(props) {
 
     const [error, setError] = useState(null);
 
+    const { protocol, token } = useContext(AllStateContext);
+    const uri = protocol + 'usercard/list';
+
     const getApi = () => {
         axios
-            .get('https://api.yeogaekgi.site', { params: param })
+            .post(uri,
+                {},
+                {
+                    headers: {
+                        Authorization: token,
+                        'Content-Type': 'application/json',
+                    },
+                },
+            )
             .then((res) => {
-                setData(res.data.result.content);
-            })
+                if (Array.isArray(res.data) && res.data.length > 0) {
+                    const formattedData = res.data.map(item => ({
+                        userCardId: item.userCardId,
+                        expiryDate: item.expiryDate,
+                        payBalance: item.payBalance,
+                        transitBalance: item.transitBalance,
+                        starred: item.starred,
+                        status: item.status,
+                        cardId: item.cardId,
+                        design: item.design,
+                        area: item.area,
+                        cardName: item.cardName,
+                        memberId: item.memberId,
+                    }));
+
+                    setData(formattedData);
+
+                }})
             .catch((err) => {
                 console.error('API 요청 중 오류 발생:', err);
                 setError('데이터를 불러오는 데 실패했습니다.');
@@ -66,51 +94,7 @@ export default function Wallet(props) {
     };
 
     useEffect(() => {
-        if (process.env.NODE_ENV !== 'development') {
             getApi();
-        } else {
-            setData([
-                { // api 응답 데이터
-                    userCardId: 1,
-                    expiryDate: "2024-11-04T02:24:10.496+00:00",
-                    payBalance: 10000,
-                    transitBalance: 10000,
-                    starred: 1,
-                    status: 1,
-                    cardId: 1,
-                    design: "https://yeogaekgi.s3.ap-northeast-2.amazonaws.com/Design.png",
-                    area: "부산",
-                    cardName: "testCard1",
-                    memberId: 1,
-                },
-                {
-                    userCardId: 101,
-                    expiryDate: "2024-11-04T02:27:45.328+00:00",
-                    payBalance: 10000,
-                    transitBalance: 10000,
-                    starred: 1,
-                    status: 1,
-                    cardId: 1,
-                    design: "https://yeogaekgi.s3.ap-northeast-2.amazonaws.com/Design.png",
-                    area: "부산",
-                    cardName: "testCard1",
-                    memberId: 1
-                },
-                {
-                    userCardId: 201,
-                    expiryDate: "2024-11-04T02:43:04.450+00:00",
-                    payBalance: 10000,
-                    transitBalance: 10000,
-                    starred: 1,
-                    status: 1,
-                    cardId: 1,
-                    design: "https://yeogaekgi.s3.ap-northeast-2.amazonaws.com/Design.png",
-                    area: "부산",
-                    cardName: "testCard1",
-                    memberId: 1
-                }
-            ]);
-        }
     }, []);
 
     return (

@@ -3,23 +3,26 @@ import { useLocation } from 'react-router';
 import UserCardOnDetail from '../../components/UserCardOnDetail/UserCardOnDetail';
 import Box from '@mui/material/Box';
 import TopUpInput from '../../components/TopUpInput/TopUpInput';
+import { useContext } from 'react';
+import { AllStateContext } from '../../App';
 
-export default function TopUp({data}) {
+export default function TopUp({ data }) {
     // console.log("top up page 확인");
     const location = useLocation();
     const cardData = location.state?.data;
-    
+    const { protocol, token } = useContext(AllStateContext);
+    const topupUrl = protocol + 'transaction/toptup';
+
     if (!cardData) {
         return <div>Card data not found</div>;
     }
-    
-    const memberData = 
-        {
-            member_no: 1,
-            bank: "SBI SHINSEI BANK, LIMITED",
-            account_number: "1234-567-890123",
-            code: 'JP',
-        };
+
+    const memberData = {
+        member_no: 1,
+        bank: 'SBI SHINSEI BANK, LIMITED',
+        account_number: '1234-567-890123',
+        code: 'JP',
+    };
 
     return (
         <>
@@ -44,7 +47,7 @@ export default function TopUp({data}) {
                         gap: 2,
                         paddingTop: '20px',
                         flexGrow: 1,
-                        marginBottom: '150px',
+                        marginBottom: '30px',
                     }}
                 >
                     <UserCardOnDetail data={cardData} />
@@ -57,7 +60,7 @@ export default function TopUp({data}) {
                         flexGrow: 1,
                     }}
                 >
-                    <TopUpInput cardData={cardData} memberData={memberData}/>
+                    <TopUpInput cardData={cardData} memberData={memberData} />
                 </Box>
             </Box>
         </>

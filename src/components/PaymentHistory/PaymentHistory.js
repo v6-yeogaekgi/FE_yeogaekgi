@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
 import * as React from 'react';
 import { Grid, Paper, Typography } from '@mui/material';
@@ -11,54 +11,35 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Drawer from '@mui/material/Drawer';
-
-// TODO
-// 결제내역 pay와 transit의 분리
-
-// TODO
-// 월 변경 시 getApi 호출
-// getApi의 로직을 '월' 데이터에 따라 받아오도록 재정의
+import { AllStateContext } from '../../App';
+import { format } from 'date-fns';
 
 // TODO
 // 상세 날짜 추가
 
-// 예상 DTO 구조
-// 1.사용자 카드 번호 userCardNo
-//     [결제 내역]
-// 1.결제 번호
-// 1.내역 종류 payType (0 : 결제, 1: 교통)
-// 1.결제 금액 payPrice
-// 1.결제 일자 (월별) datetime(timestamp)
-// 1.결제 상태 status (0: 결제 취소, 1: 결제 완료)
-// 1.결제처 serviceName
-// 1.결제후 페이 잔액 transitBalanceSnap
-// 1.결제후 교통 잔액 payBalanceSnap
-//
-// [거래 내역]
-// 1.거래 번호
-// 1.내역 종류 tranType (0: 전환 1: 충전 2: 환급)
-// 1.거래 일자 (월별) datetime
-// 1.방향 transferType (0: 페이에서 교통으로 금액 전환, 1: 교통에서 페이로 금액 전환)
-// 1.원화 금액 krwAmount (얼마나 충전, 환급했는지)
-// 1.외화 금액 foreignAmount (얼마나 충전, 환급했는지)
-// 1.통화 종류 currency_type (0:USD 1:JPY 2:CNY 3:KRW )
-// 1.결제후 페이 잔액 transitBalanceSnap
-// 1.결제후 교통 잔액 payBalanceSnap
-//
-// 1.결제인지 거래인지[결제면 0 거래면1] type
 
 const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
-    // 실제 api 연동되었을 때 -> cardData.userCardNo
-    // const userCardNo = cardData.userCardNo;
-    const userCardNo = '1';
+    const userCardNo = cardData.userCardId;
     const [data, setData] = useState();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [filteredData, setFilteredData] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [selectedItem, setSelectedItem] = useState(null);
+    const [selectedItem, setselectedItem] = useState(null);
+
+    const groupDataByDate = (data) => {
+        const grouped = {};
+        data.forEach(item => {
+            const date = format(new Date(item.datetime), 'yyyy-MM-dd');
+            if (!grouped[date]) {
+                grouped[date] = [];
+            }
+            grouped[date].push(item);
+        });
+        return grouped;
+    };
 
     const handleItemClick = (item) => {
-        setSelectedItem(item);
+        setselectedItem(item);
         setDrawerOpen(true);
     };
 
@@ -66,86 +47,50 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
         setDrawerOpen(false);
     };
 
+    const { protocol, token } = useContext(AllStateContext);
+    const uri = protocol + 'payTrack/list';
+
     const getApi = (userCardNo, year, month) => {
+
         axios
-            .post('https://api.yeogaekgi.site', { params: { userCardNo, year, month } })
+            .post(uri,
+                { userCardNo, year, month },
+                {
+                    headers: {
+                        Authorization: token,
+                        'Content-Type': 'application/json',
+                    },
+                },
+            )
             .then((res) => {
-                setData(res.data.result.content);
+                if (Array.isArray(res.data) && res.data.length > 0) {
+                    const formattedData = res.data.map(item => ({
+                        userCardNo: item.userCardNo,
+                        datetime: item.datetime,
+                        transitBalanceSnap: item.transitBalanceSnap,
+                        payBalanceSnap: item.payBalanceSnap,
+                        pno: item.pno,
+                        payType: item.payType,
+                        payPrice: item.payPrice,
+                        status: item.status,
+                        serviceName: item.serviceName,
+                        tno: item.tno,
+                        tranType: item.tranType,
+                        transferType: item.transferType,
+                        krwAmount: item.krwAmount,
+                        foreignAmount: item.foreignAmount,
+                        currencyType: item.currencyType,
+                        payment: item.payment,
+                    }));
+
+                    setData(formattedData);
+
+                } else {
+                    setData([]);
+                }
             })
             .catch((err) => {
                 console.error('API 요청 중 오류 발생:', err);
-                setData(
-                    [
-                        {
-                            userCardNo: 17,
-                            datetime: "2024-08-19T03:30:47.331+00:00",
-                            transitBalanceSnap: 10000,
-                            payBalanceSnap: 20000,
-                            pno: null,
-                            payType: null,
-                            payPrice: null,
-                            status: null,
-                            serviceName: null,
-                            tno: 22,
-                            tranType: 1,
-                            transferType: null,
-                            krwAmount: 10000,
-                            foreignAmount: 1099,
-                            payment: false
-                        },
-                        {
-                            userCardNo: 17,
-                            datetime: "2024-08-19T03:30:46.645+00:00",
-                            transitBalanceSnap: 10000,
-                            payBalanceSnap: 20000,
-                            pno: null,
-                            payType: null,
-                            payPrice: null,
-                            status: null,
-                            serviceName: null,
-                            tno: 15,
-                            tranType: 1,
-                            transferType: null,
-                            krwAmount: 10000,
-                            foreignAmount: 1099,
-                            payment: false
-                        },
-                        {
-                            userCardNo: 17,
-                            datetime: "2024-08-19T02:43:01.258+00:00",
-                            transitBalanceSnap: 2000,
-                            payBalanceSnap: 5000,
-                            pno: 119,
-                            payType: 1,
-                            payPrice: 10000,
-                            status: 1,
-                            serviceName: "교통공사",
-                            tno: null,
-                            tranType: null,
-                            transferType: null,
-                            krwAmount: null,
-                            foreignAmount: null,
-                            payment: true
-                        },
-                        {
-                            userCardNo: 17,
-                            datetime: "2024-08-19T02:27:40.568+00:00",
-                            transitBalanceSnap: 2000,
-                            payBalanceSnap: 5000,
-                            pno: 19,
-                            payType: 1,
-                            payPrice: 10000,
-                            status: 1,
-                            serviceName: "교통공사",
-                            tno: null,
-                            tranType: null,
-                            transferType: null,
-                            krwAmount: null,
-                            foreignAmount: null,
-                            payment: true
-                        }
-                    ],
-                );
             });
     };
 
@@ -158,7 +103,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
     React.useEffect(() => {
         if (data) {
             const filtered = data.filter(item => {
-                if (item.type === 0) { // 결제 내역
+                if (item.payment) { // 결제 내역
                     if (paymentType === 0) {
                         return item.payType === 0; // 페이 결제
                     } else {
@@ -227,114 +172,135 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                     </Grid>
                 </Grid>
 
-                {filteredData && filteredData.map((item, index) => (
-                    <React.Fragment key={index}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <Divider />
-                            </Grid>
-                        </Grid>
-
-                        <Grid
-                            container
-                            spacing={2}
-                            sx={{
-                                cursor: 'pointer',
-                            }}
-                            onClick={() => handleItemClick(item)}
-                        >
-                            <Grid item xs={12}>
-                                <Typography variant="body2" color="textSecondary">
-                                    {item.type === 0 ? `결제 번호: ${item.pno}` : `거래 번호: ${item.tno}`}
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={1} sx={{ display: 'flex', alignItems: 'center' }}>
-                                {item.type === 0 ? <RemoveIcon /> : <AddIcon />}
-                            </Grid>
-                            <Grid item xs={3}>
-                                <Grid container direction="column" spacing={1}>
-                                    <Grid item>
-                                        <Typography variant="body2">
-                                            {item.type === 0 ? '결제' : '거래'}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item>
-                                        <Typography variant="body2" color="textSecondary">
-                                            {item.type === 0 ? item.serviceName :
-                                                (item.tranType === 0 ? '전환' :
-                                                    item.tranType === 1 ? '충전' : '환급')}
-                                        </Typography>
-                                    </Grid>
+                {filteredData && filteredData.length > 0 ? (
+                    Object.entries(groupDataByDate(filteredData)).map(([date, items]) => (
+                        <React.Fragment key={date}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <Typography variant="subtitle1" style={{ fontWeight: 'bold', margin: '20px 0 10px' }}>
+                                        {format(new Date(date), 'yyyy년 MM월 dd일')}
+                                    </Typography>
                                 </Grid>
                             </Grid>
-                            {/* 거래 시간 */}
-                            <Grid item xs={2}>
-                                <Grid container direction="column" spacing={1}>
-                                    <Grid item>
-                                        <Typography variant="body2" color="transparent">placeholder</Typography>
+                            {items.map((item, index) => (
+                                <React.Fragment key={index}>
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={12}>
+                                            <Divider />
+                                        </Grid>
                                     </Grid>
-                                    <Grid item>
-                                        <Typography variant="body2" color="textSecondary">
-                                            {new Date(item.type === 0 ? item.datetime : item.datetime).toLocaleTimeString([], {
-                                                hour: '2-digit',
-                                                minute: '2-digit',
-                                            })}
-                                        </Typography>
+                                    <Grid
+                                        container
+                                        spacing={2}
+                                        sx={{
+                                            cursor: 'pointer',
+                                        }}
+                                        onClick={() => handleItemClick(item)}
+                                    >
+                                        <Grid item xs={12}>
+                                            <Typography variant="body2" color="textSecondary">
+                                                {item.payment ? `결제 번호: ${item.pno}` : `거래 번호: ${item.tno}`}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                                            {item.payment ? <RemoveIcon /> : <AddIcon />}
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Grid container direction="column" spacing={1}>
+                                                <Grid item>
+                                                    <Typography variant="body2">
+                                                        {item.payment ? '결제' : '거래'}
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Typography variant="body2" color="textSecondary">
+                                                        {item.payment ? item.serviceName :
+                                                            (item.tranType === 0 ? '전환' :
+                                                                item.tranType === 1 ? '충전' : '환급')}
+                                                    </Typography>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <Grid container direction="column" spacing={1}>
+                                                <Grid item>
+                                                    <Typography variant="body2" color="transparent">placeholder</Typography>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Typography variant="body2" color="textSecondary">
+                                                        {new Date(item.datetime).toLocaleTimeString([], {
+                                                            hour: '2-digit',
+                                                            minute: '2-digit',
+                                                        })}
+                                                    </Typography>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid item xs={6}
+                                              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                                            <Grid container direction="column" spacing={1} style={{ textAlign: 'right' }}>
+                                                <Grid item>
+                                                    <Typography variant="body2" color="textSecondary">
+                                                        {item.payment ?
+                                                            `- ${item.payPrice.toLocaleString()}₩` :
+                                                            item.tranType === 0 ?
+                                                                (paymentType === 0 ?
+                                                                        (item.transferType === 0 ? `- ${item.krwAmount.toLocaleString()}₩` : `+ ${item.krwAmount.toLocaleString()}₩`) :
+                                                                        (item.transferType === 0 ? `+ ${item.krwAmount.toLocaleString()}₩` : `- ${item.krwAmount.toLocaleString()}₩`)
+                                                                ) :
+                                                                `${item.krwAmount.toLocaleString()}₩`
+                                                        }
+                                                        {(item.tranType === 1 || item.tranType === 2) && item.foreignAmount && item.currencyType ?
+                                                            ` (${item.foreignAmount.toLocaleString()} ${item.currencyType === 0 ? 'USD' : item.currencyType === 1 ? 'JPY' : item.currencyType === 2 ? 'CNY' : item.currencyType === 3 ? 'KRW' : ''})` :
+                                                            ''
+                                                        }
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Typography variant="body2" color="textSecondary">
+                                                        {item.type === 1 && item.tranType === 0 ? (
+                                                            paymentType === 0 ? (
+                                                                item.transferType === 0 ? (
+                                                                    <>
+                                                                        pay {(item.payBalanceSnap + item.krwAmount).toLocaleString()} -&gt; transit {item.transitBalanceSnap.toLocaleString()}₩
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        transit {(item.transitBalanceSnap - item.krwAmount).toLocaleString()} -&gt; pay {item.payBalanceSnap.toLocaleString()}₩
+                                                                    </>
+                                                                )
+                                                            ) : (
+                                                                item.transferType === 0 ? (
+                                                                    <>
+                                                                        pay {(item.payBalanceSnap + item.krwAmount).toLocaleString()} -&gt; transit {item.transitBalanceSnap.toLocaleString()}₩
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        transit {(item.transitBalanceSnap - item.krwAmount).toLocaleString()} -&gt; pay {item.payBalanceSnap.toLocaleString()}₩
+                                                                    </>
+                                                                )
+                                                            )
+                                                        ) : (
+                                                            `balance ${paymentType === 0 ?
+                                                                item.payBalanceSnap.toLocaleString() :
+                                                                item.transitBalanceSnap.toLocaleString()}₩`
+                                                        )}
+                                                    </Typography>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-                            </Grid>
-                            <Grid item xs={6}
-                                  sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                <Grid container direction="column" spacing={1} style={{ textAlign: 'right' }}>
-                                    <Grid item>
-                                        <Typography variant="body2" color="textSecondary">
-                                            {item.type === 0 ?
-                                                `- ${item.payPrice.toLocaleString()}₩` :
-                                                item.tranType === 0 ?
-                                                    (paymentType === 0 ?
-                                                            (item.transferType === 0 ? `- ${item.krwAmount.toLocaleString()}₩` : `+ ${item.krwAmount.toLocaleString()}₩`) :
-                                                            (item.transferType === 0 ? `+ ${item.krwAmount.toLocaleString()}₩` : `- ${item.krwAmount.toLocaleString()}₩`)
-                                                    ) :
-                                                    `${item.krwAmount.toLocaleString()}₩`
-                                            }
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item>
-                                        <Typography variant="body2" color="textSecondary">
-                                            {item.type === 1 && item.tranType === 0 ? (
-                                                paymentType === 0 ? (
-                                                    item.transferType === 0 ? (
-                                                        <>
-                                                            pay {(item.payBalanceSnap + item.krwAmount).toLocaleString()} -&gt; transit {item.transitBalanceSnap.toLocaleString()}₩
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            transit {(item.transitBalanceSnap - item.krwAmount).toLocaleString()} -&gt; pay {item.payBalanceSnap.toLocaleString()}₩
-                                                        </>
-                                                    )
-                                                ) : (
-                                                    item.transferType === 0 ? (
-                                                        <>
-                                                            pay {(item.payBalanceSnap + item.krwAmount).toLocaleString()} -&gt; transit {item.transitBalanceSnap.toLocaleString()}₩
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            transit {(item.transitBalanceSnap - item.krwAmount).toLocaleString()} -&gt; pay {item.payBalanceSnap.toLocaleString()}₩
-                                                        </>
-                                                    )
-                                                )
-                                            ) : (
-                                                `balance ${paymentType === 0 ?
-                                                    item.payBalanceSnap.toLocaleString() :
-                                                    item.transitBalanceSnap.toLocaleString()}₩`
-                                            )}
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </React.Fragment>
-                ))}
+                                </React.Fragment>
+                            ))}
+                        </React.Fragment>
+                    ))
+                ) : (
+                    <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '200px' }}>
+                        <Typography variant="h6" color="textSecondary">
+                            No data
+                        </Typography>
+                    </Grid>
+                )}
             </Paper>
             <Drawer
                 anchor="bottom"
@@ -355,7 +321,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                 <ListItemText
                                     primary="거래 유형"
                                     secondary={
-                                        selectedItem.type === 0
+                                        selectedItem.payment
                                             ? '일반결제'
                                             : '기타거래'
                                     }
@@ -367,7 +333,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                     secondary={selectedItem.userCardNo}
                                 />
                             </ListItem>
-                            {selectedItem.type === 0 ? (
+                            {selectedItem.payment ? (
                                 <>
                                     <ListItem>
                                         <ListItemText primary="결제 유형"
@@ -377,7 +343,8 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                         <ListItemText primary="결제번호" secondary={selectedItem.pno} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="결제 금액" secondary={selectedItem.payPrice.toLocaleString()} 원 />
+                                        <ListItemText primary="결제 금액" secondary={selectedItem.payPrice.toLocaleString()}
+                                                      원 />
                                     </ListItem>
                                     <ListItem>
                                         <ListItemText primary="결제 일시" secondary={selectedItem.datetime} />
@@ -414,19 +381,20 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                         </ListItem>
                                     )}
                                     <ListItem>
-                                        <ListItemText primary="원화 금액" secondary={selectedItem.krwAmount.toLocaleString()+' ₩'}  />
+                                        <ListItemText primary="원화 금액"
+                                                      secondary={selectedItem.krwAmount.toLocaleString() + ' ₩'} />
                                     </ListItem>
                                     {selectedItem.foreignAmount !== null && (
                                         <ListItem>
                                             <ListItemText primary="외화 금액"
                                                           secondary={`${selectedItem.foreignAmount.toLocaleString()} ${
-                                                              selectedItem.currency_type === 0 ? '달러' :
-                                                                  selectedItem.currency_type === 1 ? '엔' : '위안'}`} />
+                                                              selectedItem.currencyType === 0 ? '달러' :
+                                                                  selectedItem.currencyType === 1 ? '엔' : '위안'}`} />
                                         </ListItem>
                                     )}
                                     <ListItem>
                                         <ListItemText primary="거래 후 잔액" secondary={
-                                            paymentType === 0 ? selectedItem.payBalanceSnap.toLocaleString()+' ₩' : selectedItem.transitBalanceSnap.toLocaleString()+' ₩'
+                                            paymentType === 0 ? selectedItem.payBalanceSnap.toLocaleString() + ' ₩' : selectedItem.transitBalanceSnap.toLocaleString() + ' ₩'
                                         } 원 />
                                     </ListItem>
                                 </>
