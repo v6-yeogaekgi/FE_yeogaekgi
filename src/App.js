@@ -19,6 +19,8 @@ import Refund from './pages/Refund/Refund';
 
 import NewPost from './pages/Community/NewPost';
 import EditPost from './pages/Community/EditPost';
+import { AddBoxSharp } from '@mui/icons-material';
+import First from './pages/First/First';
 import Conversion from './pages/Conversion/Conversion';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 
@@ -35,8 +37,21 @@ const PageLayout = ({ children, menuName }) => {
         >
             <Header menuName={menuName} />
             <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
-
             <Footer />
+        </Box>
+    );
+};
+
+const FirstPage = ({ children }) => {
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                minHeight: '100vh',
+            }}
+        >
+            {children}
         </Box>
     );
 };
@@ -173,6 +188,14 @@ function App() {
                             </PageLayout>
                         }
                     />
+                    <Route
+                        path={'/signup'}
+                        element={
+                            <FirstPage>
+                                <First />
+                        </FirstPage>
+                    }
+                />
                     <Route
                         path={'/wallet/conversion'}
                         element={
