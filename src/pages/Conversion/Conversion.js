@@ -16,6 +16,7 @@ import { useLocation } from 'react-router';
 import cardImg from '../../img/Design.png';
 import axios from 'axios';
 import { AllStateContext } from '../../App';
+import { useNavigate } from 'react-router-dom';
 
 const StyledTextField = styled(TextField)({
     '& .MuiInputBase-input': {
@@ -24,14 +25,17 @@ const StyledTextField = styled(TextField)({
 });
 
 export default function Conversion({ data }) {
+    const navigate = useNavigate();
     const location = useLocation();
     const cardData = location.state?.data;
     const { payBalance, transitBalance, userCardId } = cardData;
     // console.log(payBalance);
     const { protocol, token } = useContext(AllStateContext);
     const conversionUrl = protocol + 'transaction/conversion';
+    const [transferAmount, setTransferAmount] = useState(null);
     const [transferType, setTransferType] = useState(0);
-    console.log(transferType);
+    // console.log(transferType);
+
     const [leftSide, setLeftSide] = useState({
         label: 'Pay',
         balance: payBalance,
@@ -40,17 +44,30 @@ export default function Conversion({ data }) {
         label: 'Transit',
         balance: transitBalance,
     });
-    const [transferAmount, setTransferAmount] = useState('0');
+
+    React.useEffect(()=>{
+        if(transferAmount > leftSide.balance) {
+            setTransferAmount(leftSide.balance);
+        } else if (transferAmount === leftSide.balance) {
+            setTransferAmount(null);
+        }
+    }, [transferAmount, leftSide.balance]);
+
+    const handleTransferAmountChange = (e) => {
+        const value = e.target.value;
+        setTransferAmount(value === '' ? null : Number(value));
+    };
 
     const handleSwitch = () => {
         setTransferType(1);
         setLeftSide(rightSide);
         setRightSide(leftSide);
     };
+
     const handleTransfer = () => {
-        alert(
-            `Transferring ${transferAmount}₩ from ${leftSide.label} to ${rightSide.label}`,
-        );
+        // alert(
+        //     `Transferring ${transferAmount}₩ from ${leftSide.label} to ${rightSide.label}`,
+        // );
         axios.post(
             conversionUrl,
             {
@@ -63,8 +80,19 @@ export default function Conversion({ data }) {
                     Authorization: token,
                     'Content-Type': 'application/json',
                 },
-            },
-        );
+            })
+        .then(function(res) {
+            if(res.ok) {
+                console.log("conversion success");
+                navigate('/wallet/detail', {state: {cardData}});
+            }
+        })
+        .catch(function(error) {
+            console.log("axios api error");
+        })
+        .then(function() { // always
+            navigate('/wallet/detail', {state: {cardData}});
+        });
     };
     return (
         <>
@@ -120,11 +148,7 @@ export default function Conversion({ data }) {
                                 <StyledTextField
                                     fullWidth
                                     variant="outlined"
-                                    value={
-                                        leftSide.balance - Number(transferAmount) >= 0 
-                                        ? leftSide.balance - Number(transferAmount) 
-                                        : (setTransferAmount(''), leftSide.balance)
-                                    }
+                                    value={Math.max(leftSide.balance - transferAmount, 0)}
                                     InputProps={{ readOnly: true }}
                                 />
                             </Grid>
@@ -140,10 +164,7 @@ export default function Conversion({ data }) {
                                 <StyledTextField
                                     fullWidth
                                     variant="outlined"
-                                    value={
-                                        rightSide.balance +
-                                        Number(transferAmount)
-                                    }
+                                    value={rightSide.balance + transferAmount}
                                     InputProps={{ readOnly: true }}
                                 />
                             </Grid>
@@ -164,14 +185,12 @@ export default function Conversion({ data }) {
                                 fullWidth
                                 variant="outlined"
                                 type="number"
-                                value={transferAmount}
-                                onChange={(e) =>
-                                    setTransferAmount(e.target.value)
-                                }
+                                value={transferAmount === null ? '' : transferAmount}
+                                onChange={handleTransferAmountChange}
                                 placeholder="0"
                             />
                             <IconButton
-                                onClick={() => setTransferAmount('')}
+                                onClick={() => setTransferAmount(null)}
                                 sx={{ ml: -5, zIndex: 1 }}
                             >
                                 <Clear />
