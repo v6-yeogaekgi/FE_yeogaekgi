@@ -58,7 +58,7 @@ const FirstPage = ({ children }) => {
 
 export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
-const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYmJAbmF2ZXIuY29tIiwiZXhwIjoxNzI0OTk4ODAzLCJpYXQiOjE3MjQzOTQwMDN9.tzXntTlo7R00IpLEcLOXCy2Dc5-r-LrmPUrJYw0THVs';
+const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYmJAbmF2ZXIuY29tIiwiZXhwIjoxNzI1MDk2MTAyLCJpYXQiOjE3MjQ0OTEzMDJ9.4NOcuaqRlwSVnOLjDiWJ3uTHj4KyWIKR1aaa4EPb_Hg';
 const memberInfo = {
     memberNo: 1396,
     accountNumber: "1111-1111-1111-1111",
