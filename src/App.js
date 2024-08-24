@@ -121,6 +121,14 @@ function App() {
                         element={<PageLayout menuName={'Community'}><Post /></PageLayout>}
                     />
                     <Route
+                        path={'/community/post/edit/:postId'}
+                        element={
+                            <PageLayout menuName={'Community'}>
+                                <EditPost />
+                            </PageLayout>
+                        }
+                    />
+                    <Route
                         path={'/community/comment/edit/:commentId'}
                         element={
                             <PageLayout menuName={'Community'}>

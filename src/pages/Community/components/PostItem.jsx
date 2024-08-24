@@ -5,13 +5,15 @@ import { ImageList, ImageListItem } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import EditIcon from '@mui/icons-material/Edit';
+import { Delete } from '@mui/icons-material';
 import Avatar from '@mui/material/Avatar';
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
 import TranslateIcon from '@mui/icons-material/Translate';
-
 import LikeCheckbox from '../../../components/LikeCheckbox/LikeCheckbox';
 import { getCountryImgById } from '../../../util';
 import BasicButton from '../../../components/BasicButton/BasicButton';
+
 
 const Images = ({ images, postId }) => {
     if (images && images.length >= 1) {
@@ -78,7 +80,7 @@ const PostItem = ({
     regDate,
     modDate,
     likeState,
-    parentPage="register",
+    parentPage="",
     currentMemberId
 }) => {
     const navigate = useNavigate();
@@ -207,7 +209,56 @@ const PostItem = ({
                             {commentCnt}
                         </Typography>
                     </div>
-                    <div>
+                    <div style={{display:"flex", justifyContent:"flex-end"}}>
+                        {currentMemberId == memberId ? (
+                                <Button
+                                    id="edit-button"
+                                    size="small"
+                                    aria-label="edit"
+                                    startIcon={<EditIcon />}
+                                    sx={{
+                                        color: '#4653f9',
+                                        padding: '4px 8px',
+                                        fontSize: '0.75rem',
+                                        height: '24px',
+                                        minWidth: '32px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        textAlign: 'center',
+                                        '& .MuiButton-startIcon': {
+                                            marginRight: 0,
+                                        },
+                                    }}
+                                    onClick={()=>{navigate("/community/post/edit/"+postId)}}
+                                />
+                            ) : (<></>)
+                        }
+                        {currentMemberId == memberId ? (
+                            <Button
+                                id="delete-button"
+                                size="small"
+                                aria-label="delete"
+                                startIcon={<Delete />}
+                                sx={{
+                                    color: '#4653f9',
+                                    padding: '4px 8px',
+                                    fontSize: '0.75rem',
+                                    height: '24px',
+                                    minWidth: '32px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    textAlign: 'center',
+                                    '& .MuiButton-startIcon': {
+                                        marginRight: 0,
+                                    },
+                                }}
+                                onClick={()=>{}}
+                            />
+                            ) : (<></>)
+                        }
+
                         <TranslateIcon
                             sx={{
                                 size:"small",
