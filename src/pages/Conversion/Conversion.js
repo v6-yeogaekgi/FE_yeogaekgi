@@ -6,18 +6,16 @@ import {
     Button,
     TextField,
     IconButton,
-    CardContent,
-    Container,
     Grid,
-    AppBar,
-    Toolbar,
 } from '@mui/material';
 import { ArrowBack, SwapVert, ArrowForward, Clear } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useLocation } from 'react-router';
 import cardImg from '../../img/Design.png';
+import axios from 'axios';
+import { AllStateContext } from '../../App';
 
 const StyledTextField = styled(TextField)({
     '& .MuiInputBase-input': {
@@ -25,24 +23,48 @@ const StyledTextField = styled(TextField)({
     },
 });
 
-export default function Conversion({data}) {
+export default function Conversion({ data }) {
     const location = useLocation();
     const cardData = location.state?.data;
-    const { status, card_name, pay_balance, transit_balance, starred } = cardData;
-
-    const [leftSide, setLeftSide] = useState({ label: 'Pay', balance: pay_balance });
+    const { payBalance, transitBalance, userCardId } = cardData;
+    // console.log(payBalance);
+    const { protocol, token } = useContext(AllStateContext);
+    const conversionUrl = protocol + 'transaction/conversion';
+    const [transferType, setTransferType] = useState(0);
+    console.log(transferType);
+    const [leftSide, setLeftSide] = useState({
+        label: 'Pay',
+        balance: payBalance,
+    });
     const [rightSide, setRightSide] = useState({
         label: 'Transit',
-        balance: transit_balance,
+        balance: transitBalance,
     });
-    const [transferAmount, setTransferAmount] = useState();
+    const [transferAmount, setTransferAmount] = useState('0');
 
     const handleSwitch = () => {
+        setTransferType(1);
         setLeftSide(rightSide);
         setRightSide(leftSide);
     };
     const handleTransfer = () => {
-        alert(`Transferring ${transferAmount}₩ from ${leftSide.label} to ${rightSide.label}`);
+        alert(
+            `Transferring ${transferAmount}₩ from ${leftSide.label} to ${rightSide.label}`,
+        );
+        axios.post(
+            conversionUrl,
+            {
+                krwAmount: transferAmount,
+                transferType: transferType,
+                userCardNo: userCardId,
+            },
+            {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                },
+            },
+        );
     };
     return (
         <>
@@ -91,18 +113,26 @@ export default function Conversion({data}) {
                             container
                             spacing={2}
                             alignItems="center"
-                            sx={{ mb: 2, mt: 2}}
+                            sx={{ mb: 2, mt: 2 }}
                         >
                             <Grid item xs={5}>
                                 <Typography>{leftSide.label}</Typography>
                                 <StyledTextField
                                     fullWidth
                                     variant="outlined"
-                                    value={leftSide.balance}
+                                    value={
+                                        leftSide.balance - Number(transferAmount) >= 0 
+                                        ? leftSide.balance - Number(transferAmount) 
+                                        : (setTransferAmount(''), leftSide.balance)
+                                    }
                                     InputProps={{ readOnly: true }}
                                 />
                             </Grid>
-                            <Grid item xs={2} sx={{ textAlign: 'center', mt:3 }}>
+                            <Grid
+                                item
+                                xs={2}
+                                sx={{ textAlign: 'center', mt: 3 }}
+                            >
                                 <ArrowForward />
                             </Grid>
                             <Grid item xs={5}>
@@ -110,7 +140,10 @@ export default function Conversion({data}) {
                                 <StyledTextField
                                     fullWidth
                                     variant="outlined"
-                                    value={rightSide.balance}
+                                    value={
+                                        rightSide.balance +
+                                        Number(transferAmount)
+                                    }
                                     InputProps={{ readOnly: true }}
                                 />
                             </Grid>
@@ -135,7 +168,7 @@ export default function Conversion({data}) {
                                 onChange={(e) =>
                                     setTransferAmount(e.target.value)
                                 }
-                                placeholder='0'
+                                placeholder="0"
                             />
                             <IconButton
                                 onClick={() => setTransferAmount('')}
@@ -150,7 +183,7 @@ export default function Conversion({data}) {
                             variant="contained"
                             color="primary"
                             onClick={handleTransfer}
-                            sx={{mt: 2}}
+                            sx={{ mt: 2 }}
                         >
                             Transfer
                         </Button>
