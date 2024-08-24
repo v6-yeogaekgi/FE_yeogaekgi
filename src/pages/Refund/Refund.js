@@ -1,23 +1,51 @@
 import Box from '@mui/material/Box';
 import UserCardOnDetail from '../../components/UserCardOnDetail/UserCardOnDetail';
 import * as React from 'react';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import UserCardOnRefund from '../../components/UserCardOnRefund/UserCardOnRefund';
 import { Accordion, AccordionDetails, AccordionSummary, Grid, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Checkbox from '@mui/material/Checkbox';
 import BasicButton from '../../components/BasicButton/BasicButton';
+import axios from 'axios';
+import { AllStateContext } from '../../App';
+import { useNavigate } from 'react-router-dom';
+import useAlertDialog from '../../hooks/useAlertDialog/useAlertDialog';
 
 export default function Refund() {
 
     const [paymentType, setPaymentType] = useState(0);
+    const [memberData, setMemberData] = useState(null);
+    const [isAgreed, setIsAgreed] = useState(false);
+    const [expanded, setExpanded] = useState(false);
+    const { openAlertDialog, AlertDialog } = useAlertDialog();
+    const [alertContent, setAlertContent] = useState('');
+
+    const navigate = useNavigate();
+
+    const { protocol, token } = useContext(AllStateContext);
+    const uri = protocol + 'transaction/refund';
+
     const location = useLocation();
     const data = location.state?.data;
     const fee = 3000;
 
-    const [isAgreed, setIsAgreed] = useState(false);
-    const [expanded, setExpanded] = useState(false);
+    useEffect(() => {
+        const getUser = localStorage.getItem('member');
+        if (getUser) {
+            try {
+                setMemberData(JSON.parse(getUser));
+            } catch (e) {
+                console.error('Failed to parse member data from localStorage', e);
+            }
+        }
+    }, []);
+
+    if (!memberData) {
+        // 데이터가 아직 로드되지 않았을 때 로딩 메시지 표시
+        return <Typography>Loading...</Typography>;
+    }
 
     const handleAgreeChange = (event) => {
         setIsAgreed(event.target.checked);
@@ -26,20 +54,42 @@ export default function Refund() {
     const handleAccordionChange = (event, isExpanded) => {
         setExpanded(isExpanded);
     };
-    
-    // 로그인된 정보를 활용해서 가져오기 user 정보 가져오기
-    
-    //{
-    //                     user_card_no: 0,
-    //                     card_name: '예시 카드 1',
-    //                     design: '디자인 예시',
-    //                     payBalance: 10000,
-    //                     transit_balance: 5000,
-    //                     status: 1,
-    //                     starred: 1,
-    //                     exp_date: new Date(),
-    //                 }
 
+    const handleRefundClick = () => {
+        if( !isAgreed ){
+            setAlertContent('약관 동의 체크    문구');
+            openAlertDialog();
+            return;
+        }
+
+
+        if (data.payBalance < 3000) {
+            setAlertContent('보유 잔액이 수수료보다 적을 시 알리는 문구');
+            openAlertDialog();
+            return;
+        }
+
+        doRefund();
+    };
+
+    const doRefund = () => {
+        axios
+            .post(uri,
+                { userCardNo: data.userCardId },
+                {
+                    headers: {
+                        Authorization: token,
+                        'Content-Type': 'application/json',
+                    },
+                },
+            )
+            .then((res) => {
+                navigate('/wallet/detail', { state: { cardData: data } });
+            })
+            .catch((err) => {
+                console.error('API 요청 중 오류 발생:', err);
+            });
+    };
 
     return (
         <>
@@ -69,16 +119,18 @@ export default function Refund() {
                     }}
                 >
                     <UserCardOnRefund data={data} />
-                    <div style={{ width : '100%' }}>
-                        <Grid container spacing={2} sx={{maxWidth: '100%', margin: 'auto', paddingTop: '20px'}}>
+                    <div style={{ width: '100%' }}>
+                        <Grid container spacing={2} sx={{ maxWidth: '100%', margin: 'auto', paddingTop: '20px' }}>
                             <Grid item xs={12}>
-                                <Typography component="h1" variant="h5">잔액 <b>{data.payBalance.toLocaleString()} ₩</b></Typography>
+                                <Typography component="h1"
+                                            variant="h5">잔액 <b>{data.payBalance.toLocaleString()} ₩</b></Typography>
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography component="h1" variant="h5">수수료 <b>{fee.toLocaleString()} ₩</b></Typography>
                             </Grid>
                             <Grid item xs={12}>
-                                <Typography component="h1" variant="h5"><b>{(data.payBalance-fee).toLocaleString()} ₩</b></Typography>
+                                <Typography component="h1"
+                                            variant="h5"><b>{(data.payBalance - fee).toLocaleString()} ₩</b></Typography>
                             </Grid>
                             <Grid item xs={9}>
                                 {/* 환율 API 적용 */}
@@ -89,41 +141,60 @@ export default function Refund() {
                             </Grid>
                         </Grid>
 
-                        <Grid container spacing={2} sx={{maxWidth: '100%', margin: 'auto', paddingTop : '20px'}}>
-                            <Grid item xs={12} sx={{ bgcolor: '#f5f5f5', padding: '15px', marginBottom: '15px', borderRadius: '15px' }}>
+                        <Grid container spacing={2} sx={{ maxWidth: '100%', margin: 'auto', paddingTop: '20px' }}>
+                            <Grid item xs={12} sx={{
+                                bgcolor: '#f5f5f5',
+                                padding: '15px',
+                                marginBottom: '15px',
+                                borderRadius: '15px',
+                            }}>
                                 <Grid container>
                                     <Grid item xs={12}>
                                         <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>이름</Typography>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <Typography variant="body1" sx={{ marginTop: '5px' }}>홍길동</Typography>
+                                        <Typography variant="body1"
+                                                    sx={{ marginTop: '5px' }}>{memberData.name}</Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
 
-                            <Grid item xs={12} sx={{ bgcolor: '#f5f5f5', padding: '15px', marginBottom: '15px', borderRadius: '15px' }}>
+                            <Grid item xs={12} sx={{
+                                bgcolor: '#f5f5f5',
+                                padding: '15px',
+                                marginBottom: '15px',
+                                borderRadius: '15px',
+                            }}>
                                 <Grid container>
                                     <Grid item xs={12}>
                                         <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>은행명</Typography>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <Typography variant="body1" sx={{ marginTop: '5px' }}>OO은행</Typography>
+                                        <Typography variant="body1"
+                                                    sx={{ marginTop: '5px' }}>{memberData.bank}</Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
 
-                            <Grid item xs={12} sx={{ bgcolor: '#f5f5f5', padding: '15px', marginBottom: '15px', borderRadius: '15px' }}>
+                            <Grid item xs={12} sx={{
+                                bgcolor: '#f5f5f5',
+                                padding: '15px',
+                                marginBottom: '15px',
+                                borderRadius: '15px',
+                            }}>
                                 <Grid container>
                                     <Grid item xs={12}>
                                         <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>계좌번호</Typography>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <Typography variant="body1" sx={{ marginTop: '5px' }}>0000 - 0000 - 0000 - 0000</Typography>
+                                        <Typography variant="body1"
+                                                    sx={{ marginTop: '5px' }}>{memberData.accountNumber}</Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
 
-                            <Grid item xs={12} sx={{ padding: '0 !important' , marginBottom: '15px', borderRadius: '15px'}}>
+                            <Grid item xs={12}
+                                  sx={{ padding: '0 !important', marginBottom: '15px', borderRadius: '15px' }}>
                                 <Accordion
                                     expanded={expanded}
                                     onChange={handleAccordionChange}
@@ -145,12 +216,12 @@ export default function Refund() {
                                         sx={{
                                             flexDirection: 'row',
                                             '& .MuiAccordionSummary-expandIconWrapper': {
-                                                marginRight: '10px'
+                                                marginRight: '10px',
                                             },
                                             padding: '15px',
                                             '& .MuiAccordionSummary-content': {
                                                 margin: '0 !important',
-                                            }
+                                            },
                                         }}
                                     >
                                         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
@@ -190,7 +261,13 @@ export default function Refund() {
                             text={'신청하기'}
                             width={'100%'}
                             size={'medium'}
+                            onClick={handleRefundClick}
                         ></BasicButton>
+
+                        <AlertDialog
+                            title={'open alert test'}
+                            content={alertContent}
+                        />
                     </div>
                 </Box>
 
