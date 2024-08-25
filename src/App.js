@@ -43,7 +43,7 @@ const PageLayout = ({ children, menuName }) => {
 
 export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
-const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYmJAbmF2ZXIuY29tIiwiZXhwIjoxNzI1MDQ1MDExLCJpYXQiOjE3MjQ0NDAyMTF9._VvRkz4BhLSU8H_od1mXIhC2HuB_LqLypzjzLh9Qrss';
+const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYmJAbmF2ZXIuY29tIiwiZXhwIjoxNzI1MjAzNTAyLCJpYXQiOjE3MjQ1OTg3MDJ9.TJdKa9jfdgiFoE8RrlToJ-J2OZ71AAavnB2uzV9yV7Q';
 const memberInfo = {
     memberNo: 1396,
     accountNumber: "1111-1111-1111-1111",
@@ -108,7 +108,7 @@ function App() {
                         }
                     />
                     <Route
-                        path={'/community/modify'}
+                        path={'/community/modify/:postId'}
                         element={
                             <PageLayout menuName={'Community'}>
                                 <EditPost />

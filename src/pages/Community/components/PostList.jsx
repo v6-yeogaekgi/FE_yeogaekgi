@@ -2,16 +2,17 @@ import * as React from 'react';
 import PostItem from './PostItem';
 
 
-const PostList = ({ posts }) => {
-
+const PostList = ({ posts, likeList=[], alertDialog, confirmDialog }) => {
     return (
         <div className="PostList">
             {posts.map((post) => (
                 <PostItem key={post.postId}
+                    alertDialog={alertDialog}
+                    confirmDialog={confirmDialog}
                     postId={post.postId}
                     memberId={post.memberId}
                     nickname={post.nickname}
-                    countryId={post.countryId}
+                    code={post.code}
                     images={post.images}
                     content={post.content}
                     hashtag={post.hashtag}
@@ -19,9 +20,10 @@ const PostList = ({ posts }) => {
                     commentCnt={post.commentCnt}
                     regDate={post.regDate}
                     modDate={post.modDate}
-                    likeState={post.likeState}
+                    likeState={likeList.includes(post.postId)}
                     parentPage={"list"}
                     currentMemberId={post.currentMemberId}
+
                 />
             ))}
         </div>

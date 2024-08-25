@@ -8,6 +8,8 @@ import PostItem from './components/PostItem';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AllStateContext } from '../../App';
+import useAlertDialog from '../../hooks/useAlertDialog/useAlertDialog';
+import useConfirmDialog from '../../hooks/useConfirmDialog/useConfirmDialog';
 
 const PageLayout = ({ menuName, children }) => (
     <Box
@@ -68,7 +70,10 @@ const mockComment = [
 export const CommentStateContext = React.createContext();
 export const CommentDispatchContext = React.createContext();
 
+
 const Post = () => {
+    const { openAlertDialog, AlertDialog } = useAlertDialog();
+    const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
     const [comment, setComment] = useState([]);
     const [post, setPost] = useState({});
     const { protocol, token } = useContext(AllStateContext);
@@ -124,6 +129,7 @@ const Post = () => {
             .then((res) => {
                 alert('댓글이 삭제되었습니다.');
                 getApi();
+                getPostApi();
             })
             .catch((error) => {
                 console.error('API 호출 오류:', error);
@@ -134,7 +140,12 @@ const Post = () => {
     // ================ [start] post api 호출 부분 ================
     const getPostApiUrl = protocol + '/';
     const getPostApi = () => {
-        axios.get(protocol + 'community/' + postId).then((res) => {
+        axios.get(protocol + 'community/' + postId, {
+            headers: {
+                Authorization: token,
+                'Content-Type': 'application/json', // 데이터 형식을 명시
+            }
+        }).then((res) => {
             setPost(res.data);
         });
     };
@@ -160,29 +171,34 @@ const Post = () => {
     } else {
         return (
             // <PageLayout menuName="post">
-                <CommentStateContext.Provider value={{ comment, postId }}>
-                    <CommentDispatchContext.Provider value={memoizedDispatch}>
-                        <PostItem
-                            key={post.postId}
-                            postId={post.postId}
-                            memberId={post.memberId}
-                            nickname={post.nickname}
-                            countryId={post.countryId}
-                            images={post.images}
-                            content={post.content}
-                            hashtag={post.hashtag}
-                            likeCnt={post.likeCnt}
-                            commentCnt={post.commentCnt}
-                            regDate={post.regDate}
-                            modDate={post.modDate}
-                            likeState={post.likeState}
-                            currentMemberId={post.currentMemberId}
-                        />
-                        <CommentList />
-                        <CommentRegister />
-                    </CommentDispatchContext.Provider>
-                </CommentStateContext.Provider>
+            <CommentStateContext.Provider value={{ comment, postId }}>
+                <CommentDispatchContext.Provider value={memoizedDispatch}>
+                    <PostItem
+                        alertDialog={openAlertDialog}
+                        confirmDialog={openConfirmDialog}
+                        key={post.postId}
+                        postId={post.postId}
+                        memberId={post.memberId}
+                        nickname={post.nickname}
+                        countryId={post.countryId}
+                        images={post.images}
+                        content={post.content}
+                        hashtag={post.hashtag}
+                        likeCnt={post.likeCnt}
+                        commentCnt={post.commentCnt}
+                        regDate={post.regDate}
+                        modDate={post.modDate}
+                        likeState={post.likeState}
+                        currentMemberId={post.currentMemberId}
+                    />
+                    <CommentList />
+                    <CommentRegister />
+                </CommentDispatchContext.Provider>
+                <AlertDialog></AlertDialog>
+                <ConfirmDialog></ConfirmDialog>
+            </CommentStateContext.Provider>
             // </PageLayout>
+
         );
     }
 };
