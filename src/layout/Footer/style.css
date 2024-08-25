@@ -38,12 +38,12 @@
 }
 
 .nav-link svg {
-    margin-bottom: 2px;
+    margin-bottom: 0px;
 }
 
 .nav-link.active {
     background-color: #4653f9; /* 파란색 배경 */
-    border-radius: 8px; /* 모서리를 둥글게 */
+    border-radius: 20px; /* 모서리를 둥글게 */
 }
 
 .nav-link.active .nav-text {
@@ -52,4 +52,8 @@
 
 .nav-link {
     transition: background-color 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+body {
+    font-family: 'Noto Sans', sans-serif;
 }
