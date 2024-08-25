@@ -77,9 +77,9 @@ function App() {
                     <Route
                         path={'/'}
                         element={
-                            <PageLayout menuName={'home'}>
-                                <HomePage />
-                            </PageLayout>
+                            <FirstPage>
+                                <First />
+                            </FirstPage>
                         }
                     />
                     <Route
@@ -189,14 +189,7 @@ function App() {
                             </PageLayout>
                         }
                     />
-                    <Route
-                        path={'/first'}
-                        element={
-                            <FirstPage>
-                                <First />
-                            </FirstPage>
-                        }
-                    />
+
                     <Route
                         path={'/login'}
                         element={

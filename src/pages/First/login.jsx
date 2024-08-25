@@ -40,7 +40,7 @@ function Login() {
             });
             const { token } = response.data;
             localStorage.setItem('token', token);
-            navigate('/');
+            navigate('/home');
         } catch (error) {
             console.error('API 호출 오류:', error);
         }
