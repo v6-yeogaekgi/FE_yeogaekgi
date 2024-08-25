@@ -178,7 +178,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <Typography variant="subtitle1" style={{ fontWeight: 'bold', margin: '20px 0 10px' }}>
-                                        {format(new Date(date), 'yyyy년 MM월 dd일')}
+                                        {format(new Date(date), 'MM/dd')}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -199,7 +199,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                     >
                                         <Grid item xs={12}>
                                             <Typography variant="body2" color="textSecondary">
-                                                {item.payment ? `결제 번호: ${item.pno}` : `거래 번호: ${item.tno}`}
+                                                {item.payment ? `Payment no: ${item.pno}` : `Transaction no: ${item.tno}`}
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={1} sx={{ display: 'flex', alignItems: 'center' }}>
@@ -217,14 +217,14 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                             <Grid container direction="column" spacing={1}>
                                                 <Grid item>
                                                     <Typography variant="body2">
-                                                        {item.payment ? '결제' : '거래'}
+                                                        {item.payment ? 'Payment' : 'Transaction'}
                                                     </Typography>
                                                 </Grid>
                                                 <Grid item>
                                                     <Typography variant="body2" color="textSecondary">
                                                         {item.payment ? item.serviceName :
-                                                            (item.tranType === 0 ? '전환' :
-                                                                item.tranType === 1 ? '충전' : '환급')}
+                                                            (item.tranType === 0 ? 'Conversion' :
+                                                                item.tranType === 1 ? 'Top Up' : 'Refund')}
                                                     </Typography>
                                                 </Grid>
                                             </Grid>
@@ -236,7 +236,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                                 </Grid>
                                                 <Grid item>
                                                     <Typography variant="body2" color="textSecondary">
-                                                        {new Date(item.datetime).toLocaleTimeString([], {
+                                                        {new Date(item.datetime).toLocaleTimeString('en-US', {
                                                             hour: '2-digit',
                                                             minute: '2-digit',
                                                         })}

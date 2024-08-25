@@ -123,10 +123,10 @@ export default function Refund() {
                         <Grid container spacing={2} sx={{ maxWidth: '100%', margin: 'auto', paddingTop: '20px' }}>
                             <Grid item xs={12}>
                                 <Typography component="h1"
-                                            variant="h5">잔액 <b>{data.payBalance.toLocaleString()} ₩</b></Typography>
+                                            variant="h5">Balance <b>{data.payBalance.toLocaleString()} ₩</b></Typography>
                             </Grid>
                             <Grid item xs={12}>
-                                <Typography component="h1" variant="h5">수수료 <b>{fee.toLocaleString()} ₩</b></Typography>
+                                <Typography component="h1" variant="h5">Fee <b>{fee.toLocaleString()} ₩</b></Typography>
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography component="h1"
@@ -134,10 +134,10 @@ export default function Refund() {
                             </Grid>
                             <Grid item xs={9}>
                                 {/* 환율 API 적용 */}
-                                <Typography>최종 환급 금액</Typography>
+                                <Typography>Refund Amount</Typography>
                             </Grid>
                             <Grid item xs={3}>
-                                <Typography>000,000 ¥</Typography>
+                                <Typography>{((data.payBalance - fee)/10).toLocaleString()}¥</Typography>
                             </Grid>
                         </Grid>
 
@@ -150,11 +150,11 @@ export default function Refund() {
                             }}>
                                 <Grid container>
                                     <Grid item xs={12}>
-                                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>이름</Typography>
+                                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>name</Typography>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Typography variant="body1"
-                                                    sx={{ marginTop: '5px' }}>{memberData.name}</Typography>
+                                                    sx={{ marginTop: '5px' }}>{memberData.name?memberData.name:'Hong Gil-dong'}</Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -184,7 +184,7 @@ export default function Refund() {
                             }}>
                                 <Grid container>
                                     <Grid item xs={12}>
-                                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>계좌번호</Typography>
+                                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Bank Account</Typography>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Typography variant="body1"
@@ -231,34 +231,34 @@ export default function Refund() {
                                                 onClick={(event) => event.stopPropagation()}
                                                 onFocus={(event) => event.stopPropagation()}
                                             />
-                                            <Typography>약관 동의 </Typography>
+                                            <Typography> I agree to the above terms </Typography>
                                         </Box>
                                     </AccordionSummary>
                                     <AccordionDetails sx={{ padding: '15px' }}>
                                         <Typography>
-                                            약관 내용 <br></br>
-                                            약관 내용 <br></br>
-                                            약관 내용 <br></br>
-                                            약관 내용 <br></br>
-                                            약관 내용 <br></br>
-                                            약관 내용 <br></br>
-                                            약관 내용 <br></br>
-                                            약관 내용 <br></br>
+                                            terms of service <br></br>
+                                            terms of service <br></br>
+                                            terms of service <br></br>
+                                            terms of service <br></br>
+                                            terms of service <br></br>
+                                            terms of service <br></br>
+                                            terms of service <br></br>
+                                            terms of service <br></br>
                                         </Typography>
                                     </AccordionDetails>
                                 </Accordion>
                             </Grid>
 
                             <Grid item xs={12} sx={{ padding: '15px', marginBottom: '15px' }}>
-                                <Typography variant={'subtitle1'}>예상 환급 소요일</Typography>
-                                <Typography variant={'h5'}>3일</Typography>
+                                <Typography variant={'subtitle1'}>Estimated Refund Time</Typography>
+                                <Typography variant={'h5'}>3days</Typography>
                             </Grid>
 
                         </Grid>
 
                         <BasicButton
                             variant={'contained'}
-                            text={'신청하기'}
+                            text={'Refund'}
                             width={'100%'}
                             size={'medium'}
                             onClick={handleRefundClick}

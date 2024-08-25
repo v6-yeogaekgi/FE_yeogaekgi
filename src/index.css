@@ -7,10 +7,6 @@ body {
     justify-content: center;
 }
 
-body {
-    height: 100%;
-}
-
 #root {
     margin: 0 auto;
     max-width: 400px;
