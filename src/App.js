@@ -23,6 +23,7 @@ import { AddBoxSharp } from '@mui/icons-material';
 import First from './pages/First/First';
 import Conversion from './pages/Conversion/Conversion';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
+import Login from './pages/First/login';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -58,14 +59,14 @@ const FirstPage = ({ children }) => {
 
 export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
-const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYmJAbmF2ZXIuY29tIiwiZXhwIjoxNzI1MDk2MTAyLCJpYXQiOjE3MjQ0OTEzMDJ9.4NOcuaqRlwSVnOLjDiWJ3uTHj4KyWIKR1aaa4EPb_Hg';
+const token = localStorage.getItem('token');
 const memberInfo = {
     memberNo: 1396,
-    accountNumber: "1111-1111-1111-1111",
-    bank: "testBank",
-    email: "bbb@naver.com",
-    code: "KR",
-};    
+    accountNumber: '1111-1111-1111-1111',
+    bank: 'testBank',
+    email: 'bbb@naver.com',
+    code: 'KR',
+};
 localStorage.setItem('member', JSON.stringify(memberInfo));
 function App() {
     return (
@@ -189,13 +190,21 @@ function App() {
                         }
                     />
                     <Route
-                        path={'/signup'}
+                        path={'/first'}
                         element={
                             <FirstPage>
                                 <First />
-                        </FirstPage>
-                    }
-                />
+                            </FirstPage>
+                        }
+                    />
+                    <Route
+                        path={'/login'}
+                        element={
+                            <FirstPage>
+                                <Login />
+                            </FirstPage>
+                        }
+                    />
                     <Route
                         path={'/wallet/conversion'}
                         element={
