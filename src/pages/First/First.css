@@ -1,0 +1,56 @@
+.page-container {
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.title {
+    font-family: 'Arial', sans-serif;
+    font-size: 3rem;
+    color: #ffffff;
+    margin-bottom: 2rem;
+}
+
+.button-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn {
+    padding: 0.8rem 2rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.signup {
+    background-color: #4a90e2;
+    color: #ffffff;
+}
+
+.signup:hover {
+    background-color: #357abd;
+}
+
+.login {
+    background-color: #ffffff;
+    color: #4a90e2;
+    border: 1px solid #4a90e2;
+}
+
+.login:hover {
+    background-color: #f0f0f0;
+}

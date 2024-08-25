@@ -19,8 +19,11 @@ import Refund from './pages/Refund/Refund';
 
 import NewPost from './pages/Community/NewPost';
 import EditPost from './pages/Community/EditPost';
+import { AddBoxSharp } from '@mui/icons-material';
+import First from './pages/First/First';
 import Conversion from './pages/Conversion/Conversion';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
+import Login from './pages/First/login';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -35,22 +38,35 @@ const PageLayout = ({ children, menuName }) => {
         >
             <Header menuName={menuName} />
             <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
-
             <Footer />
+        </Box>
+    );
+};
+
+const FirstPage = ({ children }) => {
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                minHeight: '100vh',
+            }}
+        >
+            {children}
         </Box>
     );
 };
 
 export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
-const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYmJAbmF2ZXIuY29tIiwiZXhwIjoxNzI0OTk4ODAzLCJpYXQiOjE3MjQzOTQwMDN9.tzXntTlo7R00IpLEcLOXCy2Dc5-r-LrmPUrJYw0THVs';
+const token = localStorage.getItem('token');
 const memberInfo = {
     memberNo: 1396,
-    accountNumber: "1111-1111-1111-1111",
-    bank: "testBank",
-    email: "bbb@naver.com",
-    code: "KR",
-};    
+    accountNumber: '1111-1111-1111-1111',
+    bank: 'testBank',
+    email: 'bbb@naver.com',
+    code: 'KR',
+};
 localStorage.setItem('member', JSON.stringify(memberInfo));
 function App() {
     return (
@@ -61,19 +77,12 @@ function App() {
                     <Route
                         path={'/'}
                         element={
-                            <PageLayout menuName={'home'}>
-                                <HomePage />
-                            </PageLayout>
+                            <FirstPage>
+                                <First />
+                            </FirstPage>
                         }
                     />
-                    <Route
-                        path={'/home'}
-                        element={
-                            <PageLayout menuName={'home'}>
-                                <HomePage />
-                            </PageLayout>
-                        }
-                    />
+                    <Route path={'/home'} element={<HomePage />} />
                     <Route
                         path={'/wallet'}
                         element={
@@ -129,7 +138,7 @@ function App() {
                         }
                     />
                     <Route
-                        path={'/community/imageDetail'}
+                        path={'/community/imageDetail/:postId'}
                         element={<ImageDetail />}
                     />
                     <Route
@@ -171,6 +180,15 @@ function App() {
                             <PageLayout menuName={'kiosk'}>
                                 <Kiosk />
                             </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/login'}
+                        element={
+                            <FirstPage>
+                                <Login />
+                            </FirstPage>
                         }
                     />
                     <Route

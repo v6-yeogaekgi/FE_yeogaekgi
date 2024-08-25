@@ -17,9 +17,11 @@ const Header = ({ menuName }) => {
     };
 
     return (
-        <Box sx={{ flexGrow: 1, color: '000'}} className='header'>
-            {/* elevation{0} -> Remove Shadow */}
-            <AppBar position="static" elevation={0} sx={{ backgroundColor: 'white', color: 'black' }}>
+        <Box sx={{ flexGrow: 1, color: '000' }} className="header">
+            <AppBar
+                position="static" elevation={0}
+                sx={{ backgroundColor: 'white', color: 'black' }}
+            >
                 <Toolbar sx={{ justifyContent: 'space-between' }}>
                     <IconButton
                         onClick={handleBack}
