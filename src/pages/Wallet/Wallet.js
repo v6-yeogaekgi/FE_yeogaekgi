@@ -13,31 +13,31 @@ const Registration = () => (
     <Paper
         onClick={() => alert('Registration')}
         sx={{
-            width: '90%', // 너비를 100%로 변경
-            height: '150px',
+            position: 'absolute',
+            bottom: '-30px', // 푸터에 약간 가려지도록 조정
+            left: '5%',
+            width: '90%',
+            height: '100px',
             border: '1px solid #ccc',
             borderRadius: '10px 10px 0 0',
             padding: '20px',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between',
-            marginTop: 'auto',
-            backgroundColor: 'white', // 배경색 추가
-            transform: 'translateY(20%)',
+            justifyContent: 'center',
+            backgroundColor: 'white',
             overflow: 'hidden',
-            boxSizing: 'border-box', // 패딩을 너비에 포함
-            margin: '0 auto', // 가운데 정렬
+            boxSizing: 'border-box',
             alignItems: 'center',
-            transition: 'background-color 0.3s, box-shadow 0.3s', // 부드러운 변화를 위해 transition 추가
+            transition: 'all 0.3s ease',
             cursor: 'pointer',
-            '&:hover': { // hover 상태 정의
-                backgroundColor: '#f5f5f5', // 배경색 변경
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', // 그림자 추가
+            '&:hover': {
+                backgroundColor: '#f5f5f5',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+                bottom: '-20px', // hover 시 약간 올라오도록 설정
             },
         }}
     >
         Registration
-        {/* + 버튼 추가 */}
     </Paper>
 );
 
@@ -70,7 +70,8 @@ export default function Wallet(props) {
             )
             .then((res) => {
                 if (Array.isArray(res.data) && res.data.length > 0) {
-                    const formattedData = res.data.map(item => ({
+                    const filteredData = res.data.filter(item => item.status !== 2);
+                    const formattedData = filteredData.map(item => ({
                         userCardId: item.userCardId,
                         expiryDate: item.expiryDate,
                         payBalance: item.payBalance,
@@ -99,13 +100,14 @@ export default function Wallet(props) {
 
     return (
         <Box sx={{
-            minHeight: '100vh',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            paddingBottom: '75px', //
             position: 'relative', //
             overflow: 'hidden', //
+            minHeight: '100%',
+            paddingBottom: '100px',
+
         }}>
             <Box
                 sx={{
@@ -124,17 +126,10 @@ export default function Wallet(props) {
                     <UserCard key={index} data={cardData} onCardClick={handleCardClick} />
                 ))}
             </Box>
-
-            <Box sx={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                width: '100%',
-            }}>
-                <Registration
-
-                />
-            </Box>
+            {data && data.length === 1 && (
+                <Box sx={{ height: '134px', width: '100%' }} /> // 빈 박스 추가
+            )}
+            <Registration />
         </Box>
     );
 }

@@ -51,19 +51,19 @@ const SettingsDrawer = ({ data }) => {
                             <ListItemText primary={'주카드 설정'} />
                         </ListItemButton>
                     </ListItem>
-                    <ListItem key={'충전'} disablePadding>
+                    <ListItem key={'충전'} disablePadding onClick={() => navigate('/wallet/top-up', { state: { data } })}>
                         <ListItemButton>
                             <ListItemText primary={'충전'} />
                         </ListItemButton>
                     </ListItem>
-                    <ListItem key={'환급'} disablePadding onClick={() => navigate('refund', { state: { data } })}>
+                    <ListItem key={'환급'} disablePadding onClick={() => navigate('/wallet/detail/refund', { state: { data } })}>
                         <ListItemButton>
                             <ListItemText primary={'환급'} />
                         </ListItemButton>
                     </ListItem>
                     <ListItem key={'잔액 전환'} disablePadding>
                         <ListItemButton>
-                            <ListItemText primary={'잔액 전환'} />
+                            <ListItemText primary={'잔액 전환'} onClick={() => navigate('/wallet/conversion', { state: { data } })}/>
                         </ListItemButton>
                     </ListItem>
                 </List>
