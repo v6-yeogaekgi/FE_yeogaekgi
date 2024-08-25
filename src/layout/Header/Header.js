@@ -7,7 +7,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Music from '../../components/Music/music';
-import "./style.css";
+import './style.css';
 
 const Header = ({ menuName }) => {
     const navigate = useNavigate();
@@ -17,8 +17,11 @@ const Header = ({ menuName }) => {
     };
 
     return (
-        <Box sx={{ flexGrow: 1, color: '000'}} className='header'>
-            <AppBar position="static" sx={{ backgroundColor: 'white', color: 'black' }}>
+        <Box sx={{ flexGrow: 1, color: '000' }} className="header">
+            <AppBar
+                position="static"
+                sx={{ backgroundColor: 'white', color: 'black' }}
+            >
                 <Toolbar sx={{ justifyContent: 'space-between' }}>
                     <IconButton
                         onClick={handleBack}

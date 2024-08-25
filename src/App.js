@@ -82,14 +82,7 @@ function App() {
                             </FirstPage>
                         }
                     />
-                    <Route
-                        path={'/home'}
-                        element={
-                            <PageLayout menuName={'home'}>
-                                <HomePage />
-                            </PageLayout>
-                        }
-                    />
+                    <Route path={'/home'} element={<HomePage />} />
                     <Route
                         path={'/wallet'}
                         element={
