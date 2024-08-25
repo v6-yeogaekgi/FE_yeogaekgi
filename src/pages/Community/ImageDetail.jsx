@@ -4,6 +4,9 @@ import axios from 'axios';
 import { AllStateContext } from '../../App';
 import Header from '../../layout/Header/Header';
 import Box from '@mui/material/Box';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const PageLayout = ({ children }) => {
     return (
@@ -27,21 +30,17 @@ const PageLayout = ({ children }) => {
 
 const ImageDetail = () => {
     const [images, setImages] = useState([]);
-    const [currentIndex, setCurrentIndex] = useState(0);
     const { protocol, token } = useContext(AllStateContext);
     const { postId } = useParams();
 
     const getApiUrl = protocol + 'community/';
 
-    // API 호출 부분
     const getApi = () => {
         axios
             .get(getApiUrl + postId)
             .then((res) => {
-                // 문자열로 받은 JSON 데이터를 배열로 변환
                 const imagesArray = JSON.parse(res.data.images);
                 setImages(imagesArray || []);
-                console.log(imagesArray);
             })
             .catch((error) => {
                 console.error('API 호출 중 오류 발생:', error);
@@ -53,29 +52,25 @@ const ImageDetail = () => {
         getApi();
     }, []);
 
-    const handleNext = () => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    };
-
-    const handlePrev = () => {
-        setCurrentIndex(
-            (prevIndex) => (prevIndex - 1 + images.length) % images.length,
-        );
-    };
-
     return (
         <PageLayout>
             {images.length > 0 ? (
-                <div>
-                    <img
-                        src={images[currentIndex]}
-                        alt={`Image ${currentIndex + 1}`}
-                    />
-                    <div>
-                        <button onClick={handlePrev}>Prev</button>
-                        <button onClick={handleNext}>Next</button>
-                    </div>
-                </div>
+                <Swiper
+                    spaceBetween={50}
+                    slidesPerView={1}
+                    pagination={{ clickable: true }} // 네비게이션 제거
+                    style={{ width: '400px', height: 'auto' }}
+                >
+                    {images.map((image, index) => (
+                        <SwiperSlide key={index}>
+                            <img
+                                src={image}
+                                alt={`Image ${index + 1}`}
+                                style={{ width: '100%', height: 'auto' }}
+                            />
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
             ) : (
                 <p>Loading...</p>
             )}
