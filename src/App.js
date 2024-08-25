@@ -19,8 +19,11 @@ import Refund from './pages/Refund/Refund';
 
 import NewPost from './pages/Community/NewPost';
 import EditPost from './pages/Community/EditPost';
+import { AddBoxSharp } from '@mui/icons-material';
+import First from './pages/First/First';
 import Conversion from './pages/Conversion/Conversion';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
+import Login from './pages/First/login';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -28,29 +31,41 @@ const PageLayout = ({ children, menuName }) => {
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                minHeight: '100vh',
                 paddingTop: '64px', // header 높이만큼 패딩 추가
                 paddingBottom: '70px', // Footer 높이만큼 패딩 추가
             }}
         >
             <Header menuName={menuName} />
             <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
-
             <Footer />
+        </Box>
+    );
+};
+
+const FirstPage = ({ children }) => {
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                minHeight: '100vh',
+            }}
+        >
+            {children}
         </Box>
     );
 };
 
 export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
-const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYmJAbmF2ZXIuY29tIiwiZXhwIjoxNzI1MjAzNTAyLCJpYXQiOjE3MjQ1OTg3MDJ9.TJdKa9jfdgiFoE8RrlToJ-J2OZ71AAavnB2uzV9yV7Q';
+const token = localStorage.getItem('token');
 const memberInfo = {
     memberNo: 1396,
-    accountNumber: "1111-1111-1111-1111",
-    bank: "testBank",
-    email: "bbb@naver.com",
-    code: "KR",
-};    
+    accountNumber: '1111-1111-1111-1111',
+    bank: 'testBank',
+    email: 'bbb@naver.com',
+    code: 'KR',
+};
 localStorage.setItem('member', JSON.stringify(memberInfo));
 function App() {
     return (
@@ -61,19 +76,12 @@ function App() {
                     <Route
                         path={'/'}
                         element={
-                            <PageLayout menuName={'home'}>
-                                <HomePage />
-                            </PageLayout>
+                            <FirstPage>
+                                <First />
+                            </FirstPage>
                         }
                     />
-                    <Route
-                        path={'/home'}
-                        element={
-                            <PageLayout menuName={'home'}>
-                                <HomePage />
-                            </PageLayout>
-                        }
-                    />
+                    <Route path={'/home'} element={<HomePage />} />
                     <Route
                         path={'/wallet'}
                         element={
@@ -93,7 +101,7 @@ function App() {
                     <Route
                         path={'/community'}
                         element={
-                            <PageLayout menuName={'Community'}>
+                            <PageLayout menuName={'community'}>
                                 <Main />
                             </PageLayout>
                         }
@@ -102,15 +110,15 @@ function App() {
                     <Route
                         path={'/community/regist'}
                         element={
-                            <PageLayout menuName={'Community'}>
+                            <PageLayout menuName={'community'}>
                                 <NewPost />
                             </PageLayout>
                         }
                     />
                     <Route
-                        path={'/community/modify/:postId'}
+                        path={'/community/modify'}
                         element={
-                            <PageLayout menuName={'Community'}>
+                            <PageLayout menuName={'community'}>
                                 <EditPost />
                             </PageLayout>
                         }
@@ -118,20 +126,16 @@ function App() {
 
                     <Route
                         path={'/community/post/:postId'}
-                        element={<PageLayout menuName={'Community'}><Post /></PageLayout>}
-                    />
-                    <Route
-                        path={'/community/post/edit/:postId'}
                         element={
                             <PageLayout menuName={'Community'}>
-                                <EditPost />
+                                <Post />
                             </PageLayout>
                         }
                     />
                     <Route
                         path={'/community/comment/edit/:commentId'}
                         element={
-                            <PageLayout menuName={'Community'}>
+                            <PageLayout menuName={'comment edit'}>
                                 <EditComment />
                             </PageLayout>
                         }
@@ -179,6 +183,15 @@ function App() {
                             <PageLayout menuName={'kiosk'}>
                                 <Kiosk />
                             </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/login'}
+                        element={
+                            <FirstPage>
+                                <Login />
+                            </FirstPage>
                         }
                     />
                     <Route
