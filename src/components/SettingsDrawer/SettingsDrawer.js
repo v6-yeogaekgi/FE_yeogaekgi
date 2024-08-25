@@ -56,7 +56,7 @@ const SettingsDrawer = ({ data }) => {
                             <ListItemText primary={'충전'} />
                         </ListItemButton>
                     </ListItem>
-                    <ListItem key={'환급'} disablePadding onClick={() => navigate('refund', { state: { data } })}>
+                    <ListItem key={'환급'} disablePadding onClick={() => navigate('/wallet/detail/refund', { state: { data } })}>
                         <ListItemButton>
                             <ListItemText primary={'환급'} />
                         </ListItemButton>
