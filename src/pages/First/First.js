@@ -7,7 +7,7 @@ const First = () => {
     const navigate = useNavigate();
 
     const handleLoginClick = () => {
-        navigate('/signin');
+        navigate('/login');
     };
 
     return (
