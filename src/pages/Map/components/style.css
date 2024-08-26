@@ -1,0 +1,28 @@
+.swiper {
+    height: 400px; /* 높이를 자동으로 조정 */
+    background-color: #fff;
+    padding: 10px 0; /* 패딩 추가 */
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 1000;
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+
+    /* Center slide text vertically */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+}
+
+.swiper-slide img {
+    display: block;
+    max-width: 400px;
+    height: 400px;
+    object-fit: cover;
+}
