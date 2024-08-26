@@ -23,7 +23,7 @@ const Footer = () => {
                     <IconComponent
                         style={{
                             fontSize: 35,
-                            color: isActive ? 'white' : 'gray',
+                            color: isActive ? '#4653f9' : 'gray',
                         }}
                     />
                     <p className={`nav-text ${isActive ? 'active' : ''}`}>
