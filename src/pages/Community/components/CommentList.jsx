@@ -20,7 +20,7 @@ const CommentList = () => {
             aria-labelledby="nested-list-subheader"
             subheader={
                 <ListSubheader component="div" id="nested-list-subheader">
-                    댓글
+                    Comments
                 </ListSubheader>
             }
         >

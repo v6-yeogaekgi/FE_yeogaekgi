@@ -26,9 +26,12 @@ const CommentItem = ({
     modDate,
     code,
     onDelete,
+    currentMemberId,
 }) => {
     const onClickDeleteComment = () => {
-        const isConfirmed = window.confirm('댓글을 삭제하시겠습니까?');
+        const isConfirmed = window.confirm(
+            'Would you like to delete the comment?',
+        );
         if (isConfirmed) {
             onDelete(commentId, postId);
         }
@@ -40,8 +43,7 @@ const CommentItem = ({
         navigate(`/community/comment/edit/${commentId}`);
     };
 
-    const currentMemberNo = 402;
-    const shouldRenderButtons = currentMemberNo === memberId;
+    const shouldRenderButtons = currentMemberId === memberId;
 
     return (
         <List sx={{ width: '95%', bgcolor: 'background.paper' }}>
