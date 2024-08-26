@@ -31,3 +31,4 @@ const BasicButton = ({ text, variant, btnColor, width, onClick, textColor, endIc
 };
 
 export default BasicButton;
+// export default Button;

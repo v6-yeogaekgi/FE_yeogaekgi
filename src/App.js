@@ -31,7 +31,6 @@ const PageLayout = ({ children, menuName }) => {
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                minHeight: '100vh',
                 paddingTop: '64px', // header 높이만큼 패딩 추가
                 paddingBottom: '70px', // Footer 높이만큼 패딩 추가
             }}
@@ -82,14 +81,7 @@ function App() {
                             </FirstPage>
                         }
                     />
-                    <Route
-                        path={'/home'}
-                        element={
-                            <PageLayout menuName={'home'}>
-                                <HomePage />
-                            </PageLayout>
-                        }
-                    />
+                    <Route path={'/home'} element={<HomePage />} />
                     <Route
                         path={'/wallet'}
                         element={
@@ -134,7 +126,11 @@ function App() {
 
                     <Route
                         path={'/community/post/:postId'}
-                        element={<Post />}
+                        element={
+                            <PageLayout menuName={'Community'}>
+                                <Post />
+                            </PageLayout>
+                        }
                     />
                     <Route
                         path={'/community/comment/edit/:commentId'}
