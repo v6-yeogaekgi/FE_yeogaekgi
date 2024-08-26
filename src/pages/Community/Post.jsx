@@ -106,6 +106,7 @@ const Post = () => {
             })
             .then((res) => {
                 setPost(res.data);
+                console.log(res);
             });
     };
     // ================ [end] post api 호출 부분 ================

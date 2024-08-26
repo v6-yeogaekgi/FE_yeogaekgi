@@ -28,7 +28,9 @@ const CommentItem = ({
     onDelete,
 }) => {
     const onClickDeleteComment = () => {
-        const isConfirmed = window.confirm('댓글을 삭제하시겠습니까?');
+        const isConfirmed = window.confirm(
+            'Would you like to delete the comment?',
+        );
         if (isConfirmed) {
             onDelete(commentId, postId);
         }
