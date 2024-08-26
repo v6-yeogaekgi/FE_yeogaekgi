@@ -50,7 +50,7 @@ const Post = () => {
                 {
                     headers: {
                         Authorization: token,
-                        'Content-Type': 'application/json', // 데이터 형식을 명시
+                        'Content-Type': 'application/json',
                     },
                 },
             )
@@ -80,7 +80,7 @@ const Post = () => {
             .delete(getApiUrl + commentId, {
                 headers: {
                     Authorization: token,
-                    'Content-Type': 'application/json', // 데이터 형식을 명시
+                    'Content-Type': 'application/json',
                 },
             })
             .then((res) => {

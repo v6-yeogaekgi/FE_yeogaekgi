@@ -145,7 +145,7 @@ function App() {
                         }
                     />
                     <Route
-                        path={'/community/modify'}
+                        path={'/community/modify/:postId'}
                         element={
                             <PageLayout menuName={'community'}>
                                 <EditPost />
