@@ -327,81 +327,81 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                         <>
                             <ListItem>
                                 <ListItemText
-                                    primary="거래 유형"
+                                    primary="Type"
                                     secondary={
                                         selectedItem.payment
-                                            ? '일반결제'
-                                            : '기타거래'
+                                            ? 'Pay'
+                                            : 'Transaction'
                                     }
                                 />
                             </ListItem>
                             <ListItem>
                                 <ListItemText
-                                    primary="카드번호"
+                                    primary="Card Number"
                                     secondary={selectedItem.userCardNo}
                                 />
                             </ListItem>
                             {selectedItem.payment ? (
                                 <>
                                     <ListItem>
-                                        <ListItemText primary="결제 유형"
+                                        <ListItemText primary="Pay Type"
                                                       secondary={selectedItem.payType === 0 ? '일반' : '교통'} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="결제번호" secondary={selectedItem.pno} />
+                                        <ListItemText primary="Pay Number" secondary={selectedItem.pno} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="결제 금액" secondary={selectedItem.payPrice.toLocaleString()}
+                                        <ListItemText primary="Pay Price" secondary={selectedItem.payPrice.toLocaleString()}
                                                       원 />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="결제 일시" secondary={selectedItem.datetime} />
+                                        <ListItemText primary="Pay Date" secondary={selectedItem.datetime} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="거래 후 잔액" secondary={
+                                        <ListItemText primary="Pay Balance Snap" secondary={
                                             paymentType === 0 ? selectedItem.payBalanceSnap : selectedItem.transitBalanceSnap
                                         } 원 />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="결제 상태"
-                                                      secondary={selectedItem.status === 1 ? '결제완료' : '취소완료'} />
+                                        <ListItemText primary="Status"
+                                                      secondary={selectedItem.status === 1 ? 'Payment Completed' : 'Cancellation Completed'} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="가맹점" secondary={selectedItem.serviceName} />
+                                        <ListItemText primary="Service" secondary={selectedItem.serviceName} />
                                     </ListItem>
                                 </>
                             ) : (
                                 <>
                                     <ListItem>
-                                        <ListItemText primary="거래 유형"
-                                                      secondary={selectedItem.tranType === 0 ? '전환' : selectedItem.tranType === 1 ? '충전' : '환급'} />
+                                        <ListItemText primary="Transaction Type"
+                                                      secondary={selectedItem.tranType === 0 ? 'Conversion' : selectedItem.tranType === 1 ? 'Top Up' : 'Refund'} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="거래 번호" secondary={selectedItem.tno} />
+                                        <ListItemText primary="Transaction Number" secondary={selectedItem.tno} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="거래 일시" secondary={selectedItem.datetime} />
+                                        <ListItemText primary="Transaction Date" secondary={selectedItem.datetime} />
                                     </ListItem>
                                     {selectedItem.transferType !== null && (
                                         <ListItem>
-                                            <ListItemText primary="거래 방향"
-                                                          secondary={selectedItem.transferType === 0 ? '페이 -> 교통' : '교통 -> 페이'} />
+                                            <ListItemText primary="Transfer Type"
+                                                          secondary={selectedItem.transferType === 0 ? 'Pay -> Transit' : 'Transit -> pay'} />
                                         </ListItem>
                                     )}
                                     <ListItem>
-                                        <ListItemText primary="원화 금액"
+                                        <ListItemText primary="KRW Amount"
                                                       secondary={selectedItem.krwAmount.toLocaleString() + ' ₩'} />
                                     </ListItem>
                                     {selectedItem.foreignAmount !== null && (
                                         <ListItem>
-                                            <ListItemText primary="외화 금액"
+                                            <ListItemText primary="Foreign Amount"
                                                           secondary={`${selectedItem.foreignAmount.toLocaleString()} ${
-                                                              selectedItem.currencyType === 0 ? '달러' :
-                                                                  selectedItem.currencyType === 1 ? '엔' : '위안'}`} />
+                                                              selectedItem.currencyType === 0 ? '$' :
+                                                                  selectedItem.currencyType === 1 ? '¥' : '¥'}`} />
                                         </ListItem>
                                     )}
                                     <ListItem>
-                                        <ListItemText primary="거래 후 잔액" secondary={
+                                        <ListItemText primary="Transaction Balance Snap" secondary={
                                             paymentType === 0 ? selectedItem.payBalanceSnap.toLocaleString() + ' ₩' : selectedItem.transitBalanceSnap.toLocaleString() + ' ₩'
                                         } 원 />
                                     </ListItem>
