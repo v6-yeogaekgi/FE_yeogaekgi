@@ -123,21 +123,24 @@ export default function Refund() {
                         <Grid container spacing={2} sx={{ maxWidth: '100%', margin: 'auto', paddingTop: '20px' }}>
                             <Grid item xs={12}>
                                 <Typography component="h1"
-                                            variant="h5">Balance <b>{data.payBalance.toLocaleString()} ₩</b></Typography>
+                                            variant="h5">Balance <b>{data.payBalance > fee ? fee.toLocaleString() : 0} ₩</b></Typography>
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography component="h1" variant="h5">Fee <b>{fee.toLocaleString()} ₩</b></Typography>
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography component="h1"
-                                            variant="h5"><b>{(data.payBalance - fee).toLocaleString()} ₩</b></Typography>
+                                            variant="h5"><b>{(data.payBalance - fee) < 0 ? 0 :(data.payBalance - fee).toLocaleString()} ₩</b></Typography>
                             </Grid>
                             <Grid item xs={9}>
                                 {/* 환율 API 적용 */}
                                 <Typography>Refund Amount</Typography>
                             </Grid>
                             <Grid item xs={3}>
-                                <Typography>{((data.payBalance - fee)/10).toLocaleString()}¥</Typography>
+                                <Typography>
+                                    {/* Todo : 멤버 정보에 따라서 통화 수정  */}
+                                    {(data.payBalance - fee) < 0 ? 0 :((data.payBalance - fee)/10).toLocaleString()}
+                                </Typography>
                             </Grid>
                         </Grid>
 
@@ -167,7 +170,7 @@ export default function Refund() {
                             }}>
                                 <Grid container>
                                     <Grid item xs={12}>
-                                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>은행명</Typography>
+                                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Bank Name</Typography>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Typography variant="body1"
