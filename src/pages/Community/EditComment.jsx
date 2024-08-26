@@ -9,19 +9,27 @@ import { useEffect } from 'react';
 
 const EditComment = () => {
     const [initialComment, setInitialComment] = useState([]);
-    const { protocol, token } = useContext(AllStateContext);
+    const { protocol } = useContext(AllStateContext);
     const navigate = useNavigate();
 
     const { commentId } = useParams();
     const getApiUrl = protocol + 'community/comment/';
+    const token = localStorage.getItem('token');
 
     //  api 호출 부분
 
     // Api 호출 부분
     const getOneCommentApi = () => {
-        axios.get(getApiUrl + commentId).then((res) => {
-            setInitialComment(res.data);
-        });
+        axios
+            .get(getApiUrl + commentId, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json', // 데이터 형식을 명시
+                },
+            })
+            .then((res) => {
+                setInitialComment(res.data);
+            });
     };
 
     const onUpdate = (newContent) => {
@@ -35,7 +43,7 @@ const EditComment = () => {
                 },
             })
             .then((res) => {
-                alert('댓글이 수정되었습니다.');
+                alert('The comment has been edited');
                 navigate('/community/post/' + postId);
             })
             .catch((error) => {

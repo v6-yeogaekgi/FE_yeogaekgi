@@ -42,14 +42,13 @@ export default function Main(props) {
                 'Content-Type': 'application/json', // 데이터 형식을 명시
             },
         }).then((res) => {
-
             setLikeList(res.data);
+            // return res.data;
         }).catch((error) => {
             console.error('API 호출 오류:', error);
             throw error;
         });
     };
-    getLikeListApi();
 
 
 
@@ -59,7 +58,9 @@ export default function Main(props) {
 
 
     const [page, setPage] = useState(0);
-
+    useEffect(()=>{
+        getLikeListApi();
+    },[])
     useEffect(()=>{
         getListApi()
 

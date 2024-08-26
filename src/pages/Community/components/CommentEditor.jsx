@@ -52,7 +52,10 @@ const CommentEditor = ({ initialComment, onUpdate }) => {
             >
                 <Avatar
                     src={getCountryImgById(initialComment.code)}
-                    sx={{ marginRight: '10px' }}
+                    sx={{
+                        marginRight: '10px',
+                        fontFamily: 'Noto Sans, sans-serif',
+                    }}
                 />
                 <Typography component="span" variant="h6">
                     {initialComment.nickname}
@@ -81,10 +84,10 @@ const CommentEditor = ({ initialComment, onUpdate }) => {
             <br />
             <TextField
                 id="outlined-multiline-static"
-                sx={{ width: '100%' }}
+                sx={{ width: '100%', fontFamily: 'Noto Sans, sans-serif' }}
                 multiline
                 rows={4}
-                placeholder="댓글을 수정해주세요"
+                placeholder="Please edit the comment"
                 value={commentState.content}
                 onChange={handleChangeContent}
                 fullWidth
@@ -95,7 +98,6 @@ const CommentEditor = ({ initialComment, onUpdate }) => {
                     {`${(commentState.content || '').length} / 500`}
                 </Typography>
             </div>
-            <br></br>
 
             <div
                 style={{
@@ -104,30 +106,45 @@ const CommentEditor = ({ initialComment, onUpdate }) => {
                     justifyContent: 'center',
                     gap: '8px',
                 }}
+            ></div>
+            <Button
+                variant="contained"
+                sx={{
+                    width: '100%',
+                    mt: 3,
+                    borderRadius: 5,
+                    textTransform: 'capitalize',
+                    height: 50,
+                    fontSize: '16px',
+                    fontFamily: 'Noto Sans, sans-serif',
+                    backgroundColor: '#4653f9',
+                    '&:hover': {
+                        backgroundColor: '#3a43d1',
+                    },
+                }}
+                onClick={handleSubmit}
             >
-                <Button
-                    variant="contained"
-                    sx={{
-                        backgroundColor: '#4653f9',
-                        color: 'white',
-                        flex: 1,
-                    }}
-                    onClick={handleSubmit}
-                >
-                    Edit
-                </Button>
-                <Button
-                    variant="contained"
-                    sx={{
-                        backgroundColor: 'gray',
-                        color: 'white',
-                        flex: 1,
-                    }}
-                    onClick={handleOnGoBack}
-                >
-                    Cancel
-                </Button>
-            </div>
+                Edit
+            </Button>
+            <Button
+                variant="contained"
+                sx={{
+                    width: '100%',
+                    mt: 2,
+                    borderRadius: 5,
+                    textTransform: 'capitalize',
+                    height: 50,
+                    fontSize: '16px',
+                    fontFamily: 'Noto Sans, sans-serif',
+                    backgroundColor: '#9e9e9e',
+                    '&:hover': {
+                        backgroundColor: '#757575',
+                    },
+                }}
+                onClick={handleOnGoBack}
+            >
+                Cancel
+            </Button>
         </div>
     );
 };

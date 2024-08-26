@@ -16,7 +16,7 @@ const PageLayout = ({ menuName, children }) => (
         sx={{
             display: 'flex',
             flexDirection: 'column',
-            minHeight: '100vh',
+            minHeight: 900,
             paddingBottom: '140px', // Footer 높이만큼 패딩 추가
         }}
     >
@@ -26,62 +26,19 @@ const PageLayout = ({ menuName, children }) => (
     </Box>
 );
 
-const mockComment = [
-    {
-        commentId: 1,
-        postNo: 1,
-        email: 'user1@test.com',
-        nickname: 'test1',
-        content:
-            'cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1',
-        regDate: new Date().getTime(),
-        modDate: new Date().getTime(),
-        countryId: 2,
-    },
-    {
-        commentId: 2,
-        postNo: 1,
-        email: 'user2@test.com',
-        nickname: 'test2',
-        content: 'cotent...2.',
-        regDate: new Date().getTime(),
-        countryId: 1,
-    },
-    {
-        commentId: 3,
-        postNo: 2,
-        email: 'user3@test.com',
-        nickname: 'test3',
-        content: 'cotent...3',
-        regDate: new Date().getTime(),
-        countryId: 1,
-    },
-    {
-        commentId: 4,
-        postNo: 2,
-        email: 'user4@test.com',
-        nickname: 'test4',
-        content: 'cotent...4',
-        regDate: new Date().getTime(),
-        countryId: 2,
-    },
-];
-
 export const CommentStateContext = React.createContext();
 export const CommentDispatchContext = React.createContext();
-
 
 const Post = () => {
     const { openAlertDialog, AlertDialog } = useAlertDialog();
     const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
     const [comment, setComment] = useState([]);
     const [post, setPost] = useState({});
-    const { protocol, token } = useContext(AllStateContext);
+    const { protocol } = useContext(AllStateContext);
+    const token = localStorage.getItem('token');
 
     const { postId } = useParams();
     const navigate = useNavigate();
-
-
 
     // ================ [start] comment api 호출 부분 ================
     const getApiUrl = protocol + 'community/comment/';
@@ -93,7 +50,7 @@ const Post = () => {
                 {
                     headers: {
                         Authorization: token,
-                        'Content-Type': 'application/json', // 데이터 형식을 명시
+                        'Content-Type': 'application/json',
                     },
                 },
             )
@@ -107,9 +64,16 @@ const Post = () => {
     };
 
     const getApi = () => {
-        axios.get(getApiUrl + 'all/' + postId).then((res) => {
-            setComment(res.data);
-        });
+        axios
+            .get(getApiUrl + 'all/' + postId, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((res) => {
+                setComment(res.data);
+            });
     };
 
     const onCreate = (content) => {
@@ -120,14 +84,14 @@ const Post = () => {
 
     const onDelete = (commentId, postId) => {
         return axios
-            .delete(getApiUrl + commentId, {
+            .delete(getApiUrl + postId + '/' + commentId, {
                 headers: {
                     Authorization: token,
-                    'Content-Type': 'application/json', // 데이터 형식을 명시
+                    'Content-Type': 'application/json',
                 },
             })
             .then((res) => {
-                alert('댓글이 삭제되었습니다.');
+                alert('The comment has been deleted');
                 getApi();
                 getPostApi();
             })
@@ -140,14 +104,17 @@ const Post = () => {
     // ================ [start] post api 호출 부분 ================
     const getPostApiUrl = protocol + '/';
     const getPostApi = () => {
-        axios.get(protocol + 'community/' + postId, {
-            headers: {
-                Authorization: token,
-                'Content-Type': 'application/json', // 데이터 형식을 명시
-            }
-        }).then((res) => {
-            setPost(res.data);
-        });
+        axios
+            .get(protocol + 'community/' + postId, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json', // 데이터 형식을 명시
+                },
+            })
+            .then((res) => {
+                setPost(res.data);
+                console.log(res);
+            });
     };
     // ================ [end] post api 호출 부분 ================
 
@@ -156,7 +123,6 @@ const Post = () => {
     useEffect(() => {
         setComment([]);
         setIsDataLoaded(true);
-        getPostApi();
     }, []);
     useEffect(() => {
         getPostApi();
@@ -170,35 +136,34 @@ const Post = () => {
         return <div>Loading...</div>;
     } else {
         return (
-            // <PageLayout menuName="post">
-            <CommentStateContext.Provider value={{ comment, postId }}>
-                <CommentDispatchContext.Provider value={memoizedDispatch}>
-                    <PostItem
-                        alertDialog={openAlertDialog}
-                        confirmDialog={openConfirmDialog}
-                        key={post.postId}
-                        postId={post.postId}
-                        memberId={post.memberId}
-                        nickname={post.nickname}
-                        countryId={post.countryId}
-                        images={post.images}
-                        content={post.content}
-                        hashtag={post.hashtag}
-                        likeCnt={post.likeCnt}
-                        commentCnt={post.commentCnt}
-                        regDate={post.regDate}
-                        modDate={post.modDate}
-                        likeState={post.likeState}
-                        currentMemberId={post.currentMemberId}
-                    />
-                    <CommentList />
-                    <CommentRegister />
-                </CommentDispatchContext.Provider>
-                <AlertDialog></AlertDialog>
-                <ConfirmDialog></ConfirmDialog>
-            </CommentStateContext.Provider>
-            // </PageLayout>
-
+            <PageLayout menuName="post">
+                <CommentStateContext.Provider value={{ comment, postId }}>
+                    <CommentDispatchContext.Provider value={memoizedDispatch}>
+                        <PostItem
+                            alertDialog={openAlertDialog}
+                            confirmDialog={openConfirmDialog}
+                            key={post.postId}
+                            postId={post.postId}
+                            memberId={post.memberId}
+                            nickname={post.nickname}
+                            countryId={post.countryId}
+                            images={post.images}
+                            content={post.content}
+                            hashtag={post.hashtag}
+                            likeCnt={post.likeCnt}
+                            commentCnt={post.commentCnt}
+                            regDate={post.regDate}
+                            modDate={post.modDate}
+                            likeState={post.likeState}
+                            currentMemberId={post.currentMemberId}
+                        />
+                        <CommentList />
+                        <CommentRegister />
+                    </CommentDispatchContext.Provider>
+                    <AlertDialog></AlertDialog>
+                    <ConfirmDialog></ConfirmDialog>
+                </CommentStateContext.Provider>
+            </PageLayout>
         );
     }
 };
