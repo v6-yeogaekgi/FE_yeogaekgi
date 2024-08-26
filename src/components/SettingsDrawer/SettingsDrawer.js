@@ -44,38 +44,51 @@ const SettingsDrawer = ({ data }) => {
                 // onClick={toggleDrawer(false)}
                 // onKeyDown={toggleDrawer(false)}
             >
+                {data.status === 1 ? (
+                    <List>
+                        {/*{['주카드 설정', '충전', '환급', '잔액 전환'].map((text) => (*/}
+                        <ListItem key={'주카드 설정'} disablePadding>
+                            <ListItemButton>
+                                <ListItemText primary={'주카드 설정'} />
+                            </ListItemButton>
+                        </ListItem>
+                        <ListItem key={'충전'} disablePadding
+                                  onClick={() => navigate('/wallet/top-up', { state: { data } })}>
+                            <ListItemButton>
+                                <ListItemText primary={'충전'} />
+                            </ListItemButton>
+                        </ListItem>
+                        <ListItem key={'환급'} disablePadding
+                                  onClick={() => navigate('/wallet/detail/refund', { state: { data } })}>
+                            <ListItemButton>
+                                <ListItemText primary={'환급'} />
+                            </ListItemButton>
+                        </ListItem>
+                        <ListItem key={'잔액 전환'} disablePadding>
+                            <ListItemButton>
+                                <ListItemText primary={'잔액 전환'}
+                                              onClick={() => navigate('/wallet/conversion', { state: { data } })} />
+                            </ListItemButton>
+                        </ListItem>
+                    </List>
+                ) : null}
+                {data.status === 1 ? (
+                    <Divider />
+                ) : (null)}
                 <List>
-                    {/*{['주카드 설정', '충전', '환급', '잔액 전환'].map((text) => (*/}
-                    <ListItem key={'주카드 설정'} disablePadding>
-                        <ListItemButton>
-                            <ListItemText primary={'주카드 설정'} />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem key={'충전'} disablePadding onClick={() => navigate('/wallet/top-up', { state: { data } })}>
-                        <ListItemButton>
-                            <ListItemText primary={'충전'} />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem key={'환급'} disablePadding onClick={() => navigate('/wallet/detail/refund', { state: { data } })}>
-                        <ListItemButton>
-                            <ListItemText primary={'환급'} />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem key={'잔액 전환'} disablePadding>
-                        <ListItemButton>
-                            <ListItemText primary={'잔액 전환'} onClick={() => navigate('/wallet/conversion', { state: { data } })}/>
-                        </ListItemButton>
-                    </ListItem>
-                </List>
-                <Divider />
-                <List>
-                    <ListItem key={'카드 상세'} disablePadding onClick={openAlertDialog}>
-                        <ListItemButton>
+                    <ListItem key={'카드 상세'} disablePadding>
+                        <ListItemButton onClick={(e) => {
+                            e.stopPropagation();
+                            openAlertDialog();
+                        }}>
                             <ListItemText primary={'카드 상세'} />
                         </ListItemButton>
                     </ListItem>
                     <ListItem key={'카드 삭제'} disablePadding>
-                        <ListItemButton>
+                        <ListItemButton onClick={(e) => {
+                            e.stopPropagation();
+                            // 카드 삭제 로직 추가
+                        }}>
                             <ListItemText primary={'카드 삭제'} />
                         </ListItemButton>
                     </ListItem>
