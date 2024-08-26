@@ -16,7 +16,7 @@ const PageLayout = ({ menuName, children }) => (
         sx={{
             display: 'flex',
             flexDirection: 'column',
-            minHeight: '100vh',
+            minHeight: 900,
             paddingBottom: '140px', // Footer 높이만큼 패딩 추가
         }}
     >
@@ -64,9 +64,16 @@ const Post = () => {
     };
 
     const getApi = () => {
-        axios.get(getApiUrl + 'all/' + postId).then((res) => {
-            setComment(res.data);
-        });
+        axios
+            .get(getApiUrl + 'all/' + postId, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((res) => {
+                setComment(res.data);
+            });
     };
 
     const onCreate = (content) => {
@@ -106,6 +113,7 @@ const Post = () => {
             })
             .then((res) => {
                 setPost(res.data);
+                console.log(res);
             });
     };
     // ================ [end] post api 호출 부분 ================
@@ -128,34 +136,34 @@ const Post = () => {
         return <div>Loading...</div>;
     } else {
         return (
-            // <PageLayout menuName="post">
-            <CommentStateContext.Provider value={{ comment, postId }}>
-                <CommentDispatchContext.Provider value={memoizedDispatch}>
-                    <PostItem
-                        alertDialog={openAlertDialog}
-                        confirmDialog={openConfirmDialog}
-                        key={post.postId}
-                        postId={post.postId}
-                        memberId={post.memberId}
-                        nickname={post.nickname}
-                        countryId={post.countryId}
-                        images={post.images}
-                        content={post.content}
-                        hashtag={post.hashtag}
-                        likeCnt={post.likeCnt}
-                        commentCnt={post.commentCnt}
-                        regDate={post.regDate}
-                        modDate={post.modDate}
-                        likeState={post.likeState}
-                        currentMemberId={post.currentMemberId}
-                    />
-                    <CommentList />
-                    <CommentRegister />
-                </CommentDispatchContext.Provider>
-                <AlertDialog></AlertDialog>
-                <ConfirmDialog></ConfirmDialog>
-            </CommentStateContext.Provider>
-            // </PageLayout>
+            <PageLayout menuName="post">
+                <CommentStateContext.Provider value={{ comment, postId }}>
+                    <CommentDispatchContext.Provider value={memoizedDispatch}>
+                        <PostItem
+                            alertDialog={openAlertDialog}
+                            confirmDialog={openConfirmDialog}
+                            key={post.postId}
+                            postId={post.postId}
+                            memberId={post.memberId}
+                            nickname={post.nickname}
+                            countryId={post.countryId}
+                            images={post.images}
+                            content={post.content}
+                            hashtag={post.hashtag}
+                            likeCnt={post.likeCnt}
+                            commentCnt={post.commentCnt}
+                            regDate={post.regDate}
+                            modDate={post.modDate}
+                            likeState={post.likeState}
+                            currentMemberId={post.currentMemberId}
+                        />
+                        <CommentList />
+                        <CommentRegister />
+                    </CommentDispatchContext.Provider>
+                    <AlertDialog></AlertDialog>
+                    <ConfirmDialog></ConfirmDialog>
+                </CommentStateContext.Provider>
+            </PageLayout>
         );
     }
 };
