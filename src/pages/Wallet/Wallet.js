@@ -126,6 +126,13 @@ export default function Wallet(props) {
                     <UserCard key={index} data={cardData} onCardClick={handleCardClick} />
                 ))}
             </Box>
+            {data && data.length === 0 && (
+                <>
+                    <Box sx={{ height: '134px', width: '100%' }} />
+                    <Box sx={{ height: '134px', width: '100%' }} />
+                </>
+            )}
+
             {data && data.length === 1 && (
                 <Box sx={{ height: '134px', width: '100%' }} /> // 빈 박스 추가
             )}
