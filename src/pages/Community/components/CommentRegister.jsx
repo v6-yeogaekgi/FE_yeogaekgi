@@ -47,7 +47,7 @@ const CommentRegister = () => {
             <Paper
                 component="form"
                 sx={{
-                    p: '2px 4px',
+                    p: '2px 1px',
                     display: 'flex',
                     alignItems: 'center',
                     width: 370,
