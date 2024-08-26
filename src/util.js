@@ -1,7 +1,7 @@
-import KR from './img/korea.png';
-import JP from './img/japan.png';
-import US from './img/US.png';
-import CN from './img/CN.png';
+import KR from './img/krFlag.png';
+import JP from './img/jpFlag.png';
+import US from './img/usFlag.png';
+import CN from './img/cnFlag.png';
 
 export const getCountryImgById = (CountryId) => {
     const targetCountryId = String(CountryId);

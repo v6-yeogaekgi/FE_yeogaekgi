@@ -11,8 +11,8 @@ import {
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import ClearIcon from '@mui/icons-material/Clear';
-import korFlag from '../../img/korea.png';
-import japFlag from '../../img/japan.png';
+import { getCountryImgById } from '../../util';
+
 import BasicButton from '../BasicButton/BasicButton';
 import { useNavigate } from 'react-router-dom';
 import { AllStateContext } from '../../App';
@@ -20,7 +20,7 @@ import axios from 'axios';
 
 export default function TopUpInput({ cardData }) {
     const navigate = useNavigate();
-    const {userCardId} = cardData;
+    const { userCardId } = cardData;
     const [userData, setUserData] = useState(null);
     // const [data, setData] = useState(null);
     const { protocol, token } = useContext(AllStateContext);
@@ -28,16 +28,45 @@ export default function TopUpInput({ cardData }) {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [krwAmount, setKrwAmount] = useState();
     const [foreignAmount, setForeignAmount] = useState();
+    const [currency, setCurrency] = useState({
+        code: 'JPY',
+        flag: getCountryImgById('JP'),
+        rate: 0.108,
+    });
 
     useEffect(() => {
-        const userString = localStorage.getItem("user");
+        const userString = localStorage.getItem('user');
         const user = JSON.parse(userString);
-        if(user) {
+        if (user) {
             try {
                 console.log(user);
                 setUserData(user);
+                if (user.country.code === 'US') {
+                    setCurrency({
+                        code: 'USD',
+                        flag: getCountryImgById('US'),
+                        rate: 0.00075,
+                    });
+                } else if (user.country.code === 'JP') {
+                    setCurrency({
+                        code: 'JPY',
+                        flag: getCountryImgById('JP'),
+                        rate: 0.108,
+                    });
+                } else if (user.country.code === 'CN') {
+                    setCurrency({
+                        code: 'CNY',
+                        flag: getCountryImgById('CN'),
+                        rate: 0.0053,
+                    });
+                } else {
+                    console.log('user country unknown');
+                }
             } catch (e) {
-                console.error("Failed to parse member data from localStorage", e);
+                console.error(
+                    'Failed to parse member data from localStorage',
+                    e,
+                );
             }
         }
     }, []);
@@ -49,28 +78,10 @@ export default function TopUpInput({ cardData }) {
 
     const handleKrwAmountChange = (e) => {
         let krInput = e.target.value;
-        let frOutput = krInput * 0.108;
+        let frOutput = krInput * currency.rate;
         setKrwAmount(krInput);
-        setForeignAmount(frOutput);
-    }
-
-    const currencyTable = [
-        {
-            no: 0,
-            country: 'US',
-            currency: 'USD',
-        },
-        {
-            no: 1,
-            country: 'JP',
-            currency: 'JPY',
-        },
-        {
-            no: 2,
-            country: 'CN',
-            currency: 'CNY',
-        },
-    ];
+        setForeignAmount(frOutput.toFixed(2));
+    };
 
     const onClickClearIcon = (e) => {
         setKrwAmount('');
@@ -86,33 +97,36 @@ export default function TopUpInput({ cardData }) {
     };
 
     const onClickTopUp = () => {
-        axios.post(topupUrl,
-            {
-                "krwAmount": Number(krwAmount),
-                "currencyType": 1,
-                "userCardNo": userCardId,
-                "foreignAmount": Number(foreignAmount),
-            },
-            {
-                headers: {
-                    Authorization: token,
-                    'Content-Type': 'application/json',
+        axios
+            .post(
+                topupUrl,
+                {
+                    krwAmount: Number(krwAmount),
+                    currencyType: 1,
+                    userCardNo: userCardId,
+                    foreignAmount: Number(foreignAmount),
+                },
+                {
+                    headers: {
+                        Authorization: token,
+                        'Content-Type': 'application/json',
+                    },
+                },
+            )
+            .then(function (res) {
+                console.log(res);
+                if (res.ok) {
+                    navigate('/wallet/detail', { state: { cardData } });
                 }
             })
-        .then(function(res) {
-            console.log(res);
-            if(res.ok) {
-                navigate('/wallet/detail', {state: {cardData}});
-            }
-        })
-        .catch(function(error) {
-            console.log("axios error");
-        })
-        .then(function() {
-            // always
-            navigate('/wallet/detail', {state: {cardData}});
-        })
-    }
+            .catch(function (error) {
+                console.log('axios error');
+            })
+            .then(function () {
+                // always
+                navigate('/wallet/detail', { state: { cardData } });
+            });
+    };
 
     return (
         <>
@@ -136,11 +150,11 @@ export default function TopUpInput({ cardData }) {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                     <Box
                         component="img"
-                        src={japFlag}
-                        alt="JPY"
+                        src={currency.flag}
+                        alt={currency.code}
                         sx={{ width: 24, height: 24, mr: 1 }}
                     />
-                    <Typography>JPY</Typography>
+                    <Typography>{currency.code}</Typography>
                 </Box>
 
                 <TextField
@@ -162,7 +176,7 @@ export default function TopUpInput({ cardData }) {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                     <Box
                         component="img"
-                        src={korFlag}
+                        src={getCountryImgById('KR')}
                         alt="KRW"
                         sx={{ width: 24, height: 24, mr: 1 }}
                     />
@@ -171,7 +185,7 @@ export default function TopUpInput({ cardData }) {
 
                 <TextField
                     fullWidth
-                    placeholder='0'
+                    placeholder="0"
                     value={krwAmount}
                     onChange={handleKrwAmountChange}
                     InputProps={{
@@ -230,9 +244,8 @@ export default function TopUpInput({ cardData }) {
                 <Typography sx={{ whiteSpace: 'pre-wrap', padding: 1 }}>
                     ✅ Notices when topping up with 'Wire Transfer' in the app{' '}
                     <br />
-                    <br />
-                    ※ Wire Transfer can be topped up with a minimum of 1,000 won{' '}
-                    <br />
+                    <br />※ Wire Transfer can be topped up with a minimum of
+                    1,000 won <br />
                     <br />
                     ※ A full refund is available if you request a refund within
                     7 days without using the charged amount. <br />
