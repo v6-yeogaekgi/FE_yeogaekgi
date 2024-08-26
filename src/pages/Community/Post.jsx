@@ -70,18 +70,16 @@ const mockComment = [
 export const CommentStateContext = React.createContext();
 export const CommentDispatchContext = React.createContext();
 
-
 const Post = () => {
     const { openAlertDialog, AlertDialog } = useAlertDialog();
     const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
     const [comment, setComment] = useState([]);
     const [post, setPost] = useState({});
-    const { protocol, token } = useContext(AllStateContext);
+    const { protocol } = useContext(AllStateContext);
+    const token = localStorage.getItem('token');
 
     const { postId } = useParams();
     const navigate = useNavigate();
-
-
 
     // ================ [start] comment api 호출 부분 ================
     const getApiUrl = protocol + 'community/comment/';
@@ -140,14 +138,16 @@ const Post = () => {
     // ================ [start] post api 호출 부분 ================
     const getPostApiUrl = protocol + '/';
     const getPostApi = () => {
-        axios.get(protocol + 'community/' + postId, {
-            headers: {
-                Authorization: token,
-                'Content-Type': 'application/json', // 데이터 형식을 명시
-            }
-        }).then((res) => {
-            setPost(res.data);
-        });
+        axios
+            .get(protocol + 'community/' + postId, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json', // 데이터 형식을 명시
+                },
+            })
+            .then((res) => {
+                setPost(res.data);
+            });
     };
     // ================ [end] post api 호출 부분 ================
 
@@ -198,7 +198,6 @@ const Post = () => {
                 <ConfirmDialog></ConfirmDialog>
             </CommentStateContext.Provider>
             // </PageLayout>
-
         );
     }
 };
