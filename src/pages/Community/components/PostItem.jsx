@@ -201,7 +201,7 @@ const PostItem = ({
                             {hashtag}
                         </Typography>
                         <Typography
-                            className="content"
+                            className="post-content"
                             variant="body2"
                             color="text.primary"
                         >
