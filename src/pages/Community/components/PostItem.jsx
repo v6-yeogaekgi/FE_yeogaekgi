@@ -1,22 +1,24 @@
 import { useNavigate } from 'react-router-dom';
-import React from 'react';
-import { Button, CardActionArea, CardActions } from '@mui/material';
+import React, { useState, useEffect, useContext } from 'react';
+import { Button, CardActionArea, CardActions, ListItemAvatar } from '@mui/material';
 import { ImageList, ImageListItem } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import EditIcon from '@mui/icons-material/Edit';
+import { Delete } from '@mui/icons-material';
 import Avatar from '@mui/material/Avatar';
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
 import TranslateIcon from '@mui/icons-material/Translate';
-
 import LikeCheckbox from '../../../components/LikeCheckbox/LikeCheckbox';
 import { getCountryImgById } from '../../../util';
 import BasicButton from '../../../components/BasicButton/BasicButton';
+import { AllStateContext } from '../../../App';
+import axios from 'axios';
+
 
 const Images = ({ images, postId }) => {
     if (images && images.length >= 1) {
-        console.log(images.length, images);
-        console.log('postID: ', postId);
         const width = images.length == 1 ? 348 : 165;
 
         return (
@@ -26,8 +28,12 @@ const Images = ({ images, postId }) => {
                     display: 'flex', // Use flexbox for layout
                     alignItems: 'center', // Center items vertically
                     width: `348px`,
-                    height: '165px',
-                    overflow: 'scroll',
+                    height: '170px',
+                    overflowX: 'auto', // Enable horizontal scrolling
+                    overflowY: 'hidden', // Hide vertical scrolling
+                    '&::-webkit-scrollbar': {
+                        display: 'none', // Hide scrollbar in Webkit browsers
+                    },
                 }}
                 cols={images.length}
                 rowHeight={165}
@@ -62,11 +68,13 @@ const Images = ({ images, postId }) => {
 };
 
 const PostItem = ({
+    alertDialog,
+    confirmDialog,
     postId,
     memberId,
     nickname,
-    countryId,
-    // images,
+    code,
+    images,
     content,
     hashtag,
     likeCnt,
@@ -74,18 +82,71 @@ const PostItem = ({
     regDate,
     modDate,
     likeState,
-    parentPage,
+    parentPage="",
+    currentMemberId
 }) => {
     const navigate = useNavigate();
+    const [viewLikeState, setViewLikeState] = useState(likeState);
+    const [viewLikeCnt, setViewLikeCnt] = useState(likeCnt);
+    const [viewContent, setViewContent] = useState(content);
+    const [translateInfo, setTranslateInfo] = useState({state:false, translateContent:null})
 
-    // const goEdit = () => {
-    //     navigate(`/edit/${id}`);
-    // };
+    const { protocol, token } = useContext(AllStateContext);
+    useEffect(() => {
+    }, [viewContent]);
 
-    const images = [
-        'https://yeogaekgi.s3.ap-northeast-2.amazonaws.com/cf2236af-21ae-4222-b08e-349ea4f4b59a.png',
-        'https://yeogaekgi.s3.ap-northeast-2.amazonaws.com/cec17c30-f39f-4ce7-b936-376c9bda55c5.png',
-    ];
+    // 번역 api
+    const translateApi = (e) => {
+        console.log(e.target.getAttribute('data-state')); // true면 번역 상태. false 면 원본 상태
+    }
+    // post 삭제 api
+    const deleteApi = () => {
+        return axios
+            .delete(protocol +  "community/" + postId,{
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json', // 데이터 형식을 명시
+                },
+            })
+            .then((res) => {
+                alertDialog("Success!", "The post has been successfully deleted.", ()=>navigate('/community'));
+            })
+            .catch((error) => {
+                console.error('API 호출 오류:', error);
+                throw error;
+            });
+    };
+    // like active api
+    const likeAtiveApi = () =>{
+        if(viewLikeState){ // like off
+            setViewLikeState(false);
+            setViewLikeCnt(viewLikeCnt-1);
+        }else{ // like on
+            setViewLikeState(true);
+            setViewLikeCnt(viewLikeCnt+1);
+        }
+        // api 호출
+        axios
+            .post(
+                protocol +"community/like/"+ postId,
+                {},
+                {
+                    headers: {
+                        Authorization: token,
+                        'Content-Type': 'application/json', // 데이터 형식을 명시
+                    },
+                },
+            )
+            .then((res) => {
+                return res;
+            })
+            .catch((error) => {
+                console.error('API 호출 오류:', error);
+                throw error;
+            });
+    }
+    
+
 
     return (
         <div className="PostItem" style={{ marginBottom: '5px' }}>
@@ -107,20 +168,34 @@ const PostItem = ({
                         }}
                         member={memberId}
                     >
-                        <Avatar
-                            alt="Remy Sharp"
-                            src={getCountryImgById(countryId)}
-                            sx={{ marginRight: '10px' }}
-                        />
-                        <Typography>{nickname}</Typography>
+                        <Avatar alt="Country Flag" src={getCountryImgById(code)} />
+                        <Typography sx={{ marginLeft: '8px' }}>{nickname}</Typography>
                     </div>
                     <div className="regDate">
-                        <Typography variant="caption" color="text.secondary">
-                            {regDate}
+                        <Typography
+                            component="span"
+                            variant="caption"
+                            color="text.secondary"
+                        >
+                            {new Date(regDate).toLocaleDateString()}
+                            {modDate && modDate !== regDate && (
+                                <Typography
+                                    component="span"
+                                    variant="caption"
+                                    color="text.secondary"
+                                    sx={{ marginLeft: '4px' }}
+                                >
+                                    (modified)
+                                </Typography>
+                            )}
                         </Typography>
                     </div>
                 </CardActions>
-                <CardActionArea className="post-content">
+                <CardActionArea className="post-content" onClick={()=>{
+                    if(parentPage=='list') {
+                        navigate("/community/post/" + postId);
+                    }
+                }}>
                     <CardContent>
                         <Typography className="hashtag" color="primary">
                             {hashtag}
@@ -130,7 +205,7 @@ const PostItem = ({
                             variant="body2"
                             color="text.primary"
                         >
-                            {content}
+                            {viewContent}
                         </Typography>
                     </CardContent>
                     <CardContent
@@ -153,14 +228,16 @@ const PostItem = ({
                     >
                         <LikeCheckbox
                             className="likeCheck"
-                            checked={likeState == 0 ? false : true}
+                            checked={viewLikeState}
+                            onClick={likeAtiveApi}
+
                         ></LikeCheckbox>
                         <Typography
                             className="likeCnt"
                             variant="body2"
                             color="text.secondary"
                         >
-                            {likeCnt}
+                            {viewLikeCnt}
                         </Typography>
                         <SmsOutlinedIcon
                             color="disabled"
@@ -174,15 +251,92 @@ const PostItem = ({
                             {commentCnt}
                         </Typography>
                     </div>
-                    <div>
+                    <div style={{display:"flex", justifyContent:"flex-end"}}>
+                        {currentMemberId == memberId ? (
+                                <Button
+                                    id="edit-button"
+                                    size="small"
+                                    aria-label="edit"
+                                    startIcon={<EditIcon />}
+                                    sx={{
+                                        color: '#4653f9',
+                                        padding: '4px 8px',
+                                        fontSize: '0.75rem',
+                                        height: '24px',
+                                        minWidth: '32px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        textAlign: 'center',
+                                        '& .MuiButton-startIcon': {
+                                            marginRight: 0,
+                                        },
+                                    }}
+                                    onClick={()=>{
+                                        navigate(
+                                            "/community/modify/"+postId,
+                                            {
+                                                state:{
+                                                    hashtag:hashtag,
+                                                    content:content,
+                                                    images:images,
+                                                    type:"mod"
+                                                }
+                                            })
+                                    }}
+                                />
+                            ) : (<></>)
+                        }
+                        {currentMemberId == memberId ? (
+                            <Button
+                                id="delete-button"
+                                size="small"
+                                aria-label="delete"
+                                startIcon={<Delete />}
+                                sx={{
+                                    color: '#4653f9',
+                                    padding: '4px 8px',
+                                    fontSize: '0.75rem',
+                                    height: '24px',
+                                    minWidth: '32px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    textAlign: 'center',
+                                    '& .MuiButton-startIcon': {
+                                        marginRight: 0,
+                                    },
+                                }}
+                                    onClick={()=>{
+                                        confirmDialog("Confirm Deletion","Are you sure you want to delete this?",deleteApi);
+                                    }
+                                }
+                            />
+                            ) : (<></>)
+                        }
                         <Button
+                            id="translate-button"
                             size="small"
-                            variant="text"
-                            btnColor="#4653f9"
-                            textColor="ffffff"
-                        >
-                            <TranslateIcon />
-                        </Button>
+                            aria-label="translate"
+                            startIcon={<TranslateIcon />}
+                            sx={{
+                                color: '#4653f9',
+                                padding: '4px 8px',
+                                fontSize: '0.75rem',
+                                height: '24px',
+                                minWidth: '32px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                textAlign: 'center',
+                                '& .MuiButton-startIcon': {
+                                    marginRight: 0,
+                                },
+                            }}
+                            onClick={()=>{
+                            }}
+                        />
+
                     </div>
                 </CardActions>
             </Card>

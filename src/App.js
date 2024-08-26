@@ -126,7 +126,11 @@ function App() {
 
                     <Route
                         path={'/community/post/:postId'}
-                        element={<Post />}
+                        element={
+                            <PageLayout menuName={'Community'}>
+                                <Post />
+                            </PageLayout>
+                        }
                     />
                     <Route
                         path={'/community/comment/edit/:commentId'}

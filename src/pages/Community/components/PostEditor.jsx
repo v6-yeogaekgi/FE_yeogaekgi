@@ -1,4 +1,5 @@
-import React, {useState, useRef} from "react";
+import React, { useState, useRef, useContext, useEffect } from 'react';
+import { useLocation, useParams, useNavigate} from 'react-router-dom';
 import { Stack } from "@mui/system";
 import BasicTextField from '../../../components/BasicTextField/BasicTextField';
 import BasicButton from '../../../components/BasicButton/BasicButton';
@@ -6,18 +7,20 @@ import Avatar from '@mui/material/Avatar';
 import { getCountryImgById } from '../../../util';
 import Typography from '@mui/material/Typography';
 import AddPhotoAlternateSharpIcon from '@mui/icons-material/AddPhotoAlternateSharp';
+import axios from 'axios';
+import { AllStateContext } from '../../../App';
+import useAlertDialog from '../../../hooks/useAlertDialog/useAlertDialog';
+import PersonIcon from '@mui/icons-material/Person';
 
 
 
 
 
-const SelectImage = ({images=[]}) => {
-    const [fileImgs, setFileImgs] = useState(images);
-
+const SelectImage = ({fileImgs, setFileImgs}) => {
+    // const [fileImgs, setFileImgs] = useState(images);
     const imageInput1 = useRef(null);
 
     const handleChange = (e) => {
-        console.log(e.target.files);
         if(e.target.files.length > 3) {
             // 3장 이상이면 안된다는 내용
         }else{
@@ -31,7 +34,6 @@ const SelectImage = ({images=[]}) => {
     };
 
     const onClick = (e, ref) => {
-            console.log(e);
             ref.current?.click();
     }
     const inputStyle = {visibility: 'hidden', position: 'absolute' };
@@ -67,45 +69,134 @@ const SelectImage = ({images=[]}) => {
 };
 
 
-const PostEditor = ({
-                        type = 'register', // register | modify
-                        post={imges:[], hashtag:"", content:""},
-                        member,
-                    }) => {
+const PostEditor = () => {
+    const { openAlertDialog, AlertDialog } = useAlertDialog();
+    const { protocol, token } = useContext(AllStateContext);
+    const {postId} = useParams();
+    const navigate = useNavigate();
 
-    const onClick = () => {
 
+
+    const registerApi  = (data) => {
+        return axios
+            .post(
+                protocol +"community/register",
+                data,
+                {
+                    headers: {
+                        Authorization: token,
+                        'Content-Type': 'multipart/form-data', // 데이터 형식을 명시
+                    },
+                },
+            )
+            .then((res) => {
+                openAlertDialog("Success!", "Go check out your post.", ()=>navigate('/community/post/'+res.data));
+            })
+            .catch((error) => {
+                console.error('API 호출 오류:', error);
+                throw error;
+            });
+    };
+
+    const modifyApi  = (data) => {
+        return axios
+            .put(
+                protocol +"community/"+postId,
+                data,
+                {
+                    headers: {
+                        Authorization: token,
+                        'Content-Type': 'multipart/form-data', // 데이터 형식을 명시
+                    },
+                },
+            )
+            .then((res) => {
+                openAlertDialog("Success!", "Go check out your post.", ()=>navigate('/community/post/'+postId));
+            })
+            .catch((error) => {
+                console.error('API 호출 오류:', error);
+                throw error;
+            });
+    };
+
+    const location = useLocation();
+    const [fileImgs, setFileImgs] = useState(location.state?.images || []);
+    const [hashtag, setHashtag] = useState(location.state?.hashtag || '');
+    const [content, setContent] = useState(location.state?.content || '');
+
+    const onClick = (e) => {
+        e.preventDefault(); // 폼 제출 시 새로고침 방지
+
+        if (!content.trim()) {
+            // alert('Please enter the content');
+            openAlertDialog('Error', 'Please enter the content');
+
+            return;
+        }
+        const data = new FormData();
+        fileImgs.forEach((file, index) => {
+            data.append('multipartFile', file); // 파일 추가
+        });
+        data.append('hashtag', hashtag);
+        data.append('content', content);
+
+
+        if(location.state?.type === "mod"){
+            // modifyApi(data);
+        }else{
+            registerApi(data);
+        }
     }
+
     return (
         <div className="post-editor" style={{ margin: '10px', height: '600px' }}>
-            <div className="profile"
-                 style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', marginBottom: '10px' }}
-                 member={member.memberId}>
-                <Avatar alt="Remy Sharp" src={getCountryImgById(member.countryId)} sx={{ marginRight: '10px' }} />
-                <Typography>{member.nickname}</Typography>
-            </div>
+            {/*<div className="profile"*/}
+            {/*     style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', marginBottom: '10px' }}*/}
+            {/*     // member={member.email}*/}
+            {/*>*/}
+            {/*    <Avatar alt="Remy Sharp"*/}
+            {/*            // src={getCountryImgById(member.country == undefined? "" : member.country.code)} sx={{ marginRight: '10px' }}*/}
+            {/*    />*/}
+            {/*    <Typography>*/}
+            {/*        /!*{member.nickname}*!/*/}
+            {/*    </Typography>*/}
+            {/*</div>*/}
             <br />
             <BasicTextField name="hashtag" label={'Hashtag'} variant={'outlined'} sx={{ width: '100%' }}
-                            fullWidth={true}>
+                            fullWidth={true}
+                            onChange={(e)=>{setHashtag(e.target.value)}}
+                            value={hashtag}
+                            inputProps={{ maxLength: 20 }}>
             </BasicTextField>
             <div style={{ width: '100%', textAlign: 'right' }}>
-                <Typography variant="caption" color="text.secondary">{'글자수'} / 20</Typography>
+                <Typography variant="caption" color="text.secondary">{hashtag.length} / 20</Typography>
             </div>
 
             <br />
             <BasicTextField name="content" label={'Content'} variant={'outlined'} sx={{ width: '100%' }}
                             fullWidth={true} rows={5}
-                            multiline={true}>
+                            multiline={true}
+                            onChange={(e)=>{setContent(e.target.value)}}
+                            value={content}
+                            inputProps={{ maxLength: 500 }}
+            >
             </BasicTextField>
             <div style={{ width: '100%', textAlign: 'right' }}>
-                <Typography variant="caption" color="text.secondary">{'글자수'} / 500</Typography>
+                <Typography variant="caption" color="text.secondary">{content.length} / 500</Typography>
             </div>
             <br />
-            <SelectImage images={post.images} />
-            <br /><br />
-            <div style={{ width: '100%', textAlign: 'center' }}>
-                <BasicButton text={'Confirm'} variant={'contained'} onClick={onClick}></BasicButton>
+            <SelectImage fileImgs={fileImgs} setFileImgs={setFileImgs} />
+
+            <div style={{ width: '100%', textAlign: 'center', marginTop:'10px'}}>
+                <BasicButton
+                    variant={"contained"}
+                    size = {"small"}
+                    btnColor={'#4653f9'}
+                    text={'Confirm'}
+                    variant={'contained'}
+                    onClick={onClick}></BasicButton>
             </div>
+            <AlertDialog></AlertDialog>
 
 
         </div>
