@@ -43,7 +43,7 @@ const EditComment = () => {
                 },
             })
             .then((res) => {
-                alert('댓글이 수정되었습니다.');
+                alert('The comment has been edited');
                 navigate('/community/post/' + postId);
             })
             .catch((error) => {
