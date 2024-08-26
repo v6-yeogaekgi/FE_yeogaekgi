@@ -26,47 +26,6 @@ const PageLayout = ({ menuName, children }) => (
     </Box>
 );
 
-const mockComment = [
-    {
-        commentId: 1,
-        postNo: 1,
-        email: 'user1@test.com',
-        nickname: 'test1',
-        content:
-            'cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1cotent...1',
-        regDate: new Date().getTime(),
-        modDate: new Date().getTime(),
-        countryId: 2,
-    },
-    {
-        commentId: 2,
-        postNo: 1,
-        email: 'user2@test.com',
-        nickname: 'test2',
-        content: 'cotent...2.',
-        regDate: new Date().getTime(),
-        countryId: 1,
-    },
-    {
-        commentId: 3,
-        postNo: 2,
-        email: 'user3@test.com',
-        nickname: 'test3',
-        content: 'cotent...3',
-        regDate: new Date().getTime(),
-        countryId: 1,
-    },
-    {
-        commentId: 4,
-        postNo: 2,
-        email: 'user4@test.com',
-        nickname: 'test4',
-        content: 'cotent...4',
-        regDate: new Date().getTime(),
-        countryId: 2,
-    },
-];
-
 export const CommentStateContext = React.createContext();
 export const CommentDispatchContext = React.createContext();
 

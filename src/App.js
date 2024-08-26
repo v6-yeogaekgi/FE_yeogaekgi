@@ -62,7 +62,6 @@ const FirstPage = ({ children }) => {
 
 export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
-const token = localStorage.getItem('token');
 const memberInfo = {
     memberNo: 1396,
     accountNumber: '1111-1111-1111-1111',
@@ -73,7 +72,7 @@ const memberInfo = {
 localStorage.setItem('member', JSON.stringify(memberInfo));
 function App() {
     return (
-        <AllStateContext.Provider value={{ protocol, token }}>
+        <AllStateContext.Provider value={{ protocol }}>
             <Router>
                 <ScrollToTop />
                 <Routes>
