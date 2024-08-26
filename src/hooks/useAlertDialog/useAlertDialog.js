@@ -4,14 +4,30 @@ import BasicButton from "../../components/BasicButton/BasicButton";
 
 const useAlertDialog = () => {
     const [open, setOpen] = React.useState(false);
-
-    const openAlertDialog = () => setOpen(true);
-    const closeAlertDialog = () => setOpen(false);
+    const [alertDialog, setAlertDialog] =  React.useState({
+        open: false,
+        title: '',
+        content: '',
+    });
+    const openAlertDialog = (title="Title", content="Content", onClose = () => {}) => setAlertDialog({
+        open: true,
+        title: title,
+        content: content,
+        onClose:onClose
+    });
+    const closeAlertDialog = () => {
+        setAlertDialog(
+            {
+                ...alertDialog,
+                open: false,
+            });
+        alertDialog.onClose();
+    }
 
     const AlertDialog = ({title, content}) => {
         return (
             <Dialog
-                open={open}
+                open={alertDialog.open}
                 onClose={closeAlertDialog}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
@@ -20,11 +36,11 @@ const useAlertDialog = () => {
                 }}
             >
                 <DialogTitle id="alert-dialog-title">
-                    {title}
+                    {title? title : alertDialog.title}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        {content}
+                        {content? content : alertDialog.content}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions style={{ justifyContent: 'center' }}>

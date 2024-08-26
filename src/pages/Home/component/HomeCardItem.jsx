@@ -16,7 +16,7 @@ const HomeCardItem = () => {
         <Box
             sx={{
                 position: 'relative', // 부모 Box에 상대적 위치 설정
-                width: 400, // 카드 너비
+                // width: 400, // 카드 너비
             }}
         >
             <Card

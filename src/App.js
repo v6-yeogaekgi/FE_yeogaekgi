@@ -24,6 +24,10 @@ import First from './pages/First/First';
 import Conversion from './pages/Conversion/Conversion';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 import Login from './pages/First/login';
+import { SelectedProvider } from './pages/Map/components/SelectedProvider';
+import { ReviewProvider } from './pages/Map/components/ReviewProvider';
+import ReviewRegister from './pages/Map/components/ReviewRegister';
+import ReviewEdit from './pages/Map/components/ReviewEdit';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -94,7 +98,33 @@ function App() {
                         path={'/map'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <Map />
+                                <SelectedProvider>
+                                    <Map />
+                                </SelectedProvider>
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/map/register'}
+                        element={
+                            <PageLayout menuName={'map'}>
+                                <SelectedProvider>
+                                    <ReviewProvider>
+                                        <ReviewRegister />
+                                    </ReviewProvider>
+                                </SelectedProvider>
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/map/edit/:reviewId'}
+                        element={
+                            <PageLayout menuName={'map'}>
+                                <SelectedProvider>
+                                    <ReviewProvider>
+                                        <ReviewEdit />
+                                    </ReviewProvider>
+                                </SelectedProvider>
                             </PageLayout>
                         }
                     />
@@ -126,7 +156,11 @@ function App() {
 
                     <Route
                         path={'/community/post/:postId'}
-                        element={<Post />}
+                        element={
+                            <PageLayout menuName={'Community'}>
+                                <Post />
+                            </PageLayout>
+                        }
                     />
                     <Route
                         path={'/community/comment/edit/:commentId'}
@@ -143,7 +177,7 @@ function App() {
                     <Route
                         path={'/myPage'}
                         element={
-                            <PageLayout menuName={'my page'}>
+                            <PageLayout menuName={'my components'}>
                                 <MyPage />
                             </PageLayout>
                         }
