@@ -23,6 +23,7 @@ function Login() {
     const navigate = useNavigate();
 
     const getApiUrl = protocol + 'members/login';
+    const memberUrl = protocol + 'members/detail';
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -40,6 +41,15 @@ function Login() {
             });
             const { token } = response.data;
             localStorage.setItem('token', token);
+            const userDetailsResponse = await axios.post(memberUrl, data, {
+                headers: {
+                    'Authorization': `${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            const { user } = userDetailsResponse.data;
+            console.log(user);
+            localStorage.setItem('user', JSON.stringify(user));
             navigate('/home');
         } catch (error) {
             console.error('API 호출 오류:', error);

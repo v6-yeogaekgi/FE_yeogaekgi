@@ -21,8 +21,8 @@ import axios from 'axios';
 export default function TopUpInput({ cardData }) {
     const navigate = useNavigate();
     const {userCardId} = cardData;
-    const [memberData, setMemberData] = useState(null);
-    const [data, setData] = useState(null);
+    const [userData, setUserData] = useState(null);
+    // const [data, setData] = useState(null);
     const { protocol, token } = useContext(AllStateContext);
     const topupUrl = protocol + 'transaction/toptup';
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -30,19 +30,19 @@ export default function TopUpInput({ cardData }) {
     const [foreignAmount, setForeignAmount] = useState();
 
     useEffect(() => {
-        const getUser = localStorage.getItem("member");
-        if(getUser) {
+        const userString = localStorage.getItem("user");
+        const user = JSON.parse(userString);
+        if(user) {
             try {
-                setMemberData(JSON.parse(getUser));
+                console.log(user);
+                setUserData(user);
             } catch (e) {
                 console.error("Failed to parse member data from localStorage", e);
             }
         }
     }, []);
 
-    console.log(memberData);
-
-    if (!memberData) {
+    if (!userData) {
         // 데이터가 아직 로드되지 않았을 때 로딩 메시지 표시
         return <Typography>Loading...</Typography>;
     }
@@ -118,11 +118,11 @@ export default function TopUpInput({ cardData }) {
         <>
             <Box sx={{ p: 2, backgroundColor: 'white' }}>
                 <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                    {memberData.bank}
+                    {userData.bank}
                 </Typography>
                 <TextField
                     fullWidth
-                    value={memberData.accountNumber}
+                    value={userData.accountNumber}
                     InputProps={{
                         readOnly: true,
                     }}
