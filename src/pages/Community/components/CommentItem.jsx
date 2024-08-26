@@ -26,6 +26,7 @@ const CommentItem = ({
     modDate,
     code,
     onDelete,
+    currentMemberId,
 }) => {
     const onClickDeleteComment = () => {
         const isConfirmed = window.confirm(
@@ -42,8 +43,7 @@ const CommentItem = ({
         navigate(`/community/comment/edit/${commentId}`);
     };
 
-    const currentMemberNo = 402;
-    const shouldRenderButtons = currentMemberNo === memberId;
+    const shouldRenderButtons = currentMemberId === memberId;
 
     return (
         <List sx={{ width: '95%', bgcolor: 'background.paper' }}>
