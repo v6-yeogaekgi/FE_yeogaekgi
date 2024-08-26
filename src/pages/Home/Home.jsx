@@ -34,6 +34,7 @@ const Home = () => (
         <Box sx={STYLES.contentBox}>
             <Box sx={STYLES.cardContainer}>
                 <HomeCardItem />
+                <br /><br /><br />
                 <div
                     style={{
                         width: '100%',
@@ -42,14 +43,15 @@ const Home = () => (
                         justifyContent: 'center',
                         margin: '10px',
                     }}>
-                <img
-                    src={links}
-                    alt="links"
-                    style={{
-                        width: '90%',
-                    }}
-                />
+                    <img
+                        src={links}
+                        alt="links"
+                        style={{
+                            width: '90%',
+                        }}
+                    />
                 </div>
+                <br /><br /><br />
                 <HomaCardRate></HomaCardRate>
             </Box>
         </Box>
