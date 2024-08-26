@@ -41,13 +41,13 @@
     margin-bottom: 0px;
 }
 
-/*.nav-link.active {*/
-/*    background-color: #4653f9; !* 파란색 배경 *!*/
-/*    border-radius: 20px; !* 모서리를 둥글게 *!*/
-/*}*/
+.nav-link.active {
+    background-color: #4653f9; /* 파란색 배경 */
+    border-radius: 20px; /* 모서리를 둥글게 */
+}
 
 .nav-link.active .nav-text {
-    /*color: white; !* 활성 상태일 때 텍스트 색상 *!*/
+    color: white; /* 활성 상태일 때 텍스트 색상 */
 }
 
 .nav-link {
