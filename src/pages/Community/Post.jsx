@@ -115,7 +115,6 @@ const Post = () => {
     useEffect(() => {
         setComment([]);
         setIsDataLoaded(true);
-        getPostApi();
     }, []);
     useEffect(() => {
         getPostApi();
