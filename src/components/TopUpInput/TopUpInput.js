@@ -43,18 +43,21 @@ export default function TopUpInput({ cardData }) {
                 setUserData(user);
                 if (user.country.code === 'US') {
                     setCurrency({
+                        id: 0,
                         code: 'USD',
                         flag: getCountryImgById('US'),
                         rate: 0.00075,
                     });
                 } else if (user.country.code === 'JP') {
                     setCurrency({
+                        id: 1,
                         code: 'JPY',
                         flag: getCountryImgById('JP'),
                         rate: 0.108,
                     });
                 } else if (user.country.code === 'CN') {
                     setCurrency({
+                        id: 2,
                         code: 'CNY',
                         flag: getCountryImgById('CN'),
                         rate: 0.0053,
@@ -97,12 +100,13 @@ export default function TopUpInput({ cardData }) {
     };
 
     const onClickTopUp = () => {
+        const currencyType = currency.id;
         axios
             .post(
                 topupUrl,
                 {
                     krwAmount: Number(krwAmount),
-                    currencyType: 1,
+                    currencyType: currencyType,
                     userCardNo: userCardId,
                     foreignAmount: Number(foreignAmount),
                 },
