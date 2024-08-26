@@ -24,6 +24,10 @@ import First from './pages/First/First';
 import Conversion from './pages/Conversion/Conversion';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 import Login from './pages/First/login';
+import { SelectedProvider } from './pages/Map/components/SelectedProvider';
+import { ReviewProvider } from './pages/Map/components/ReviewProvider';
+import ReviewRegister from './pages/Map/components/ReviewRegister';
+import ReviewEdit from './pages/Map/components/ReviewEdit';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -58,7 +62,6 @@ const FirstPage = ({ children }) => {
 
 export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
-const token = localStorage.getItem('token');
 const memberInfo = {
     memberNo: 1396,
     accountNumber: '1111-1111-1111-1111',
@@ -69,7 +72,7 @@ const memberInfo = {
 localStorage.setItem('member', JSON.stringify(memberInfo));
 function App() {
     return (
-        <AllStateContext.Provider value={{ protocol, token }}>
+        <AllStateContext.Provider value={{ protocol }}>
             <Router>
                 <ScrollToTop />
                 <Routes>
@@ -94,7 +97,33 @@ function App() {
                         path={'/map'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <Map />
+                                <SelectedProvider>
+                                    <Map />
+                                </SelectedProvider>
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/map/register'}
+                        element={
+                            <PageLayout menuName={'map'}>
+                                <SelectedProvider>
+                                    <ReviewProvider>
+                                        <ReviewRegister />
+                                    </ReviewProvider>
+                                </SelectedProvider>
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/map/edit/:reviewId'}
+                        element={
+                            <PageLayout menuName={'map'}>
+                                <SelectedProvider>
+                                    <ReviewProvider>
+                                        <ReviewEdit />
+                                    </ReviewProvider>
+                                </SelectedProvider>
                             </PageLayout>
                         }
                     />
@@ -116,7 +145,7 @@ function App() {
                         }
                     />
                     <Route
-                        path={'/community/modify'}
+                        path={'/community/modify/:postId'}
                         element={
                             <PageLayout menuName={'community'}>
                                 <EditPost />
@@ -147,7 +176,7 @@ function App() {
                     <Route
                         path={'/myPage'}
                         element={
-                            <PageLayout menuName={'my page'}>
+                            <PageLayout menuName={'my components'}>
                                 <MyPage />
                             </PageLayout>
                         }
