@@ -84,14 +84,14 @@ const Post = () => {
 
     const onDelete = (commentId, postId) => {
         return axios
-            .delete(getApiUrl + commentId, {
+            .delete(getApiUrl + postId + '/' + commentId, {
                 headers: {
                     Authorization: token,
                     'Content-Type': 'application/json',
                 },
             })
             .then((res) => {
-                alert('댓글이 삭제되었습니다.');
+                alert('The comment has been deleted');
                 getApi();
                 getPostApi();
             })
