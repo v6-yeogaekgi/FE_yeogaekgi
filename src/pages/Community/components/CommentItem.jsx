@@ -27,6 +27,7 @@ const CommentItem = ({
     code,
     onDelete,
     currentMemberId,
+    translateText,
 }) => {
     const onClickDeleteComment = () => {
         const isConfirmed = window.confirm(
@@ -41,6 +42,10 @@ const CommentItem = ({
 
     const goEdit = () => {
         navigate(`/community/comment/edit/${commentId}`);
+    };
+
+    const goDeepL = () => {
+        translateText(content, 'EN');
     };
 
     const shouldRenderButtons = currentMemberId === memberId;
@@ -113,6 +118,7 @@ const CommentItem = ({
                                     marginRight: 0,
                                 },
                             }}
+                            onClick={goDeepL}
                         />
 
                         {shouldRenderButtons && (
