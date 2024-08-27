@@ -47,3 +47,18 @@ export const getMonthRangeByDate = (date) => {
     ).getTime();
     return { beginTimeStamp, endTimeStamp };
 };
+
+export const getCountryCodeForTranslate = (code) => {
+    switch (code) {
+        case 'KR':
+            return 'KO';
+        case 'JP':
+            return 'JA';
+        case 'US':
+            return 'EN';
+        case 'CN':
+            return 'ZH';
+        default:
+            return null;
+    }
+};
