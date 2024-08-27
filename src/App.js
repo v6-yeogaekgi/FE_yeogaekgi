@@ -190,7 +190,7 @@ function App() {
                         }
                     />
                     <Route
-                        path={'/wallet/topup'}
+                        path={'/wallet/top-up'}
                         element={
                             <PageLayout menuName={'top-up'}>
                                 <TopUp />
