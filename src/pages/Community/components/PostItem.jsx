@@ -91,6 +91,7 @@ const PostItem = ({
     parentPage = '',
     currentMemberId,
     currentMemberCode,
+    deepLApi,
 }) => {
     const navigate = useNavigate();
     const [viewLikeState, setViewLikeState] = useState(likeState);
@@ -100,7 +101,7 @@ const PostItem = ({
         state: false,
         translateContent: null,
     });
-    const { deepLApi } = useContext(CommentDispatchContext);
+    // const { deepLApi } = useContext(CommentDispatchContext);
     const [translatedContent, setTranslatedContent] = useState(null);
     const [translatedHashtag, setTranslatedHashtag] = useState(null);
     const [isTranslated, setIsTranslated] = useState(false);

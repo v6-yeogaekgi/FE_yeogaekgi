@@ -182,6 +182,7 @@ const Post = () => {
                             likeState={post.likeState}
                             currentMemberId={post.currentMemberId}
                             currentMemberCode={post.currentMemberCode}
+                            deepLApi={deepLApi}
                         />
                         <CommentList />
                         <CommentRegister />
