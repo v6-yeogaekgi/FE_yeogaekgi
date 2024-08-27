@@ -12,7 +12,7 @@ import {
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import ClearIcon from '@mui/icons-material/Clear';
 import { getCountryImgById } from '../../util';
-
+import { getExchangeRate, convertCurrency } from '../ExchangeRateManager/ExchangeRateManager';
 import BasicButton from '../BasicButton/BasicButton';
 import { useNavigate } from 'react-router-dom';
 import { AllStateContext } from '../../App';
@@ -22,22 +22,20 @@ export default function TopUpInput({ cardData }) {
     const navigate = useNavigate();
     const { userCardId } = cardData;
     const [userData, setUserData] = useState(null);
-    // const [data, setData] = useState(null);
-    const { protocol, token } = useContext(AllStateContext);
+    const { protocol } = useContext(AllStateContext);
+    const token = localStorage.getItem("token");
     const topupUrl = protocol + 'transaction/toptup';
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [krwAmount, setKrwAmount] = useState();
     const [foreignAmount, setForeignAmount] = useState();
-    const [currency, setCurrency] = useState({
-        code: 'JPY',
-        flag: getCountryImgById('JP'),
-        rate: 0.108,
-    });
+    const [currency, setCurrency] = useState();
 
     useEffect(() => {
+        const storedRates = getExchangeRate();
+        console.log(storedRates);
         const userString = localStorage.getItem('user');
         const user = JSON.parse(userString);
-        if (user) {
+        if (user && storedRates) {
             try {
                 console.log(user);
                 setUserData(user);
@@ -46,21 +44,21 @@ export default function TopUpInput({ cardData }) {
                         id: 0,
                         code: 'USD',
                         flag: getCountryImgById('US'),
-                        rate: 0.00075,
+                        rate: (1 / storedRates.KRW) * storedRates.USD,
                     });
                 } else if (user.country.code === 'JP') {
                     setCurrency({
                         id: 1,
                         code: 'JPY',
                         flag: getCountryImgById('JP'),
-                        rate: 0.108,
+                        rate: (1 / storedRates.KRW) * storedRates.JPY,
                     });
                 } else if (user.country.code === 'CN') {
                     setCurrency({
                         id: 2,
                         code: 'CNY',
                         flag: getCountryImgById('CN'),
-                        rate: 0.0053,
+                        rate: (1 / storedRates.KRW) * storedRates.CNY,
                     });
                 } else {
                     console.log('user country unknown');
