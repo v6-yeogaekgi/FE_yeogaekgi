@@ -29,6 +29,7 @@ import { ReviewProvider } from './pages/Map/components/ReviewProvider';
 import ReviewRegister from './pages/Map/components/ReviewRegister';
 import ReviewEdit from './pages/Map/components/ReviewEdit';
 import { fetchAndStoreExchangeRate } from './components/ExchangeRateManager/ExchangeRateManager';
+import MyReviews from './pages/MyReviews/MyReviews';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -65,10 +66,9 @@ export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
 
 function App() {
-
     useEffect(() => {
         fetchAndStoreExchangeRate();
-    },[])
+    }, []);
 
     return (
         <AllStateContext.Provider value={{ protocol }}>
@@ -173,9 +173,9 @@ function App() {
                         element={<ImageDetail />}
                     />
                     <Route
-                        path={'/myPage'}
+                        path={'/mypage'}
                         element={
-                            <PageLayout menuName={'my components'}>
+                            <PageLayout menuName={'Account'}>
                                 <MyPage />
                             </PageLayout>
                         }
@@ -197,7 +197,7 @@ function App() {
                         }
                     />
                     <Route
-                        path={'/wallet/top-up'}
+                        path={'/wallet/topup'}
                         element={
                             <PageLayout menuName={'top-up'}>
                                 <TopUp />
@@ -227,6 +227,14 @@ function App() {
                         element={
                             <PageLayout menuName={'Conversion'}>
                                 <Conversion />
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/mypage/review'}
+                        element={
+                            <PageLayout menuName={'My Reviews'}>
+                                <MyReviews />
                             </PageLayout>
                         }
                     />
