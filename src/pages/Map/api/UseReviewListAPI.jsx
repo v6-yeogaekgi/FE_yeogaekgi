@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useSelected } from './SelectedProvider';
+import { useSelected } from '../provider/SelectedProvider';
+import { useReview } from '../provider/ReviewProvider';
 
-const UseReviewListAPI = () => {
-    const [list, setList] = useState(null);
+const UseReviewListAPI = (SelectedService) => {
+    const [list, setList] = useState();
     const [listApiLoading, setlistApiLoading] = useState(false);
-    const { SelectedService } = useSelected();
 
     const serviceListAPI = () => {
         setlistApiLoading(true);
@@ -17,7 +17,6 @@ const UseReviewListAPI = () => {
                 .then((res) => {
                     setList(res.data);
                     setlistApiLoading(false);
-                    console.log(res.data);
                 })
                 .catch((error) => {
                     setlistApiLoading(false);

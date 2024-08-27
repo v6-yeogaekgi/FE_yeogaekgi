@@ -24,10 +24,9 @@ import First from './pages/First/First';
 import Conversion from './pages/Conversion/Conversion';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 import Login from './pages/First/login';
-import { SelectedProvider } from './pages/Map/components/SelectedProvider';
-import { ReviewProvider } from './pages/Map/components/ReviewProvider';
-import ReviewRegister from './pages/Map/components/ReviewRegister';
-import ReviewEdit from './pages/Map/components/ReviewEdit';
+import { ReviewProvider } from './pages/Map/provider/ReviewProvider';
+import ReviewRegister from './pages/Map/pages/ReviewRegister';
+import ReviewEdit from './pages/Map/pages/ReviewEdit';
 import { fetchAndStoreExchangeRate } from './components/ExchangeRateManager/ExchangeRateManager';
 import MyReviews from './pages/MyReviews/MyReviews';
 
@@ -96,33 +95,27 @@ function App() {
                         path={'/map'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <SelectedProvider>
-                                    <Map />
-                                </SelectedProvider>
+                                <Map />
                             </PageLayout>
                         }
                     />
                     <Route
-                        path={'/map/register'}
+                        path={'/map/register/:serviceId/:name'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <SelectedProvider>
-                                    <ReviewProvider>
-                                        <ReviewRegister />
-                                    </ReviewProvider>
-                                </SelectedProvider>
+                                <ReviewProvider>
+                                    <ReviewRegister />
+                                </ReviewProvider>
                             </PageLayout>
                         }
                     />
                     <Route
-                        path={'/map/edit/:reviewId'}
+                        path={'/map/edit/:name/:serviceId/:reviewId'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <SelectedProvider>
-                                    <ReviewProvider>
-                                        <ReviewEdit />
-                                    </ReviewProvider>
-                                </SelectedProvider>
+                                <ReviewProvider>
+                                    <ReviewEdit />
+                                </ReviewProvider>
                             </PageLayout>
                         }
                     />

@@ -1,18 +1,40 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import { Box, Button, IconButton, Rating, Typography } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CloseIcon from '@mui/icons-material/Close';
-import { useSelected } from './SelectedProvider';
-import { useReview } from './ReviewProvider';
+import { useReview } from '../provider/ReviewProvider';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { AllStateContext } from '../../../App';
 
-const ReviewRegister = () => {
+const ReviewEdit = () => {
     const [content, setContent] = useState('');
-    const [images, setImages] = useState([]); // 이미지들을 배열로 관리
-    const { SelectedServiceInfo } = useSelected();
-    const { onCreate } = useReview();
-    const [score, setScore] = useState(0); // 초기값을 0으로 설정하여 숫자로 유지
-
+    const [images, setImages] = useState([]);
+    const [chooseImages, setChooseImages] = useState([]);
+    const { name, serviceId, reviewId } = useParams();
+    const [score, setScore] = useState(0);
     const inputRef = useRef();
+    const { onUpdate } = useReview();
+    const { protocol, token } = useContext(AllStateContext);
+    const Authorization =
+        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdG9tQG5hdmVyLmNvbSIsImV4cCI6MTcyNTIwNTEwNCwiaWF0IjoxNzI0NjAwMzA0fQ.7CyhMJSTCrfP-IXpoZ3Yo83WHrG_3U3bsPP1Z4sh83E';
+    const http = 'http://localhost:8090';
+
+    useEffect(() => {
+        axios
+            .get(`${http}/review/${serviceId}/${reviewId}/detail`, {
+                headers: { Authorization: Authorization },
+            })
+            .then((res) => {
+                const data = res.data;
+                setContent(data.content);
+                setScore(data.score);
+                setImages(data.images.map((url, index) => ({ url, index })));
+            })
+            .catch((error) => {
+                console.error('Error fetching review data:', error);
+            });
+    }, [serviceId, reviewId, Authorization]);
 
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
@@ -20,44 +42,47 @@ const ReviewRegister = () => {
             alert('최대 3개의 사진만 등록할 수 있습니다.');
             return;
         }
-        setImages((prevImages) => [
-            ...prevImages,
-            ...files.slice(0, 3 - images.length),
-        ]);
+        const newImages = files.map((file) => ({
+            file,
+            url: URL.createObjectURL(file),
+            isNew: true,
+        }));
+        setImages((prevImages) => [...prevImages, ...newImages].slice(0, 3));
     };
 
     const handleImageRemove = (index) => {
         setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+        setChooseImages((prev) => [...prev, index]);
     };
 
     const onChangeContent = (e) => {
         setContent(e.target.value);
     };
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         if (!content && !score) {
             inputRef.current.focus();
             return;
         }
 
-        const reviewData = new FormData();
-        reviewData.append('content', content);
-        reviewData.append('score', score); // score는 숫자형이어야 함
+        const formData = new FormData();
+        formData.append('content', content);
+        formData.append('score', score);
 
-        // 각 파일을 FormData에 개별적으로 추가
-        images.forEach((image, index) => {
-            reviewData.append('files', image);
+        const newImages = images.filter((img) => img.isNew);
+        newImages.forEach((image, index) => {
+            formData.append('images', image.file);
         });
 
-        onCreate(reviewData); // formData 객체를 제출
-        setContent(''); // 제출 후 입력창 초기화
-        setScore(0); // Rating 값 초기화
-        setImages([]); // 이미지 초기화
-    };
+        chooseImages.forEach((index) => {
+            formData.append('chooseImages', index);
+        });
 
-    const onKeyDown = (e) => {
-        if (e.keyCode === 13) {
-            onSubmit();
+        try {
+            await onUpdate(serviceId, reviewId, formData);
+            // 성공 처리 (예: 리뷰 목록 페이지로 리다이렉트)
+        } catch (error) {
+            console.error('Error updating review:', error);
         }
     };
 
@@ -70,22 +95,17 @@ const ReviewRegister = () => {
                 padding: '16px',
             }}
         >
-            {/* Title */}
             <Typography variant="h6" gutterBottom>
-                {SelectedServiceInfo.name}
+                {name}
             </Typography>
 
-            {/* Rating */}
             <Rating
                 name="simple-controlled"
                 value={score}
-                onChange={(event, newScore) => {
-                    setScore(newScore); // newScore는 숫자형 값이므로 그대로 사용
-                }}
+                onChange={(event, newScore) => setScore(newScore)}
                 sx={{ marginBottom: '16px' }}
             />
 
-            {/* Image Upload and Preview */}
             <Box
                 sx={{
                     display: 'flex',
@@ -127,14 +147,13 @@ const ReviewRegister = () => {
                 <input
                     type="file"
                     id="image-upload"
-                    style={{ display: 'none' }} // input 숨김
+                    style={{ display: 'none' }}
                     onChange={handleImageUpload}
                     accept="image/*"
                     multiple
                 />
             </Box>
 
-            {/* Uploaded Images Preview */}
             <Box
                 sx={{
                     display: 'flex',
@@ -157,7 +176,7 @@ const ReviewRegister = () => {
                         }}
                     >
                         <img
-                            src={URL.createObjectURL(image)}
+                            src={image.url}
                             alt={`Preview ${index}`}
                             style={{
                                 width: '100%',
@@ -173,7 +192,9 @@ const ReviewRegister = () => {
                                 right: '4px',
                                 backgroundColor: 'rgba(255, 255, 255, 0.7)',
                             }}
-                            onClick={() => handleImageRemove(index)}
+                            onClick={() =>
+                                handleImageRemove(image.index || index)
+                            }
                         >
                             <CloseIcon fontSize="small" />
                         </IconButton>
@@ -181,7 +202,6 @@ const ReviewRegister = () => {
                 ))}
             </Box>
 
-            {/* Placeholder Box */}
             <textarea
                 ref={inputRef}
                 style={{
@@ -193,20 +213,18 @@ const ReviewRegister = () => {
                 }}
                 onChange={onChangeContent}
                 value={content}
-                onKeyDown={onKeyDown}
             ></textarea>
 
-            {/* OK Button */}
             <Button
                 variant="contained"
                 color="primary"
                 sx={{ width: '100%', borderRadius: '8px' }}
                 onClick={onSubmit}
             >
-                OK
+                Edit
             </Button>
         </Box>
     );
 };
 
-export default ReviewRegister;
+export default ReviewEdit;

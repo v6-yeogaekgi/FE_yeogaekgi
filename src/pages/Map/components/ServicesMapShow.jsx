@@ -1,20 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import useGeolocation from './UseGeolocation';
-import { useSelected } from './SelectedProvider';
-import useServicesMarkerApi from './UseServicesMarkerApi';
-import MapMarkerFilter from './MapMarkerCheck';
+import useServicesMarkerApi from '../api/UseServicesMarkerApi';
 import Box from '@mui/material/Box';
-import Skeleton from '@mui/material/Skeleton';
 
-const ServicesMapShow = () => {
+const ServicesMapShow = ({ handleServiceSelect, state }) => {
     const mapRef = useRef(null);
 
     const { currentMyLocation, locationLoading } = useGeolocation();
-    const { data: servicesData, apiLoading } = useServicesMarkerApi();
+    const { data: servicesData, apiLoading } = useServicesMarkerApi(state);
     const { naver } = window;
     const [map, setMap] = useState(null);
-
-    const { handleServiceSelect } = useSelected();
 
     useEffect(() => {
         if (!naver || !mapRef.current) return;
@@ -51,7 +46,6 @@ const ServicesMapShow = () => {
                 });
 
                 naver.maps.Event.addListener(marker, 'click', () => {
-                    console.log(service.id);
                     const markerPosition = new naver.maps.LatLng(
                         service.lat,
                         service.lon,
@@ -69,6 +63,7 @@ const ServicesMapShow = () => {
                         service.id,
                         service.name,
                         service.content,
+                        service.serviceType,
                     );
                 });
             });
