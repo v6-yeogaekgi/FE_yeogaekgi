@@ -6,9 +6,7 @@ import { CommentDispatchContext, CommentStateContext } from '../Post';
 
 const CommentList = () => {
     const { comment } = useContext(CommentStateContext);
-    const { translateText, onDelete, getApi } = useContext(
-        CommentDispatchContext,
-    );
+    const { deepLApi, onDelete, getApi } = useContext(CommentDispatchContext);
 
     // 처음 렌더링될 때 실행
     useEffect(() => {
@@ -31,7 +29,7 @@ const CommentList = () => {
                     {...it}
                     key={it.id}
                     onDelete={onDelete}
-                    translateText={translateText}
+                    deepLApi={deepLApi}
                 />
             ))}
         </List>

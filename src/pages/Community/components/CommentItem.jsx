@@ -1,8 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { getCountryImgById } from '../../../util';
-
 import Avatar from '@mui/material/Avatar';
-
 import TranslateIcon from '@mui/icons-material/Translate';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
@@ -14,6 +12,7 @@ import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
 import { ListItemAvatar } from '@mui/material';
 import Divider from '@mui/material/Divider';
+import { getCountryCodeForTranslate } from '../../../util';
 
 const CommentItem = ({
     commentId,
@@ -27,8 +26,12 @@ const CommentItem = ({
     code,
     onDelete,
     currentMemberId,
-    translateText,
+    currentMemberCode,
+    deepLApi,
 }) => {
+    const [translatedContent, setTranslatedContent] = useState(null);
+    const [isTranslated, setIsTranslated] = useState(false);
+
     const onClickDeleteComment = () => {
         const isConfirmed = window.confirm(
             'Would you like to delete the comment?',
@@ -44,8 +47,23 @@ const CommentItem = ({
         navigate(`/community/comment/edit/${commentId}`);
     };
 
-    const goDeepL = () => {
-        translateText(content, 'EN');
+    const goDeepL = async () => {
+        if (isTranslated) {
+            setIsTranslated(false);
+        } else {
+            if (!translatedContent) {
+                try {
+                    const translated = await deepLApi(
+                        content,
+                        getCountryCodeForTranslate(currentMemberCode),
+                    );
+                    setTranslatedContent(translated);
+                } catch (error) {
+                    console.error('Translation failed:', error);
+                }
+            }
+            setIsTranslated(true);
+        }
     };
 
     const shouldRenderButtons = currentMemberId === memberId;
@@ -54,7 +72,10 @@ const CommentItem = ({
         <List sx={{ width: '95%', bgcolor: 'background.paper' }}>
             <ListItem alignItems="flex-start">
                 <ListItemAvatar>
-                    <Avatar alt="Country Flag" src={getCountryImgById(code)} />
+                    <Avatar
+                        alt="Country Flag"
+                        src={getCountryImgById(currentMemberCode)}
+                    />
                 </ListItemAvatar>
                 <div style={{ flex: 1 }}>
                     <Typography component="span" variant="h6">
@@ -89,7 +110,7 @@ const CommentItem = ({
                             overflowWrap: 'break-word',
                         }}
                     >
-                        {content}
+                        {isTranslated ? translatedContent : content}
                     </Typography>
 
                     <div

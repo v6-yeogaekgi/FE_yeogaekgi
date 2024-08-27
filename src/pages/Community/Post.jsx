@@ -40,33 +40,29 @@ const Post = () => {
     const { postId } = useParams();
     const navigate = useNavigate();
 
-    // ================ [start] comment api 호출 부분 ================
+    // ================ [start] DeepL api 호출 부분 ================
 
-    const authKey = process.env.REACT_APP_DEEPL_API_KEY;
+    const deepLApi = (text, target_lang) => {
+        const data = {
+            text: [text],
+            target_lang: target_lang,
+        };
 
-    const translateText = async (text, targetLang) => {
-        try {
-            const response = await axios.post(
-                'https://api-free.deepl.com/v2/translate',
-                {
-                    text: [text], // 번역할 텍스트
-                    target_lang: targetLang, // 목표 언어 (예: 'DE' for German)
+        return axios
+            .post(protocol + 'api/translate', data, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
                 },
-                {
-                    headers: {
-                        Authorization: `DeepL-Auth-Key ${authKey}`, // API 키를 Authorization 헤더에 포함
-                        'Content-Type': 'application/json', // 요청 본문 형식
-                    },
-                },
-            );
-
-            // 번역된 텍스트는 응답의 translations 배열에서 가져옵니다.
-            console.log(response.data.translations[0].text);
-            return response.data.translations[0].text;
-        } catch (error) {
-            console.error('Error translating text:', error);
-            throw error; // 오류가 발생하면 호출한 곳에서 처리할 수 있도록 예외를 던집니다.
-        }
+            })
+            .then((res) => {
+                console.log(res.data.translations[0].text);
+                return res.data.translations[0].text;
+            })
+            .catch((error) => {
+                console.error('API 호출 오류:', error);
+                throw error;
+            });
     };
 
     // ================ [start] comment api 호출 부분 ================
@@ -158,7 +154,7 @@ const Post = () => {
     }, [comment]);
 
     const memoizedDispatch = useMemo(() => {
-        return { onCreate, onDelete, postApi, getApi, translateText };
+        return { onCreate, onDelete, postApi, getApi, deepLApi };
     }, [comment]);
 
     if (!isDataLoaded) {
