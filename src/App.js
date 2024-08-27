@@ -63,14 +63,7 @@ const FirstPage = ({ children }) => {
 
 export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
-const memberInfo = {
-    memberNo: 1396,
-    accountNumber: '1111-1111-1111-1111',
-    bank: 'testBank',
-    email: 'bbb@naver.com',
-    code: 'KR',
-};
-localStorage.setItem('member', JSON.stringify(memberInfo));
+
 function App() {
 
     useEffect(() => {
