@@ -6,6 +6,7 @@ import { Paper } from '@mui/material';
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AllStateContext } from '../../App';
+import { getExchangeRate } from '../../components/ExchangeRateManager/ExchangeRateManager';
 
 const Registration = () => (
     // TODO 
@@ -42,6 +43,9 @@ const Registration = () => (
 );
 
 export default function Wallet(props) {
+    const rates = getExchangeRate();
+    console.log(rates);
+
     const navigate = useNavigate();
     const [data, setData] = useState(null);
     const [param, setParam] = useState({
@@ -54,7 +58,8 @@ export default function Wallet(props) {
 
     const [error, setError] = useState(null);
 
-    const { protocol, token } = useContext(AllStateContext);
+    const { protocol } = useContext(AllStateContext);
+    const token = localStorage.getItem('token');
     const uri = protocol + 'usercard/list';
 
     const getApi = () => {

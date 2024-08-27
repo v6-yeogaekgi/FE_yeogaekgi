@@ -48,14 +48,22 @@ export default function Conversion({ data }) {
     React.useEffect(()=>{
         if(transferAmount > leftSide.balance) {
             setTransferAmount(leftSide.balance);
-        } else if (transferAmount === leftSide.balance) {
-            setTransferAmount(null);
         }
     }, [transferAmount, leftSide.balance]);
 
     const handleTransferAmountChange = (e) => {
         const value = e.target.value;
-        setTransferAmount(value === '' ? null : Number(value));
+        // 숫자만 허용하는 정규 표현식
+        const numericValue = value.replace(/[^0-9]/g, '');
+
+        if (numericValue === '') {
+            setTransferAmount(null);
+        } else {
+            const parsedValue = parseInt(numericValue, 10);
+            if (!isNaN(parsedValue)) {
+                setTransferAmount(parsedValue);
+            }
+        }
     };
 
     const handleSwitch = () => {
@@ -184,7 +192,11 @@ export default function Conversion({ data }) {
                             <TextField
                                 fullWidth
                                 variant="outlined"
-                                type="number"
+                                type="text"
+                                inputProps={{
+                                    inputMode: 'numeric',
+                                    pattern: '[0-9]*'
+                                }}
                                 value={transferAmount === null ? '' : transferAmount}
                                 onChange={handleTransferAmountChange}
                                 placeholder="0"

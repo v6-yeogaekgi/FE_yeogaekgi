@@ -258,8 +258,8 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                                                 ) :
                                                                 `${item.krwAmount.toLocaleString()}₩`
                                                         }
-                                                        {(item.tranType === 1 || item.tranType === 2) && item.foreignAmount && item.currencyType ?
-                                                            ` (${item.foreignAmount.toLocaleString()} ${item.currencyType === 0 ? 'USD' : item.currencyType === 1 ? 'JPY' : item.currencyType === 2 ? 'CNY' : item.currencyType === 3 ? 'KRW' : ''})` :
+                                                        {(item.tranType === 1 || item.tranType === 2) && item.foreignAmount ?
+                                                            ` (${item.foreignAmount.toLocaleString()} ${item.currencyType === 0 ? '$' : item.currencyType === 1 ? '¥' : item.currencyType === 2 ? '¥' : item.currencyType === 3 ? '₩' : ''})` :
                                                             ''
                                                         }
                                                     </Typography>
@@ -352,7 +352,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                     </ListItem>
                                     <ListItem>
                                         <ListItemText primary="Pay Price" secondary={selectedItem.payPrice.toLocaleString()}
-                                                      원 />
+                                                       />
                                     </ListItem>
                                     <ListItem>
                                         <ListItemText primary="Pay Date" secondary={selectedItem.datetime} />
@@ -360,7 +360,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                     <ListItem>
                                         <ListItemText primary="Pay Balance Snap" secondary={
                                             paymentType === 0 ? selectedItem.payBalanceSnap : selectedItem.transitBalanceSnap
-                                        } 원 />
+                                        } />
                                     </ListItem>
                                     <ListItem>
                                         <ListItemText primary="Status"
@@ -403,7 +403,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                     <ListItem>
                                         <ListItemText primary="Transaction Balance Snap" secondary={
                                             paymentType === 0 ? selectedItem.payBalanceSnap.toLocaleString() + ' ₩' : selectedItem.transitBalanceSnap.toLocaleString() + ' ₩'
-                                        } 원 />
+                                        } />
                                     </ListItem>
                                 </>
                             )}

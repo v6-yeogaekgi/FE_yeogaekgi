@@ -91,7 +91,9 @@ const PostItem = ({
     const [viewContent, setViewContent] = useState(content);
     const [translateInfo, setTranslateInfo] = useState({state:false, translateContent:null})
 
-    const { protocol, token } = useContext(AllStateContext);
+
+    const { protocol } = useContext(AllStateContext);
+    const token = localStorage.getItem('token');
     useEffect(() => {
     }, [viewContent]);
 
