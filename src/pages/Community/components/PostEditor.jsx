@@ -190,7 +190,7 @@ const PostEditor = () => {
                 <BasicButton
                     variant={"contained"}
                     size = {"small"}
-                    btnColor={'#4653f9'}
+                    width = {"100%"}
                     text={'Confirm'}
                     variant={'contained'}
                     onClick={onClick}></BasicButton>

@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 
 // className도 매개변수로 받아야 되나? 네네네 그래서 제가 추가할게요 ㅎㅎ
 
-const BasicButton = ({ text, variant, btnColor, width, onClick, textColor, endIcon, startIcon, size, className=''}) => {
+const BasicButton = ({ text, variant='outlined', btnColor='#4653f9', width, onClick, textColor="white", endIcon, startIcon, size, className='', height='50px'}) => {
     // variant = text | contained | outlined
   return (
     <Button
@@ -11,14 +11,21 @@ const BasicButton = ({ text, variant, btnColor, width, onClick, textColor, endIc
       variant={variant}
       onClick={onClick}
       sx={{
-        backgroundColor: btnColor,
-        color: textColor,
+        borderColor:(variant === 'outlined') ? btnColor : '',
+        textColor: textColor,
+        backgroundColor: (variant === 'outlined') ? '' : btnColor ,
         "&:hover": {
-          backgroundColor: btnColor,
+          backgroundColor: (variant === 'outlined') ? '' : btnColor ,
           filter: "brightness(80%)",
         },
         width: width,
-        textTransform: 'none',
+        height: height,
+        textTransform: 'capitalize',
+        fontFamily: 'Noto Sans, sans-serif',
+        fontSize: '16px',
+        borderRadius: 5,
+          mt:1,
+          mb:1
       }}
       startIcon={startIcon}
       endIcon={endIcon}
@@ -27,6 +34,7 @@ const BasicButton = ({ text, variant, btnColor, width, onClick, textColor, endIc
     >
       {text}
     </Button>
+
   );
 };
 
