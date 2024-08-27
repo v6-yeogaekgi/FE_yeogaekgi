@@ -71,7 +71,8 @@ const SelectImage = ({fileImgs, setFileImgs}) => {
 
 const PostEditor = () => {
     const { openAlertDialog, AlertDialog } = useAlertDialog();
-    const { protocol, token } = useContext(AllStateContext);
+    const { protocol } = useContext(AllStateContext);
+    const token = localStorage.getItem('token');
     const {postId} = useParams();
     const navigate = useNavigate();
 
