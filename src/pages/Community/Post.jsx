@@ -40,6 +40,31 @@ const Post = () => {
     const { postId } = useParams();
     const navigate = useNavigate();
 
+    // ================ [start] DeepL api 호출 부분 ================
+
+    const deepLApi = (text, target_lang) => {
+        const data = {
+            text: [text],
+            target_lang: target_lang,
+        };
+
+        return axios
+            .post(protocol + 'api/translate', data, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((res) => {
+                console.log(res.data.translations[0].text);
+                return res.data.translations[0].text;
+            })
+            .catch((error) => {
+                console.error('API 호출 오류:', error);
+                throw error;
+            });
+    };
+
     // ================ [start] comment api 호출 부분 ================
     const getApiUrl = protocol + 'community/comment/';
     const postApi = (content) => {
@@ -129,7 +154,7 @@ const Post = () => {
     }, [comment]);
 
     const memoizedDispatch = useMemo(() => {
-        return { onCreate, onDelete, postApi, getApi };
+        return { onCreate, onDelete, postApi, getApi, deepLApi };
     }, [comment]);
 
     if (!isDataLoaded) {
