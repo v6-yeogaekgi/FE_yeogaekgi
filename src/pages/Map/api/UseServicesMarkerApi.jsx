@@ -1,19 +1,18 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
-import { useSelected } from './SelectedProvider';
+import { useSelected } from '../provider/SelectedProvider';
 
-const UseServicesMarkerApi = () => {
+const UseServicesMarkerApi = (state) => {
     const [data, setData] = useState(null);
     const [apiLoading, setApiLoading] = useState(false);
-    const { State } = useSelected();
 
     const buildQueryString = useCallback(() => {
         const params = [];
-        if (State.Tour) params.push('TouristAttraction=TouristAttraction');
-        if (State.ACTIVITY) params.push('ACTIVITY=ACTIVITY');
-        if (State.ETC) params.push('ETC=ETC');
+        if (state.Tour) params.push('TouristAttraction=TouristAttraction');
+        if (state.ACTIVITY) params.push('ACTIVITY=ACTIVITY');
+        if (state.ETC) params.push('ETC=ETC');
         return params.length > 0 ? `?${params.join('&')}` : '';
-    }, [State]);
+    }, [state]);
 
     const serviceListAPI = useCallback(() => {
         setApiLoading(true);
@@ -32,6 +31,7 @@ const UseServicesMarkerApi = () => {
 
     useEffect(() => {
         serviceListAPI();
+        console.log('리렌더링됨');
     }, [serviceListAPI]);
 
     return { data, apiLoading };

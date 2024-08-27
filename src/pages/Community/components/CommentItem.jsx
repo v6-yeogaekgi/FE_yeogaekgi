@@ -1,8 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { getCountryImgById } from '../../../util';
-
 import Avatar from '@mui/material/Avatar';
-
 import TranslateIcon from '@mui/icons-material/Translate';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import { ListItemAvatar } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import { AllStateContext } from '../../../App';
+import { getCountryCodeForTranslate } from '../../../util';
 
 const CommentItem = ({
     commentId,
@@ -28,8 +27,13 @@ const CommentItem = ({
     code,
     onDelete,
     currentMemberId,
+    currentMemberCode,
+    deepLApi,
 }) => {
     const { dialog } = useContext(AllStateContext);
+    const [translatedContent, setTranslatedContent] = useState(null);
+    const [isTranslated, setIsTranslated] = useState(false);
+
     const onClickDeleteComment = () => {
         const isConfirmed = window.confirm(
             'Would you like to delete the comment?',
@@ -44,13 +48,35 @@ const CommentItem = ({
         navigate(`/community/comment/edit/${commentId}`);
     };
 
+    const goDeepL = async () => {
+        if (isTranslated) {
+            setIsTranslated(false);
+        } else {
+            if (!translatedContent) {
+                try {
+                    const translated = await deepLApi(
+                        content,
+                        getCountryCodeForTranslate(currentMemberCode),
+                    );
+                    setTranslatedContent(translated);
+                } catch (error) {
+                    console.error('Translation failed:', error);
+                }
+            }
+            setIsTranslated(true);
+        }
+    };
+
     const shouldRenderButtons = currentMemberId === memberId;
 
     return (
         <List sx={{ width: '95%', bgcolor: 'background.paper' }}>
             <ListItem alignItems="flex-start">
                 <ListItemAvatar>
-                    <Avatar alt="Country Flag" src={getCountryImgById(code)} />
+                    <Avatar
+                        alt="Country Flag"
+                        src={getCountryImgById(currentMemberCode)}
+                    />
                 </ListItemAvatar>
                 <div style={{ flex: 1 }}>
                     <Typography>
@@ -86,7 +112,7 @@ const CommentItem = ({
                             overflowWrap: 'break-word',
                         }}
                     >
-                        {content}
+                        {isTranslated ? translatedContent : content}
                     </Typography>
 
                     <div
@@ -164,6 +190,7 @@ const CommentItem = ({
                                     marginRight: 0,
                                 },
                             }}
+                            onClick={goDeepL}
                         />
                     </div>
                 </div>

@@ -6,7 +6,7 @@ import { CommentDispatchContext, CommentStateContext } from '../Post';
 
 const CommentList = () => {
     const { comment } = useContext(CommentStateContext);
-    const { onUpdate, onDelete, getApi } = useContext(CommentDispatchContext);
+    const { deepLApi, onDelete, getApi } = useContext(CommentDispatchContext);
 
     // 처음 렌더링될 때 실행
     useEffect(() => {
@@ -25,7 +25,12 @@ const CommentList = () => {
             }
         >
             {comment.map((it) => (
-                <CommentItem {...it} key={it.id} onDelete={onDelete} />
+                <CommentItem
+                    {...it}
+                    key={it.id}
+                    onDelete={onDelete}
+                    deepLApi={deepLApi}
+                />
             ))}
         </List>
     );

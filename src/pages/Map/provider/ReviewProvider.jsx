@@ -7,22 +7,25 @@ import { useSelected } from './SelectedProvider';
 const ReviewContext = createContext();
 
 // Provider 컴포넌트
-export const ReviewProvider = ({ children }) => {
-    const { SelectedService } = useSelected();
+export const ReviewProvider = ({
+    children,
+    selectedService,
+    selectedServiceInfo,
+}) => {
     const [selectedReview, setSelectedReview] = useState(null);
-    const Authorization =
-        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdG9tQG5hdmVyLmNvbSIsImV4cCI6MTcyNTIwNTEwNCwiaWF0IjoxNzI0NjAwMzA0fQ.7CyhMJSTCrfP-IXpoZ3Yo83WHrG_3U3bsPP1Z4sh83E';
+    const [list, setList] = useState(null);
+    const [img, setImg] = useState([]);
+    const token = localStorage.getItem("token");
     const ContentType = 'multipart/form-data';
     const http = 'http://localhost:8090';
-
-    const onCreate = async (reviewData) => {
+    const onCreate = async (serviceId, reviewData) => {
         try {
             const response = await axios.post(
-                `${http}/review/${SelectedService}/register`,
+                `${http}/review/${serviceId}/register`,
                 reviewData,
                 {
                     headers: {
-                        Authorization: Authorization,
+                        Authorization: token,
                         'Content-Type': ContentType,
                     },
                 },
@@ -35,14 +38,14 @@ export const ReviewProvider = ({ children }) => {
         }
     };
 
-    const onUpdate = async (reviewId, updateData) => {
+    const onUpdate = async (serviceId, reviewId, updateData) => {
         try {
             const response = await axios.put(
-                `${http}/review/${SelectedService}/${reviewId}`,
+                `${http}/review/${serviceId}/${reviewId}`,
                 updateData,
                 {
                     headers: {
-                        Authorization: Authorization,
+                        Authorization: token,
                         'Content-Type': ContentType,
                     },
                 },
@@ -58,10 +61,10 @@ export const ReviewProvider = ({ children }) => {
     const onDelete = async (selectedReview) => {
         try {
             const response = await axios.delete(
-                `${http}/review/${SelectedService}/${selectedReview}`,
+                `${http}/review/${selectedService}/${selectedReview}`,
                 {
                     headers: {
-                        Authorization: Authorization,
+                        Authorization: token,
                     },
                 },
             );
@@ -76,11 +79,16 @@ export const ReviewProvider = ({ children }) => {
     return (
         <ReviewContext.Provider
             value={{
+                img,
+                setImg,
                 onCreate,
                 onUpdate,
                 onDelete,
+                list,
+                setList,
                 selectedReview,
                 setSelectedReview,
+                selectedServiceInfo,
             }}
         >
             {children}
