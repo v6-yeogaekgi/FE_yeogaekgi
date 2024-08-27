@@ -9,7 +9,8 @@ import useConfirmDialog from '../../hooks/useConfirmDialog/useConfirmDialog';
 
 
 export default function Main(props) {
-    const { protocol, token } = useContext(AllStateContext);
+    const { protocol } = useContext(AllStateContext);
+    const token = localStorage.getItem('token');
     const { openAlertDialog, AlertDialog } = useAlertDialog();
     const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
     const getApiUrl = protocol + 'community/';
