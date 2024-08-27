@@ -14,6 +14,7 @@ import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
 import { ListItemAvatar } from '@mui/material';
 import Divider from '@mui/material/Divider';
+import { AllStateContext } from '../../../App';
 
 const CommentItem = ({
     commentId,
@@ -28,13 +29,13 @@ const CommentItem = ({
     onDelete,
     currentMemberId,
 }) => {
+    const { dialog } = useContext(AllStateContext);
     const onClickDeleteComment = () => {
         const isConfirmed = window.confirm(
             'Would you like to delete the comment?',
         );
-        if (isConfirmed) {
-            onDelete(commentId, postId);
-        }
+        dialog.confirm.openConfirmDialog("Confirm Deletion","Would you like to delete the comment?",onDelete(commentId, postId));
+
     };
 
     const navigate = useNavigate();
@@ -52,12 +53,12 @@ const CommentItem = ({
                     <Avatar alt="Country Flag" src={getCountryImgById(code)} />
                 </ListItemAvatar>
                 <div style={{ flex: 1 }}>
-                    <Typography component="span" variant="h6">
+                    <Typography>
                         {nickname}
                     </Typography>
                     <Typography
                         component="span"
-                        variant="body2"
+                        variant="caption"
                         color="text.secondary"
                         sx={{ marginLeft: '8px' }}
                     >
@@ -65,7 +66,7 @@ const CommentItem = ({
                         {modDate && modDate !== regDate && (
                             <Typography
                                 component="span"
-                                variant="body2"
+                                variant="caption"
                                 color="text.secondary"
                                 sx={{ marginLeft: '4px' }}
                             >
@@ -75,7 +76,8 @@ const CommentItem = ({
                     </Typography>
 
                     <Typography
-                        variant="body1"
+                        variant="body2"
+                        color="text.primary"
                         sx={{
                             mt: 1,
                             mb: 1,
@@ -94,26 +96,7 @@ const CommentItem = ({
                             justifyContent: 'flex-end',
                         }}
                     >
-                        <Button
-                            id="translate-button"
-                            size="small"
-                            aria-label="translate"
-                            startIcon={<TranslateIcon />}
-                            sx={{
-                                color: '#4653f9',
-                                padding: '4px 8px',
-                                fontSize: '0.75rem',
-                                height: '24px',
-                                minWidth: '32px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                textAlign: 'center',
-                                '& .MuiButton-startIcon': {
-                                    marginRight: 0,
-                                },
-                            }}
-                        />
+
 
                         {shouldRenderButtons && (
                             <>
@@ -162,6 +145,26 @@ const CommentItem = ({
                                 />
                             </>
                         )}
+                        <Button
+                            id="translate-button"
+                            size="small"
+                            aria-label="translate"
+                            startIcon={<TranslateIcon />}
+                            sx={{
+                                color: '#4653f9',
+                                padding: '4px 8px',
+                                fontSize: '0.75rem',
+                                height: '24px',
+                                minWidth: '32px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                textAlign: 'center',
+                                '& .MuiButton-startIcon': {
+                                    marginRight: 0,
+                                },
+                            }}
+                        />
                     </div>
                 </div>
             </ListItem>

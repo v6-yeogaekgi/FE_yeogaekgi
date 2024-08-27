@@ -9,7 +9,6 @@ import Typography from '@mui/material/Typography';
 import AddPhotoAlternateSharpIcon from '@mui/icons-material/AddPhotoAlternateSharp';
 import axios from 'axios';
 import { AllStateContext } from '../../../App';
-import useAlertDialog from '../../../hooks/useAlertDialog/useAlertDialog';
 import PersonIcon from '@mui/icons-material/Person';
 
 
@@ -70,8 +69,7 @@ const SelectImage = ({fileImgs, setFileImgs}) => {
 
 
 const PostEditor = () => {
-    const { openAlertDialog, AlertDialog } = useAlertDialog();
-    const { protocol } = useContext(AllStateContext);
+    const { protocol, dialog } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
     const {postId} = useParams();
     const navigate = useNavigate();
@@ -91,7 +89,7 @@ const PostEditor = () => {
                 },
             )
             .then((res) => {
-                openAlertDialog("Success!", "Go check out your post.", ()=>navigate('/community/post/'+res.data));
+                dialog.alert.openAlertDialog("Success!", "Go check out your post.", ()=>navigate('/community/post/'+res.data));
             })
             .catch((error) => {
                 console.error('API 호출 오류:', error);
@@ -112,7 +110,7 @@ const PostEditor = () => {
                 },
             )
             .then((res) => {
-                openAlertDialog("Success!", "Go check out your post.", ()=>navigate('/community/post/'+postId));
+                dialog.alert.openAlertDialog("Success!", "Go check out your post.", ()=>navigate('/community/post/'+postId));
             })
             .catch((error) => {
                 console.error('API 호출 오류:', error);
@@ -130,7 +128,7 @@ const PostEditor = () => {
 
         if (!content.trim()) {
             // alert('Please enter the content');
-            openAlertDialog('Error', 'Please enter the content');
+            dialog.alert.openAlertDialog('Error', 'Please enter the content');
 
             return;
         }
@@ -197,7 +195,7 @@ const PostEditor = () => {
                     variant={'contained'}
                     onClick={onClick}></BasicButton>
             </div>
-            <AlertDialog></AlertDialog>
+            <dialog.alert.AlertDialog></dialog.alert.AlertDialog>
 
 
         </div>

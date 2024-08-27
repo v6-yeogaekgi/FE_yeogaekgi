@@ -68,8 +68,6 @@ const Images = ({ images, postId }) => {
 };
 
 const PostItem = ({
-    alertDialog,
-    confirmDialog,
     postId,
     memberId,
     nickname,
@@ -92,7 +90,7 @@ const PostItem = ({
     const [translateInfo, setTranslateInfo] = useState({state:false, translateContent:null})
 
 
-    const { protocol } = useContext(AllStateContext);
+    const { protocol, dialog } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
     useEffect(() => {
     }, [viewContent]);
@@ -111,7 +109,7 @@ const PostItem = ({
                 },
             })
             .then((res) => {
-                alertDialog("Success!", "The post has been successfully deleted.", ()=>navigate('/community'));
+                dialog.alert.openAlertDialog("Success!", "The post has been successfully deleted.", ()=>navigate('/community'));
             })
             .catch((error) => {
                 console.error('API 호출 오류:', error);
@@ -310,7 +308,7 @@ const PostItem = ({
                                     },
                                 }}
                                     onClick={()=>{
-                                        confirmDialog("Confirm Deletion","Are you sure you want to delete this?",deleteApi);
+                                        dialog.confirm.openConfirmDialog("Confirm Deletion","Are you sure you want to delete this?",deleteApi);
                                     }
                                 }
                             />
