@@ -15,8 +15,7 @@ export const ReviewProvider = ({
     const [selectedReview, setSelectedReview] = useState(null);
     const [list, setList] = useState(null);
     const [img, setImg] = useState([]);
-    const Authorization =
-        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdG9tQG5hdmVyLmNvbSIsImV4cCI6MTcyNTIwNTEwNCwiaWF0IjoxNzI0NjAwMzA0fQ.7CyhMJSTCrfP-IXpoZ3Yo83WHrG_3U3bsPP1Z4sh83E';
+    const token = localStorage.getItem("token");
     const ContentType = 'multipart/form-data';
     const http = 'http://localhost:8090';
     const onCreate = async (serviceId, reviewData) => {
@@ -26,7 +25,7 @@ export const ReviewProvider = ({
                 reviewData,
                 {
                     headers: {
-                        Authorization: Authorization,
+                        Authorization: token,
                         'Content-Type': ContentType,
                     },
                 },
@@ -46,7 +45,7 @@ export const ReviewProvider = ({
                 updateData,
                 {
                     headers: {
-                        Authorization: Authorization,
+                        Authorization: token,
                         'Content-Type': ContentType,
                     },
                 },
@@ -65,7 +64,7 @@ export const ReviewProvider = ({
                 `${http}/review/${selectedService}/${selectedReview}`,
                 {
                     headers: {
-                        Authorization: Authorization,
+                        Authorization: token,
                     },
                 },
             );
