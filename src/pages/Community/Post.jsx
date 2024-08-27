@@ -146,7 +146,7 @@ const Post = () => {
                             postId={post.postId}
                             memberId={post.memberId}
                             nickname={post.nickname}
-                            countryId={post.countryId}
+                            code={post.code}
                             images={post.images}
                             content={post.content}
                             hashtag={post.hashtag}
