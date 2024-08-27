@@ -181,6 +181,7 @@ const Post = () => {
                             modDate={post.modDate}
                             likeState={post.likeState}
                             currentMemberId={post.currentMemberId}
+                            currentMemberCode={post.currentMemberCode}
                         />
                         <CommentList />
                         <CommentRegister />
