@@ -9,8 +9,6 @@ import { AllStateContext } from '../../App';
 import { getExchangeRate } from '../../components/ExchangeRateManager/ExchangeRateManager';
 
 const Registration = () => (
-    // TODO 
-    // exp_date 만료인 카드 처리 
     <Paper
         onClick={() => alert('Registration')}
         sx={{
@@ -51,6 +49,8 @@ export default function Wallet(props) {
     const [param, setParam] = useState({
         page: 1,
     });
+
+    const [starChanged, setStarChanged] = useState(false);
 
     const handleCardClick = (cardData) => {
         navigate('detail', { state: { cardData } });
@@ -103,6 +103,16 @@ export default function Wallet(props) {
             getApi();
     }, []);
 
+    useEffect(() => {
+        if (starChanged) {
+            setStarChanged(false);
+        }
+    }, [starChanged]);
+
+    const handleStarChange = () => {
+        setStarChanged(true);
+    };
+
     return (
         <Box sx={{
             display: 'flex',
@@ -128,7 +138,7 @@ export default function Wallet(props) {
                 }}
             >
                 {data && data.map((cardData, index) => (
-                    <UserCard key={index} data={cardData} onCardClick={handleCardClick} />
+                    <UserCard key={index} data={cardData} onCardClick={handleCardClick} onStarChange={handleStarChange} />
                 ))}
             </Box>
             {data && data.length === 0 && (

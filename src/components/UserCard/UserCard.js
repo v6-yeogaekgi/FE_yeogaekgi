@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import SettingsDrawer from '../SettingsDrawer/SettingsDrawer';
+import { useEffect, useState } from 'react';
 
 const commonPaperStyle = (isActive) => ({
     width: '90%',
@@ -37,7 +38,7 @@ const CardImage = ({ imageUrl, isOverlayActive }) => (
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
-                ...(isOverlayActive ? { filter: 'brightness(80%)' } : {})
+                ...(isOverlayActive ? { filter: 'brightness(80%)' } : {}),
             }}
         />
     </div>
@@ -61,10 +62,19 @@ const Overlay = () => (
     </div>
 );
 
-export default function UserCard({ data, onCardClick }) {
+export default function UserCard({ data, onCardClick, onStarChange }) {
     const navigate = useNavigate();
     const { status, cardName, payBalance, transitBalance, starred } = data;
     const isActive = status !== 0;
+
+    const [starredState, setStarredState] = useState(starred === 1);
+
+    const handleStarChange = (newStarredState) => {
+        setStarredState(newStarredState);
+    };
+
+    useEffect(() => {
+    }, []);
 
     const handleCardClick = (e) => {
 
@@ -141,7 +151,9 @@ export default function UserCard({ data, onCardClick }) {
                         display: 'flex',
                         alignItems: 'center',
                     }}>
-                        <StarCheckbox checked={isActive && starred === 1} />
+                        <div onClick={(e) => e.stopPropagation()}>
+                            <StarCheckbox checked={isActive && starredState} userCardId={data.userCardId} onChange={() => { onStarChange(); }} />
+                        </div>
                         <div onClick={(e) => e.stopPropagation()}>
                             <SettingsDrawer data={data} />
                         </div>
