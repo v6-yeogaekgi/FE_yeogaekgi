@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Footer from './layout/Footer/Footer';
 import Header from './layout/Header/Header';
@@ -28,6 +28,7 @@ import { SelectedProvider } from './pages/Map/components/SelectedProvider';
 import { ReviewProvider } from './pages/Map/components/ReviewProvider';
 import ReviewRegister from './pages/Map/components/ReviewRegister';
 import ReviewEdit from './pages/Map/components/ReviewEdit';
+import { fetchAndStoreExchangeRate } from './components/ExchangeRateManager/ExchangeRateManager';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -71,6 +72,11 @@ const memberInfo = {
 };
 localStorage.setItem('member', JSON.stringify(memberInfo));
 function App() {
+
+    useEffect(() => {
+        fetchAndStoreExchangeRate();
+    },[])
+
     return (
         <AllStateContext.Provider value={{ protocol }}>
             <Router>
