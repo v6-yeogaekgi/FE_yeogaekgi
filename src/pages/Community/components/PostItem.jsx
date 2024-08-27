@@ -1,6 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect, useContext } from 'react';
-import { Button, CardActionArea, CardActions, ListItemAvatar } from '@mui/material';
+import {
+    Button,
+    CardActionArea,
+    CardActions,
+    ListItemAvatar,
+} from '@mui/material';
 import { ImageList, ImageListItem } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -15,7 +20,8 @@ import { getCountryImgById } from '../../../util';
 import BasicButton from '../../../components/BasicButton/BasicButton';
 import { AllStateContext } from '../../../App';
 import axios from 'axios';
-
+import { CommentDispatchContext } from '../Post';
+import { getCountryCodeForTranslate } from '../../../util';
 
 const Images = ({ images, postId }) => {
     if (images && images.length >= 1) {
@@ -82,34 +88,68 @@ const PostItem = ({
     regDate,
     modDate,
     likeState,
-    parentPage="",
-    currentMemberId
+    parentPage = '',
+    currentMemberId,
+    currentMemberCode,
 }) => {
     const navigate = useNavigate();
     const [viewLikeState, setViewLikeState] = useState(likeState);
     const [viewLikeCnt, setViewLikeCnt] = useState(likeCnt);
     const [viewContent, setViewContent] = useState(content);
-    const [translateInfo, setTranslateInfo] = useState({state:false, translateContent:null})
+    const [translateInfo, setTranslateInfo] = useState({
+        state: false,
+        translateContent: null,
+    });
+    const { deepLApi } = useContext(CommentDispatchContext);
+    const [translatedContent, setTranslatedContent] = useState(null);
+    const [translatedHashtag, setTranslatedHashtag] = useState(null);
+    const [isTranslated, setIsTranslated] = useState(false);
 
     const { protocol, token } = useContext(AllStateContext);
-    useEffect(() => {
-    }, [viewContent]);
+    useEffect(() => {}, [viewContent]);
 
-    // 번역 api
-    const translateApi = (e) => {
-        console.log(e.target.getAttribute('data-state')); // true면 번역 상태. false 면 원본 상태
-    }
+    // DeepL API
+    const goDeepL = async () => {
+        if (isTranslated) {
+            // 번역 취소 (원래 값으로 복원)
+            setIsTranslated(false);
+        } else {
+            // 번역 시작
+            if (!translatedContent && !translatedHashtag) {
+                try {
+                    const translatedContentText = await deepLApi(
+                        content,
+                        getCountryCodeForTranslate(currentMemberCode),
+                    );
+                    const translatedHashtagText = await deepLApi(
+                        hashtag,
+                        getCountryCodeForTranslate(currentMemberCode),
+                    );
+                    setTranslatedContent(translatedContentText);
+                    setTranslatedHashtag(translatedHashtagText);
+                } catch (error) {
+                    console.error('Translation failed:', error);
+                }
+            }
+            setIsTranslated(true);
+        }
+    };
+
     // post 삭제 api
     const deleteApi = () => {
         return axios
-            .delete(protocol +  "community/" + postId,{
+            .delete(protocol + 'community/' + postId, {
                 headers: {
                     Authorization: token,
                     'Content-Type': 'application/json', // 데이터 형식을 명시
                 },
             })
             .then((res) => {
-                alertDialog("Success!", "The post has been successfully deleted.", ()=>navigate('/community'));
+                alertDialog(
+                    'Success!',
+                    'The post has been successfully deleted.',
+                    () => navigate('/community'),
+                );
             })
             .catch((error) => {
                 console.error('API 호출 오류:', error);
@@ -117,18 +157,20 @@ const PostItem = ({
             });
     };
     // like active api
-    const likeAtiveApi = () =>{
-        if(viewLikeState){ // like off
+    const likeAtiveApi = () => {
+        if (viewLikeState) {
+            // like off
             setViewLikeState(false);
-            setViewLikeCnt(viewLikeCnt-1);
-        }else{ // like on
+            setViewLikeCnt(viewLikeCnt - 1);
+        } else {
+            // like on
             setViewLikeState(true);
-            setViewLikeCnt(viewLikeCnt+1);
+            setViewLikeCnt(viewLikeCnt + 1);
         }
         // api 호출
         axios
             .post(
-                protocol +"community/like/"+ postId,
+                protocol + 'community/like/' + postId,
                 {},
                 {
                     headers: {
@@ -144,9 +186,7 @@ const PostItem = ({
                 console.error('API 호출 오류:', error);
                 throw error;
             });
-    }
-    
-
+    };
 
     return (
         <div className="PostItem" style={{ marginBottom: '5px' }}>
@@ -168,8 +208,13 @@ const PostItem = ({
                         }}
                         member={memberId}
                     >
-                        <Avatar alt="Country Flag" src={getCountryImgById(code)} />
-                        <Typography sx={{ marginLeft: '8px' }}>{nickname}</Typography>
+                        <Avatar
+                            alt="Country Flag"
+                            src={getCountryImgById(code)}
+                        />
+                        <Typography sx={{ marginLeft: '8px' }}>
+                            {nickname}
+                        </Typography>
                     </div>
                     <div className="regDate">
                         <Typography
@@ -191,21 +236,24 @@ const PostItem = ({
                         </Typography>
                     </div>
                 </CardActions>
-                <CardActionArea className="post-content" onClick={()=>{
-                    if(parentPage=='list') {
-                        navigate("/community/post/" + postId);
-                    }
-                }}>
+                <CardActionArea
+                    className="post-content"
+                    onClick={() => {
+                        if (parentPage == 'list') {
+                            navigate('/community/post/' + postId);
+                        }
+                    }}
+                >
                     <CardContent>
                         <Typography className="hashtag" color="primary">
-                            {hashtag}
+                            {isTranslated ? translatedHashtag : hashtag}
                         </Typography>
                         <Typography
                             className="post-content"
                             variant="body2"
                             color="text.primary"
                         >
-                            {viewContent}
+                            {isTranslated ? translatedContent : content}
                         </Typography>
                     </CardContent>
                     <CardContent
@@ -230,7 +278,6 @@ const PostItem = ({
                             className="likeCheck"
                             checked={viewLikeState}
                             onClick={likeAtiveApi}
-
                         ></LikeCheckbox>
                         <Typography
                             className="likeCnt"
@@ -251,42 +298,43 @@ const PostItem = ({
                             {commentCnt}
                         </Typography>
                     </div>
-                    <div style={{display:"flex", justifyContent:"flex-end"}}>
+                    <div
+                        style={{ display: 'flex', justifyContent: 'flex-end' }}
+                    >
                         {currentMemberId == memberId ? (
-                                <Button
-                                    id="edit-button"
-                                    size="small"
-                                    aria-label="edit"
-                                    startIcon={<EditIcon />}
-                                    sx={{
-                                        color: '#4653f9',
-                                        padding: '4px 8px',
-                                        fontSize: '0.75rem',
-                                        height: '24px',
-                                        minWidth: '32px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        textAlign: 'center',
-                                        '& .MuiButton-startIcon': {
-                                            marginRight: 0,
+                            <Button
+                                id="edit-button"
+                                size="small"
+                                aria-label="edit"
+                                startIcon={<EditIcon />}
+                                sx={{
+                                    color: '#4653f9',
+                                    padding: '4px 8px',
+                                    fontSize: '0.75rem',
+                                    height: '24px',
+                                    minWidth: '32px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    textAlign: 'center',
+                                    '& .MuiButton-startIcon': {
+                                        marginRight: 0,
+                                    },
+                                }}
+                                onClick={() => {
+                                    navigate('/community/modify/' + postId, {
+                                        state: {
+                                            hashtag: hashtag,
+                                            content: content,
+                                            images: images,
+                                            type: 'mod',
                                         },
-                                    }}
-                                    onClick={()=>{
-                                        navigate(
-                                            "/community/modify/"+postId,
-                                            {
-                                                state:{
-                                                    hashtag:hashtag,
-                                                    content:content,
-                                                    images:images,
-                                                    type:"mod"
-                                                }
-                                            })
-                                    }}
-                                />
-                            ) : (<></>)
-                        }
+                                    });
+                                }}
+                            />
+                        ) : (
+                            <></>
+                        )}
                         {currentMemberId == memberId ? (
                             <Button
                                 id="delete-button"
@@ -307,13 +355,17 @@ const PostItem = ({
                                         marginRight: 0,
                                     },
                                 }}
-                                    onClick={()=>{
-                                        confirmDialog("Confirm Deletion","Are you sure you want to delete this?",deleteApi);
-                                    }
-                                }
+                                onClick={() => {
+                                    confirmDialog(
+                                        'Confirm Deletion',
+                                        'Are you sure you want to delete this?',
+                                        deleteApi,
+                                    );
+                                }}
                             />
-                            ) : (<></>)
-                        }
+                        ) : (
+                            <></>
+                        )}
                         <Button
                             id="translate-button"
                             size="small"
@@ -333,10 +385,8 @@ const PostItem = ({
                                     marginRight: 0,
                                 },
                             }}
-                            onClick={()=>{
-                            }}
+                            onClick={goDeepL}
                         />
-
                     </div>
                 </CardActions>
             </Card>
