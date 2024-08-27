@@ -102,9 +102,9 @@ export default function UserCardOnDetail({ data, onCardClick }) {
                     <Grid item xs={8}>
                         <Typography variant="h7">{cardName}</Typography>
                         <Typography>Pay Balance </Typography>
-                        <Typography variant="h5">{payBalance.toLocaleString()}₩</Typography>
+                        <Typography variant="h5">₩{payBalance.toLocaleString()}</Typography>
                         <Typography>Transit Balance </Typography>
-                        <Typography variant="h5">{transitBalance.toLocaleString()}₩</Typography>
+                        <Typography variant="h5">₩{transitBalance.toLocaleString()}</Typography>
                     </Grid>
                     <Grid item xs={4} style={{ position: 'relative' }}>
                         <div style={{
