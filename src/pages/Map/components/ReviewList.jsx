@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
     IconButton,
     Card,
@@ -13,14 +13,17 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { red } from '@mui/material/colors';
 import { useReview } from '../provider/ReviewProvider';
 import { useNavigate } from 'react-router-dom';
+import { AllStateContext } from '../../../App';
 
 const ReviewList = ({ list, selectedService, selectedServiceInfo }) => {
+    const { protocol } = useContext(AllStateContext);
+    const token = localStorage.getItem('token');
     useEffect(() => {
         console.log('ReviewList received new list:', list);
     }, [list]);
 
-    const { selectedReview, setSelectedReview, onDelete, onCreate, onUpdate } =
-        useReview();
+    const { selectedReview, setSelectedReview, onDelete } = useReview();
+
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
 

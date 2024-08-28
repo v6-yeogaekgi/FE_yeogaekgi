@@ -46,16 +46,24 @@ export default function Map() {
         };
     }, []);
 
-    const handleServiceSelect = (service, name, content, serviceType) => {
+    const handleServiceSelect = (
+        service,
+        name,
+        content,
+        serviceType,
+        likeCnt,
+    ) => {
         setSelectedService(service);
-        console.log('서비스입니다' + service);
         setSelectedServiceInfo({
             name: name,
             content: content,
             serviceType: serviceType,
+            likeCnt: likeCnt,
         });
         setOpen(true);
     };
+
+    useEffect(() => {}, [handleServiceSelect]);
 
     console.log('asdasd' + selectedService);
     return (
@@ -99,6 +107,7 @@ export default function Map() {
                         setOpen={setOpen}
                         selectedServiceInfo={selectedServiceInfo}
                         selectedService={selectedService}
+                        likeCnt={selectedServiceInfo.likeCnt}
                     />
                 </ReviewProvider>
             </Box>

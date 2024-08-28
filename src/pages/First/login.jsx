@@ -43,7 +43,7 @@ function Login() {
             localStorage.setItem('token', token);
             const userDetailsResponse = await axios.post(memberUrl, data, {
                 headers: {
-                    'Authorization': `${token}`,
+                    Authorization: `${token}`,
                     'Content-Type': 'application/json',
                 },
             });

@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from 'react';
 import * as React from 'react';
 import axios from 'axios';
-import { useSelected } from './SelectedProvider';
+import { AllStateContext } from '../../../App';
 
 // Context 생성
 const ReviewContext = createContext();
@@ -15,18 +15,17 @@ export const ReviewProvider = ({
     const [selectedReview, setSelectedReview] = useState(null);
     const [list, setList] = useState(null);
     const [img, setImg] = useState([]);
-    const Authorization =
-        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdG9tQG5hdmVyLmNvbSIsImV4cCI6MTcyNTIwNTEwNCwiaWF0IjoxNzI0NjAwMzA0fQ.7CyhMJSTCrfP-IXpoZ3Yo83WHrG_3U3bsPP1Z4sh83E';
     const ContentType = 'multipart/form-data';
-    const http = 'http://localhost:8090';
+    const { protocol } = useContext(AllStateContext);
+    const token = localStorage.getItem('token');
     const onCreate = async (serviceId, reviewData) => {
         try {
             const response = await axios.post(
-                `${http}/review/${serviceId}/register`,
+                `${protocol}review/${serviceId}/register`,
                 reviewData,
                 {
                     headers: {
-                        Authorization: Authorization,
+                        Authorization: token,
                         'Content-Type': ContentType,
                     },
                 },
@@ -42,11 +41,11 @@ export const ReviewProvider = ({
     const onUpdate = async (serviceId, reviewId, updateData) => {
         try {
             const response = await axios.put(
-                `${http}/review/${serviceId}/${reviewId}`,
+                `${protocol}review/${serviceId}/${reviewId}`,
                 updateData,
                 {
                     headers: {
-                        Authorization: Authorization,
+                        Authorization: token,
                         'Content-Type': ContentType,
                     },
                 },
@@ -62,10 +61,10 @@ export const ReviewProvider = ({
     const onDelete = async (selectedReview) => {
         try {
             const response = await axios.delete(
-                `${http}/review/${selectedService}/${selectedReview}`,
+                `${protocol}review/${selectedService}/${selectedReview}`,
                 {
                     headers: {
-                        Authorization: Authorization,
+                        Authorization: token,
                     },
                 },
             );

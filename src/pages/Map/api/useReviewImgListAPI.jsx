@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSelected } from '../provider/SelectedProvider';
 import { useReview } from '../provider/ReviewProvider';
+import { AllStateContext } from '../../../App';
 
 const UseReviewImgListAPI = (SelectedService) => {
     // Array of objects containing images and user data
-    console.log('값 변경됨' + SelectedService);
-
     useEffect(() => {
         serviceImgListAPI();
     }, [SelectedService]);
 
     const [img, setImg] = useState();
     const [imgApiLoading, setApiLoading] = useState(false);
+    const { protocol } = useContext(AllStateContext);
 
     const serviceImgListAPI = () => {
         setApiLoading(true);
@@ -21,7 +21,7 @@ const UseReviewImgListAPI = (SelectedService) => {
                 `http://localhost:8090/review/${SelectedService}/ImgList`,
             );
             axios
-                .get(`http://localhost:8090/review/${SelectedService}/ImgList`)
+                .get(`${protocol}review/${SelectedService}/ImgList`)
                 .then((res) => {
                     const parsedData = res.data.flatMap((item) =>
                         item.images.map((image) => ({

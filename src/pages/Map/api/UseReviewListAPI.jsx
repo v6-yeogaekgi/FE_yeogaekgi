@@ -1,18 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSelected } from '../provider/SelectedProvider';
 import { useReview } from '../provider/ReviewProvider';
+import { AllStateContext } from '../../../App';
 
 const UseReviewListAPI = (SelectedService) => {
     const [list, setList] = useState();
     const [listApiLoading, setlistApiLoading] = useState(false);
+    const { protocol } = useContext(AllStateContext);
+    const token = localStorage.getItem('token');
 
     const serviceListAPI = () => {
         setlistApiLoading(true);
         if (SelectedService != null) {
             axios
                 .get(
-                    `http://localhost:8090/review/${SelectedService}/reviewList?page=0&size=3&sort=modDate,DESC`,
+                    `${protocol}review/${SelectedService}/reviewList?page=0&size=3&sort=modDate,DESC`,
                 )
                 .then((res) => {
                     setList(res.data);

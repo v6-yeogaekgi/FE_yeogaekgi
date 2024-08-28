@@ -14,16 +14,17 @@ const ReviewEdit = () => {
     const { name, serviceId, reviewId } = useParams();
     const [score, setScore] = useState(0);
     const inputRef = useRef();
+
     const { onUpdate } = useReview();
-    const { protocol, token } = useContext(AllStateContext);
-    const Authorization =
-        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdG9tQG5hdmVyLmNvbSIsImV4cCI6MTcyNTIwNTEwNCwiaWF0IjoxNzI0NjAwMzA0fQ.7CyhMJSTCrfP-IXpoZ3Yo83WHrG_3U3bsPP1Z4sh83E';
-    const http = 'http://localhost:8090';
+    const { protocol } = useContext(AllStateContext);
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         axios
-            .get(`${http}/review/${serviceId}/${reviewId}/detail`, {
-                headers: { Authorization: Authorization },
+            .get(`${protocol}review/${serviceId}/${reviewId}/detail`, {
+                headers: {
+                    Authorization: token,
+                },
             })
             .then((res) => {
                 const data = res.data;
@@ -34,7 +35,7 @@ const ReviewEdit = () => {
             .catch((error) => {
                 console.error('Error fetching review data:', error);
             });
-    }, [serviceId, reviewId, Authorization]);
+    }, [serviceId, reviewId]);
 
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);

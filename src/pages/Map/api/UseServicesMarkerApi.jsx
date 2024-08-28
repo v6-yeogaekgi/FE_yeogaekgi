@@ -1,10 +1,12 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import axios from 'axios';
 import { useSelected } from '../provider/SelectedProvider';
+import { AllStateContext } from '../../../App';
 
 const UseServicesMarkerApi = (state) => {
     const [data, setData] = useState(null);
     const [apiLoading, setApiLoading] = useState(false);
+    const { protocol } = useContext(AllStateContext);
 
     const buildQueryString = useCallback(() => {
         const params = [];
@@ -18,7 +20,7 @@ const UseServicesMarkerApi = (state) => {
         setApiLoading(true);
         const queryString = buildQueryString();
         axios
-            .get(`http://localhost:8090/services/servicesList${queryString}`)
+            .get(`${protocol}services/servicesList${queryString}`)
             .then((res) => {
                 setData(res.data);
                 setApiLoading(false);
