@@ -62,15 +62,24 @@ const Overlay = () => (
     </div>
 );
 
-export default function UserCard({ data, onCardClick, onCardUpdate }) {
+export default function UserCard({ data, onCardClick, onStarChange }) {
     const navigate = useNavigate();
     const { status, cardName, payBalance, transitBalance, starred } = data;
     const isActive = status !== 0;
 
     const [starredState, setStarredState] = useState(starred === 1);
 
+    const handleStarChange = () => {
+        if (onStarChange) {
+            onStarChange();
+        }
+    };
+
     useEffect(() => {
-    }, []);
+        if (onStarChange) {
+            onStarChange();
+        }
+    }, [starredState]);
 
     const handleCardClick = (e) => {
 
@@ -125,10 +134,6 @@ export default function UserCard({ data, onCardClick, onCardUpdate }) {
         </div>
     );
 
-    const handleCardDelete = () => {
-        onCardUpdate();
-    }
-
     return (
         <Paper
             style={commonPaperStyle(isActive)}
@@ -153,14 +158,17 @@ export default function UserCard({ data, onCardClick, onCardUpdate }) {
                     }}>
                         <div onClick={(e) => e.stopPropagation()}>
                             <StarCheckbox
-                                // checked={isActive && starredState}
                                 initialChecked={starred === 1}
                                 userCardId={data.userCardId}
+                                onStarChange={(newState) => {
+                                    setStarredState(newState);
+                                    handleStarChange();
+                                }}
                                 isActive={status === 1}
                             />
                         </div>
                         <div onClick={(e) => e.stopPropagation()}>
-                            <SettingsDrawer data={data} onCardDelete={handleCardDelete} />
+                            <SettingsDrawer data={data} />
                         </div>
                     </div>
                     <CardImage imageUrl={data.design} isOverlayActive={status === 0} />

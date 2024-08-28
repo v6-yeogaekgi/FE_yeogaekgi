@@ -48,11 +48,11 @@ export default function Wallet(props) {
     const [data, setData] = useState(null);
 
     // const [starChanged, setStarChanged] = useState(false);
+    const [updateTrigger, setUpdateTrigger] = useState(0);
+
     const handleCardClick = (cardData) => {
         navigate('detail', { state: { cardData } });
     };
-
-    const [cards, setCards] = useState([]);
 
     const [error, setError] = useState(null);
 
@@ -89,8 +89,7 @@ export default function Wallet(props) {
                         memberId: item.memberId,
                     }));
                     setData(formattedData);
-                }
-            })
+                }})
             .catch((err) => {
                 console.error('API 요청 중 오류 발생:', err);
                 setError('데이터를 불러오는 데 실패했습니다.');
@@ -99,10 +98,11 @@ export default function Wallet(props) {
 
     useEffect(() => {
         getApi();
-    }, []);
+        console.log(updateTrigger)
+    }, [updateTrigger]);
 
-    const handleCardUpdate = () => {
-        getApi();
+    const handleStarChange = () => {
+        setUpdateTrigger(prev => prev + 1);
     };
 
     return (
@@ -130,12 +130,7 @@ export default function Wallet(props) {
                 }}
             >
                 {data && data.map((cardData, index) => (
-                    <UserCard
-                        key={index}
-                        data={cardData}
-                        onCardClick={handleCardClick}
-                        onCardUpdate={handleCardUpdate}
-                        />
+                    <UserCard key={index} data={cardData} onCardClick={handleCardClick} onStarChange={handleStarChange} />
                 ))}
             </Box>
             {data && data.length === 0 && (

@@ -6,12 +6,14 @@ import axios from 'axios';
 import { useContext, useEffect } from 'react';
 import { AllStateContext } from '../../App';
 
-const StarCheckbox = ({ initialChecked, userCardId, isActive }) => {
+const StarCheckbox = ({ initialChecked, userCardId, onStarChange, isActive }) => {
+    const [checked, setChecked] = React.useState(initialChecked);
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
-    const [checked, setChecked] = React.useState(initialChecked);
 
     const getApi = (uri) => {
+        if (!isActive) return;
+
         axios
             .put(uri,
                 {
@@ -28,9 +30,10 @@ const StarCheckbox = ({ initialChecked, userCardId, isActive }) => {
                 if (res.status === 200) {
                     console.log('주카드 설정');
                     setChecked(!checked);
+                    onStarChange(!checked);
                 } else {
                     console.log('에러 발생');
-                    setChecked(!checked);
+                    onStarChange(!checked);
                 }
             })
             .catch((err) => {
@@ -38,8 +41,12 @@ const StarCheckbox = ({ initialChecked, userCardId, isActive }) => {
             });
     };
 
+    useEffect(() => {
+        setChecked(initialChecked);
+    }, [initialChecked]);
+
     const handleClick = () => {
-        if(!isActive) return;
+        if (!isActive) return;
 
         if (checked) {
             getApi(protocol + 'usercard/delete/star');
@@ -47,10 +54,6 @@ const StarCheckbox = ({ initialChecked, userCardId, isActive }) => {
             getApi(protocol + 'usercard/modify/star');
         }
     };
-
-    useEffect(() => {
-        setChecked(initialChecked);
-    }, [initialChecked]);
 
     return (
         <Checkbox
@@ -63,9 +66,8 @@ const StarCheckbox = ({ initialChecked, userCardId, isActive }) => {
                     color: 'yellow',
                 },
             }}
-            onChange={() => {
-                handleClick();
-            }}
+            onChange={() => {handleClick()}}
+            disabled={!isActive}
         />
     );
 };
