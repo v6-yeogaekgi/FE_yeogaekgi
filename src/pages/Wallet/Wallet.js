@@ -9,8 +9,6 @@ import { AllStateContext } from '../../App';
 import { getExchangeRate } from '../../components/ExchangeRateManager/ExchangeRateManager';
 
 const Registration = () => (
-    // TODO 
-    // exp_date 만료인 카드 처리 
     <Paper
         onClick={() => alert('Registration')}
         sx={{
@@ -48,9 +46,9 @@ export default function Wallet(props) {
 
     const navigate = useNavigate();
     const [data, setData] = useState(null);
-    const [param, setParam] = useState({
-        page: 1,
-    });
+
+    // const [starChanged, setStarChanged] = useState(false);
+    const [updateTrigger, setUpdateTrigger] = useState(0);
 
     const handleCardClick = (cardData) => {
         navigate('detail', { state: { cardData } });
@@ -63,6 +61,7 @@ export default function Wallet(props) {
     const uri = protocol + 'usercard/list';
 
     const getApi = () => {
+        //toDo 비활성화 카드(status === 0) 맨 아래에서 렌더링 되도록 수정
         axios
             .post(uri,
                 {},
@@ -89,9 +88,7 @@ export default function Wallet(props) {
                         cardName: item.cardName,
                         memberId: item.memberId,
                     }));
-
                     setData(formattedData);
-
                 }})
             .catch((err) => {
                 console.error('API 요청 중 오류 발생:', err);
@@ -100,8 +97,13 @@ export default function Wallet(props) {
     };
 
     useEffect(() => {
-            getApi();
-    }, []);
+        getApi();
+        console.log(updateTrigger)
+    }, [updateTrigger]);
+
+    const handleStarChange = () => {
+        setUpdateTrigger(prev => prev + 1);
+    };
 
     return (
         <Box sx={{
@@ -128,7 +130,7 @@ export default function Wallet(props) {
                 }}
             >
                 {data && data.map((cardData, index) => (
-                    <UserCard key={index} data={cardData} onCardClick={handleCardClick} />
+                    <UserCard key={index} data={cardData} onCardClick={handleCardClick} onStarChange={handleStarChange} />
                 ))}
             </Box>
             {data && data.length === 0 && (
