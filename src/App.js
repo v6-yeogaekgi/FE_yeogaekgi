@@ -42,7 +42,6 @@ const PageLayout = ({ children, menuName }) => {
                 flexDirection: 'column',
                 paddingTop: '64px', // header 높이만큼 패딩 추가
                 paddingBottom: '70px', // Footer 높이만큼 패딩 추가
-                width: '390px',
                 height: '844px',
                 overflowY: 'auto', // Hide vertical scrolling
                 '&::-webkit-scrollbar': {
