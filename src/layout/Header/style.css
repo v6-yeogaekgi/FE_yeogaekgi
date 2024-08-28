@@ -7,3 +7,7 @@
     background: #61dafb;
     width: 400px;
 }
+
+body {
+    font-family: 'Noto Sans', sans-serif;
+}
