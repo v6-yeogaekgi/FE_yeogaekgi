@@ -48,21 +48,22 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
+      - name: Docker build & push to prod
+        if: contains(github.ref, 'develop')
+        run: |
+          docker build --no-cache -f Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
+        if: contains(github.ref, 'develop')
         with:
           host: ${{ secrets.HOST }}
           username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
-            docker stop ${{ secrets.DOCKERHUB_REPO }} || true
-            docker rm ${{ secrets.DOCKERHUB_REPO }} || true
-            docker run -d --name ${{ secrets.DOCKERHUB_REPO }} -p 80:3000 ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
+            sudo docker ps
+            sudo docker rm -f $(docker ps -qa)
+            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
+            sudo docker run -d -p 80:3000 ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
+            sudo docker image prune -f

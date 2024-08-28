@@ -50,7 +50,7 @@ const Overlay = () => (
         left: -30,
         right: -30,
         bottom: -10,
-        backgroundColor: 'rgba(128, 128, 128, 0.3)',
+        backgroundColor: 'rgba(19, 19, 19, 0.5)',
         display: 'flex',
         justifyContent: 'center',
         // alignItems: 'center',
@@ -65,6 +65,7 @@ export default function UserCard({ data, onCardClick }) {
     const navigate = useNavigate();
     const { status, cardName, payBalance, transitBalance, starred } = data;
     const isActive = status !== 0;
+    const imageUrl = status === 0 ? '../../img/exp_design.png' : data.design;
 
     const handleCardClick = (e) => {
 
@@ -129,9 +130,9 @@ export default function UserCard({ data, onCardClick }) {
                 <Grid item xs={8}>
                     <Typography variant="h7">{cardName}</Typography>
                     <Typography>Pay Balance </Typography>
-                    <Typography variant="h5">{payBalance.toLocaleString()}₩</Typography>
+                    <Typography variant="h5">₩{payBalance.toLocaleString()}</Typography>
                     <Typography>Transit Balance </Typography>
-                    <Typography variant="h5">{transitBalance.toLocaleString()}₩</Typography>
+                    <Typography variant="h5">₩{transitBalance.toLocaleString()}</Typography>
                 </Grid>
                 <Grid item xs={4} style={{ position: 'relative' }}>
                     <div style={{
@@ -146,7 +147,7 @@ export default function UserCard({ data, onCardClick }) {
                             <SettingsDrawer data={data} />
                         </div>
                     </div>
-                    <CardImage imageUrl={data.design} isOverlayActive={status === 0} />
+                    <CardImage imageUrl={imageUrl} isOverlayActive={status === 0} />
                 </Grid>
             </Grid>
             <CardButtons isActive={isActive} />

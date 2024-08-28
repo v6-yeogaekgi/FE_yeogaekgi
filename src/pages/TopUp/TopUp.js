@@ -10,8 +10,7 @@ export default function TopUp({ data }) {
     // console.log("top up page 확인");
     const location = useLocation();
     const cardData = location.state?.data;
-    const { protocol, token } = useContext(AllStateContext);
-    const topupUrl = protocol + 'transaction/toptup';
+    const { protocol } = useContext(AllStateContext);
 
     if (!cardData) {
         return <div>Card data not found</div>;

@@ -1,20 +1,36 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import ServicesMapShow from './components/ServicesMapShow';
 import ServiceInfoDrawer from './components/ServiceInfoDrawer';
-import { SelectedProvider } from './components/SelectedProvider';
 import 'swiper/swiper-bundle.css';
 import './components/style.css';
 import MapMarkerCheck from './components/MapMarkerCheck';
+import { ReviewProvider } from './provider/ReviewProvider';
+
 export default function Map() {
     const [isMapLoaded, setIsMapLoaded] = useState(false);
+    const [selectedService, setSelectedService] = useState(null);
+    const [selectedServiceInfo, setSelectedServiceInfo] = useState({});
+    const [open, setOpen] = useState(false);
+    const [state, setState] = useState({
+        Tour: false,
+        ACTIVITY: false,
+        ETC: false,
+    });
+
+    const handleFilterChange = (event) => {
+        setState({
+            ...state,
+            [event.target.name]: event.target.checked,
+        });
+    };
 
     useEffect(() => {
         const naverMapClientId = process.env.REACT_APP_NAVER_MAP_CLIENT_ID;
 
         if (!naverMapClientId) {
             console.error(
-                'Naver Map Client ID is not defined. Please check your environment variables.',
+                'Naver Map Client ID가 정의되지 않았습니다. 환경 변수를 확인해주세요.',
             );
             return;
         }
@@ -30,6 +46,18 @@ export default function Map() {
         };
     }, []);
 
+    const handleServiceSelect = (service, name, content, serviceType) => {
+        setSelectedService(service);
+        console.log('서비스입니다' + service);
+        setSelectedServiceInfo({
+            name: name,
+            content: content,
+            serviceType: serviceType,
+        });
+        setOpen(true);
+    };
+
+    console.log('asdasd' + selectedService);
     return (
         <Box
             sx={{
@@ -52,9 +80,27 @@ export default function Map() {
                     flexGrow: 1,
                 }}
             >
-                <MapMarkerCheck />
-                {isMapLoaded && <ServicesMapShow />}
-                <ServiceInfoDrawer />
+                <ReviewProvider
+                    selectedService={selectedService}
+                    selectedServiceInfo={selectedServiceInfo}
+                >
+                    <MapMarkerCheck
+                        state={state}
+                        handleFilterChange={handleFilterChange}
+                    />
+                    {isMapLoaded && (
+                        <ServicesMapShow
+                            handleServiceSelect={handleServiceSelect}
+                            state={state}
+                        />
+                    )}
+                    <ServiceInfoDrawer
+                        open={open}
+                        setOpen={setOpen}
+                        selectedServiceInfo={selectedServiceInfo}
+                        selectedService={selectedService}
+                    />
+                </ReviewProvider>
             </Box>
         </Box>
     );

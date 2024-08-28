@@ -24,11 +24,14 @@ import First from './pages/First/First';
 import Conversion from './pages/Conversion/Conversion';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 import Login from './pages/First/login';
-import { SelectedProvider } from './pages/Map/components/SelectedProvider';
-import { ReviewProvider } from './pages/Map/components/ReviewProvider';
-import ReviewRegister from './pages/Map/components/ReviewRegister';
-import ReviewEdit from './pages/Map/components/ReviewEdit';
+import { ReviewProvider } from './pages/Map/provider/ReviewProvider';
+import ReviewRegister from './pages/Map/pages/ReviewRegister';
+import ReviewEdit from './pages/Map/pages/ReviewEdit';
 import { fetchAndStoreExchangeRate } from './components/ExchangeRateManager/ExchangeRateManager';
+import MyReviews from './pages/MyReviews/MyReviews';
+
+import useAlertDialog from './hooks/useAlertDialog/useAlertDialog';
+import useConfirmDialog from './hooks/useConfirmDialog/useConfirmDialog';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -65,13 +68,25 @@ export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
 
 function App() {
+    const { openAlertDialog, AlertDialog } = useAlertDialog();
+    const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
+    const dialog = {
+        confirm:{
+            openConfirmDialog,
+            ConfirmDialog
+        },
+        alert: {
+            openAlertDialog,
+            AlertDialog
+        }
+    };
 
     useEffect(() => {
         fetchAndStoreExchangeRate();
-    },[])
+    }, []);
 
     return (
-        <AllStateContext.Provider value={{ protocol }}>
+        <AllStateContext.Provider value={{ protocol, dialog }}>
             <Router>
                 <ScrollToTop />
                 <Routes>
@@ -96,33 +111,27 @@ function App() {
                         path={'/map'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <SelectedProvider>
-                                    <Map />
-                                </SelectedProvider>
+                                <Map />
                             </PageLayout>
                         }
                     />
                     <Route
-                        path={'/map/register'}
+                        path={'/map/register/:serviceId/:name'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <SelectedProvider>
-                                    <ReviewProvider>
-                                        <ReviewRegister />
-                                    </ReviewProvider>
-                                </SelectedProvider>
+                                <ReviewProvider>
+                                    <ReviewRegister />
+                                </ReviewProvider>
                             </PageLayout>
                         }
                     />
                     <Route
-                        path={'/map/edit/:reviewId'}
+                        path={'/map/edit/:name/:serviceId/:reviewId'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <SelectedProvider>
-                                    <ReviewProvider>
-                                        <ReviewEdit />
-                                    </ReviewProvider>
-                                </SelectedProvider>
+                                <ReviewProvider>
+                                    <ReviewEdit />
+                                </ReviewProvider>
                             </PageLayout>
                         }
                     />
@@ -173,9 +182,9 @@ function App() {
                         element={<ImageDetail />}
                     />
                     <Route
-                        path={'/myPage'}
+                        path={'/mypage'}
                         element={
-                            <PageLayout menuName={'my components'}>
+                            <PageLayout menuName={'Account'}>
                                 <MyPage />
                             </PageLayout>
                         }
@@ -227,6 +236,14 @@ function App() {
                         element={
                             <PageLayout menuName={'Conversion'}>
                                 <Conversion />
+                            </PageLayout>
+                        }
+                    />
+                    <Route
+                        path={'/mypage/review'}
+                        element={
+                            <PageLayout menuName={'My Reviews'}>
+                                <MyReviews />
                             </PageLayout>
                         }
                     />

@@ -1,16 +1,25 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useSelected } from './SelectedProvider';
-import { useReview } from './ReviewProvider';
+import { useSelected } from '../provider/SelectedProvider';
+import { useReview } from '../provider/ReviewProvider';
 
-const UseReviewImgListAPI = () => {
-    const [img, setImg] = useState([]); // Array of objects containing images and user data
+const UseReviewImgListAPI = (SelectedService) => {
+    // Array of objects containing images and user data
+    console.log('값 변경됨' + SelectedService);
+
+    useEffect(() => {
+        serviceImgListAPI();
+    }, [SelectedService]);
+
+    const [img, setImg] = useState();
     const [imgApiLoading, setApiLoading] = useState(false);
-    const { SelectedService } = useSelected();
 
     const serviceImgListAPI = () => {
         setApiLoading(true);
         if (SelectedService != null) {
+            console.log(
+                `http://localhost:8090/review/${SelectedService}/ImgList`,
+            );
             axios
                 .get(`http://localhost:8090/review/${SelectedService}/ImgList`)
                 .then((res) => {
@@ -30,10 +39,6 @@ const UseReviewImgListAPI = () => {
                 });
         }
     };
-
-    useEffect(() => {
-        serviceImgListAPI();
-    }, [SelectedService]);
 
     return { img, imgApiLoading };
 };

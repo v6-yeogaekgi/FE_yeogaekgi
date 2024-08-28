@@ -47,11 +47,12 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
         setDrawerOpen(false);
     };
 
-    const { protocol, token } = useContext(AllStateContext);
+    const { protocol } = useContext(AllStateContext);
+    const token = localStorage.getItem('token');
+
     const uri = protocol + 'payTrack/list';
 
     const getApi = (userCardNo, year, month) => {
-
         axios
             .post(uri,
                 { userCardNo, year, month },
@@ -250,16 +251,16 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                                 <Grid item>
                                                     <Typography variant="body2" color="textSecondary">
                                                         {item.payment ?
-                                                            `- ${item.payPrice.toLocaleString()}₩` :
+                                                            `- ₩${item.payPrice.toLocaleString()}` :
                                                             item.tranType === 0 ?
                                                                 (paymentType === 0 ?
-                                                                        (item.transferType === 0 ? `- ${item.krwAmount.toLocaleString()}₩` : `+ ${item.krwAmount.toLocaleString()}₩`) :
-                                                                        (item.transferType === 0 ? `+ ${item.krwAmount.toLocaleString()}₩` : `- ${item.krwAmount.toLocaleString()}₩`)
+                                                                        (item.transferType === 0 ? `- ₩${item.krwAmount.toLocaleString()}` : `+ ₩${item.krwAmount.toLocaleString()}`) :
+                                                                        (item.transferType === 0 ? `+ ₩${item.krwAmount.toLocaleString()}` : `- ₩${item.krwAmount.toLocaleString()}`)
                                                                 ) :
-                                                                `${item.krwAmount.toLocaleString()}₩`
+                                                                `₩${item.krwAmount.toLocaleString()}`
                                                         }
                                                         {(item.tranType === 1 || item.tranType === 2) && item.foreignAmount ?
-                                                            ` (${item.foreignAmount.toLocaleString()} ${item.currencyType === 0 ? '$' : item.currencyType === 1 ? '¥' : item.currencyType === 2 ? '¥' : item.currencyType === 3 ? '₩' : ''})` :
+                                                            ` (${item.currencyType === 0 ? '$' : item.currencyType === 1 ? '¥' : item.currencyType === 2 ? '¥' : item.currencyType === 3 ? '₩' : ''}${item.foreignAmount.toLocaleString()})` :
                                                             ''
                                                         }
                                                     </Typography>
@@ -270,28 +271,28 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                                             paymentType === 0 ? (
                                                                 item.transferType === 0 ? (
                                                                     <>
-                                                                        pay {(item.payBalanceSnap + item.krwAmount).toLocaleString()} -&gt; transit {item.transitBalanceSnap.toLocaleString()}₩
+                                                                        pay ₩{(item.payBalanceSnap + item.krwAmount).toLocaleString()} -&gt; transit {item.transitBalanceSnap.toLocaleString()}
                                                                     </>
                                                                 ) : (
                                                                     <>
-                                                                        transit {(item.transitBalanceSnap - item.krwAmount).toLocaleString()} -&gt; pay {item.payBalanceSnap.toLocaleString()}₩
+                                                                        transit ₩{(item.transitBalanceSnap - item.krwAmount).toLocaleString()} -&gt; pay {item.payBalanceSnap.toLocaleString()}
                                                                     </>
                                                                 )
                                                             ) : (
                                                                 item.transferType === 0 ? (
                                                                     <>
-                                                                        pay {(item.payBalanceSnap + item.krwAmount).toLocaleString()} -&gt; transit {item.transitBalanceSnap.toLocaleString()}₩
+                                                                        pay ₩{(item.payBalanceSnap + item.krwAmount).toLocaleString()} -&gt; transit {item.transitBalanceSnap.toLocaleString()}
                                                                     </>
                                                                 ) : (
                                                                     <>
-                                                                        transit {(item.transitBalanceSnap - item.krwAmount).toLocaleString()} -&gt; pay {item.payBalanceSnap.toLocaleString()}₩
+                                                                        transit ₩{(item.transitBalanceSnap - item.krwAmount).toLocaleString()} -&gt; pay {item.payBalanceSnap.toLocaleString()}
                                                                     </>
                                                                 )
                                                             )
                                                         ) : (
-                                                            `balance ${paymentType === 0 ?
+                                                            `balance ₩${paymentType === 0 ?
                                                                 item.payBalanceSnap.toLocaleString() :
-                                                                item.transitBalanceSnap.toLocaleString()}₩`
+                                                                item.transitBalanceSnap.toLocaleString()}`
                                                         )}
                                                     </Typography>
                                                 </Grid>
@@ -351,7 +352,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                         <ListItemText primary="Pay Number" secondary={selectedItem.pno} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="Pay Price" secondary={selectedItem.payPrice.toLocaleString()}
+                                        <ListItemText primary="Pay Price" secondary={'₩'+selectedItem.payPrice.toLocaleString()}
                                                        />
                                     </ListItem>
                                     <ListItem>
@@ -359,7 +360,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                     </ListItem>
                                     <ListItem>
                                         <ListItemText primary="Pay Balance Snap" secondary={
-                                            paymentType === 0 ? selectedItem.payBalanceSnap : selectedItem.transitBalanceSnap
+                                            '₩'+ (paymentType === 0 ? selectedItem.payBalanceSnap : selectedItem.transitBalanceSnap)
                                         } />
                                     </ListItem>
                                     <ListItem>
@@ -390,19 +391,19 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                     )}
                                     <ListItem>
                                         <ListItemText primary="KRW Amount"
-                                                      secondary={selectedItem.krwAmount.toLocaleString() + ' ₩'} />
+                                                      secondary={'₩' +selectedItem.krwAmount.toLocaleString()} />
                                     </ListItem>
                                     {selectedItem.foreignAmount !== null && (
                                         <ListItem>
                                             <ListItemText primary="Foreign Amount"
-                                                          secondary={`${selectedItem.foreignAmount.toLocaleString()} ${
+                                                          secondary={`${
                                                               selectedItem.currencyType === 0 ? '$' :
-                                                                  selectedItem.currencyType === 1 ? '¥' : '¥'}`} />
+                                                                  selectedItem.currencyType === 1 ? '¥' : '¥'} ${selectedItem.foreignAmount.toLocaleString()}`} />
                                         </ListItem>
                                     )}
                                     <ListItem>
                                         <ListItemText primary="Transaction Balance Snap" secondary={
-                                            paymentType === 0 ? selectedItem.payBalanceSnap.toLocaleString() + ' ₩' : selectedItem.transitBalanceSnap.toLocaleString() + ' ₩'
+                                            paymentType === 0 ? '₩' + selectedItem.payBalanceSnap.toLocaleString() :  '₩' +selectedItem.transitBalanceSnap.toLocaleString()
                                         } />
                                     </ListItem>
                                 </>

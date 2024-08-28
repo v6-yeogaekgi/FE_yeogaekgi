@@ -12,6 +12,7 @@ import axios from 'axios';
 import { AllStateContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
 import useAlertDialog from '../../hooks/useAlertDialog/useAlertDialog';
+import { convertCurrency } from '../../components/ExchangeRateManager/ExchangeRateManager';
 
 export default function Refund() {
 
@@ -24,15 +25,49 @@ export default function Refund() {
 
     const navigate = useNavigate();
 
-    const { protocol, token } = useContext(AllStateContext);
+    const { protocol } = useContext(AllStateContext);
+    const token = localStorage.getItem('token');
     const uri = protocol + 'transaction/refund';
 
     const location = useLocation();
     const data = location.state?.data;
     const fee = 3000;
 
+    function getMemberCode() {
+        return memberData.country.code;
+    }
+
+    function filterCurrency() {
+        const memberCode = getMemberCode();
+        if (memberCode === 'KR') return 'KRW';
+        if (memberCode === 'US') return 'USD';
+        if (memberCode === 'JP') return 'JPY';
+        if (memberCode === 'CN') return 'CNY';
+        return null;
+    }
+
+    function filterToFixed() {
+        if (getMemberCode() === 'KR') return 0;
+        return 2;
+    }
+
+    function filterCurrencySymbol() {
+        if (getMemberCode() === 'US') return '$';
+        if (getMemberCode() === 'KR') return '₩';
+        if (getMemberCode() === 'JP') return '￥';
+        if (getMemberCode() === 'CN') return '￥';
+        return null;
+    }
+
+    function getCurrencyType(){
+        if (getMemberCode() === 'US') return 0;
+        if (getMemberCode() === 'JP') return 1;
+        if (getMemberCode() === 'CN') return 2;
+        if (getMemberCode() === 'KR') return 3;
+    }
+
     useEffect(() => {
-        const getUser = localStorage.getItem('member');
+        const getUser = localStorage.getItem('user');
         if (getUser) {
             try {
                 setMemberData(JSON.parse(getUser));
@@ -56,7 +91,7 @@ export default function Refund() {
     };
 
     const handleRefundClick = () => {
-        if( !isAgreed ){
+        if (!isAgreed) {
             setAlertContent('약관 동의 체크    문구');
             openAlertDialog();
             return;
@@ -75,7 +110,15 @@ export default function Refund() {
     const doRefund = () => {
         axios
             .post(uri,
-                { userCardNo: data.userCardId },
+                {
+                    userCardNo: data.userCardId,
+                    foreignAmount: convertCurrency(
+                        (data.payBalance - fee),
+                        'KRW',
+                        filterCurrency(),
+                    ),
+                    currencyType: getCurrencyType(),
+                },
                 {
                     headers: {
                         Authorization: token,
@@ -123,23 +166,29 @@ export default function Refund() {
                         <Grid container spacing={2} sx={{ maxWidth: '100%', margin: 'auto', paddingTop: '20px' }}>
                             <Grid item xs={12}>
                                 <Typography component="h1"
-                                            variant="h5">Balance <b>{data.payBalance > fee ? fee.toLocaleString() : 0} ₩</b></Typography>
+                                            variant="h5">Balance <b>₩{data.payBalance > fee ? fee.toLocaleString() : 0} </b></Typography>
                             </Grid>
                             <Grid item xs={12}>
-                                <Typography component="h1" variant="h5">Fee <b>{fee.toLocaleString()} ₩</b></Typography>
+                                <Typography component="h1" variant="h5">Fee <b>₩{fee.toLocaleString()}</b></Typography>
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography component="h1"
-                                            variant="h5"><b>{(data.payBalance - fee) < 0 ? 0 :(data.payBalance - fee).toLocaleString()} ₩</b></Typography>
+                                            variant="h5"><b>₩{(data.payBalance - fee) < 0 ? 0 : (data.payBalance - fee).toLocaleString()}</b></Typography>
                             </Grid>
                             <Grid item xs={9}>
-                                {/* 환율 API 적용 */}
+                                <Typography>{memberData.code}</Typography>
                                 <Typography>Refund Amount</Typography>
                             </Grid>
                             <Grid item xs={3}>
                                 <Typography>
-                                    {/* Todo : 멤버 정보에 따라서 통화 수정  */}
-                                    {(data.payBalance - fee) < 0 ? 0 :((data.payBalance - fee)/10).toLocaleString()}
+                                    {filterCurrencySymbol()}{
+                                    convertCurrency(
+                                        (data.payBalance - fee) < 0 ? 0 : ((data.payBalance - fee)),
+                                        'KRW',
+                                        filterCurrency(),
+                                    ).toFixed(filterToFixed())
+                                }
+                                    {/*{(data.payBalance - fee) < 0 ? 0 :((data.payBalance - fee)/10).toLocaleString()}*/}
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -157,7 +206,7 @@ export default function Refund() {
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Typography variant="body1"
-                                                    sx={{ marginTop: '5px' }}>{memberData.name?memberData.name:'Hong Gil-dong'}</Typography>
+                                                    sx={{ marginTop: '5px' }}>{memberData.name ? memberData.name : 'Hong Gil-dong'}</Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -170,7 +219,8 @@ export default function Refund() {
                             }}>
                                 <Grid container>
                                     <Grid item xs={12}>
-                                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Bank Name</Typography>
+                                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Bank
+                                            Name</Typography>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Typography variant="body1"
@@ -187,7 +237,8 @@ export default function Refund() {
                             }}>
                                 <Grid container>
                                     <Grid item xs={12}>
-                                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Bank Account</Typography>
+                                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Bank
+                                            Account</Typography>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Typography variant="body1"

@@ -6,12 +6,15 @@ import { Global } from '@emotion/react';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button'; // Import Button component
-import * as React from 'react';
-import { useSelected } from './SelectedProvider';
-import ReviewList from './ReviewList'; // Correctly import ReviewList component
+import React, { useEffect, useState } from 'react';
+import Stack from '@mui/material/Stack';
+import { Rating } from '@mui/material';
+import useReviewListAPI from '../api/UseReviewListAPI';
+import useReviewImgListAPI from '../api/useReviewImgListAPI';
+import ReviewList from './ReviewList';
+import ReviewImgList from './ReviewImgList';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { ReviewProvider } from './ReviewProvider'; // Import useNavigate from react-router-dom
+
 const drawerBleeding = 56;
 
 const Puller = styled('div')(({ theme }) => ({
@@ -24,16 +27,37 @@ const Puller = styled('div')(({ theme }) => ({
     left: 'calc(50% - 15px)',
 }));
 
-const ServiceInfoDrawer = () => {
-    const { Open, setOpen, SelectedServiceInfo } = useSelected();
+const ServiceInfoDrawer = ({
+    open,
+    setOpen,
+    selectedServiceInfo,
+    selectedService,
+}) => {
     const navigate = useNavigate(); // Initialize useNavigate
+
+    const { list, listApiLoading } = useReviewListAPI(selectedService);
+    const { img, imgApiLoading } = useReviewImgListAPI(selectedService);
+    const [score, setScore] = useState(0);
+
     const toggleDrawer = (newOpen) => {
         setOpen(newOpen);
     };
 
     const handleNavigateToRegister = () => {
-        navigate('/map/register');
+        const name = selectedServiceInfo.name;
+        navigate(`/map/register/${selectedService}/${name}`);
     };
+
+    useEffect(() => {
+        if (list != null) {
+            const totalScore = list.content.reduce(
+                (acc, scores) => acc + scores.score,
+                0,
+            );
+            let avgScore = Math.round((totalScore / list.size) * 10) / 10;
+            setScore(avgScore);
+        }
+    }, [list]);
 
     return (
         <>
@@ -48,7 +72,7 @@ const ServiceInfoDrawer = () => {
             />
             <SwipeableDrawer
                 anchor="bottom"
-                open={Open}
+                open={open}
                 onClose={() => toggleDrawer(false)}
                 onOpen={() => toggleDrawer(true)}
                 swipeAreaWidth={0}
@@ -78,11 +102,34 @@ const ServiceInfoDrawer = () => {
                     }}
                 >
                     <Puller />
-                    <Typography sx={{ p: 2, color: 'text.secondary' }}>
-                        {SelectedServiceInfo?.name}
-                        <br />
-                        {SelectedServiceInfo?.content}
+                    <Typography sx={{ pl: 2, pt: 2, color: 'text.primary' }}>
+                        {selectedServiceInfo?.name}{' '}
+                        {selectedServiceInfo?.serviceType}
                     </Typography>
+                    <Typography sx={{ pl: 2, color: 'text.secondary' }}>
+                        {selectedServiceInfo?.content}
+                    </Typography>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'flex-start',
+                            pl: 2,
+                        }}
+                    >
+                        <Typography sx={{ color: 'text.warning' }}>
+                            {score}
+                        </Typography>
+                        <Stack spacing={1}>
+                            <Rating
+                                name="half-rating-read"
+                                value={score}
+                                precision={0.5}
+                                readOnly
+                                size="small"
+                            />
+                        </Stack>
+                    </Box>
                 </Box>
                 <Box
                     sx={{
@@ -92,11 +139,13 @@ const ServiceInfoDrawer = () => {
                         overflow: 'auto',
                     }}
                 >
-                    <ReviewProvider>
-                        <ReviewList />
-                    </ReviewProvider>
+                    <ReviewImgList img={img} />
+                    <ReviewList
+                        list={list}
+                        selectedServiceInfo={selectedServiceInfo}
+                        selectedService={selectedService}
+                    />
                 </Box>
-                {/* Add a button to navigate to the register page */}
                 <Box sx={{ px: 2, pb: 2 }}>
                     <Button
                         variant="contained"

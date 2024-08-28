@@ -52,7 +52,7 @@ export default function UserCardOnRefund({ data }) {
                 <Grid item xs={8} marginTop={'10px'}>
                     <Typography variant="h7">{cardName}</Typography>
                     <Typography marginTop={'30px'}>Pay Balance </Typography>
-                    <Typography variant="h5">{payBalance.toLocaleString()}₩</Typography>
+                    <Typography variant="h5">₩{payBalance.toLocaleString()}</Typography>
                     {/*<Typography>Transit Balance </Typography>*/}
                     {/*<Typography variant="h5">{transitBalance.toLocaleString()}₩</Typography>*/}
                 </Grid>
