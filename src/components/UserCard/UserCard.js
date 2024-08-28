@@ -62,7 +62,7 @@ const Overlay = () => (
     </div>
 );
 
-export default function UserCard({ data, onCardClick, onStarChange }) {
+export default function UserCard({ data, onCardClick, onStarChange, onCardDelete }) {
     const navigate = useNavigate();
     const { status, cardName, payBalance, transitBalance, starred } = data;
     const isActive = status !== 0;
@@ -107,6 +107,10 @@ export default function UserCard({ data, onCardClick, onStarChange }) {
     const handleBalanceConversionClick = (e) => {
         e.stopPropagation(); // 이벤트 버블링 방지
         navigate('/wallet/conversion', { state: { data } });
+    };
+
+    const handleCardDelete = () => {
+        onCardDelete();
     };
 
     const CardButtons = ({ isActive }) => (
@@ -169,7 +173,7 @@ export default function UserCard({ data, onCardClick, onStarChange }) {
                             />
                         </div>
                         <div onClick={(e) => e.stopPropagation()}>
-                            <SettingsDrawer data={data} />
+                            <SettingsDrawer data={data} onCardDelete={handleCardDelete}/>
                         </div>
                     </div>
                     <CardImage imageUrl={imageUrl} isOverlayActive={status === 0} />

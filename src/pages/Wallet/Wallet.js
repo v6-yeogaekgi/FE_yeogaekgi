@@ -54,6 +54,10 @@ export default function Wallet(props) {
         navigate('detail', { state: { cardData } });
     };
 
+    const handleCardDelete = () => {
+        getApi();
+    }
+
     const [error, setError] = useState(null);
 
     const { protocol } = useContext(AllStateContext);
@@ -98,7 +102,6 @@ export default function Wallet(props) {
 
     useEffect(() => {
         getApi();
-        console.log(updateTrigger)
     }, [updateTrigger]);
 
     const handleStarChange = () => {
@@ -130,7 +133,7 @@ export default function Wallet(props) {
                 }}
             >
                 {data && data.map((cardData, index) => (
-                    <UserCard key={index} data={cardData} onCardClick={handleCardClick} onStarChange={handleStarChange} />
+                    <UserCard key={index} data={cardData} onCardClick={handleCardClick} onStarChange={handleStarChange} onCardDelete={handleCardDelete}/>
                 ))}
             </Box>
             {data && data.length === 0 && (
