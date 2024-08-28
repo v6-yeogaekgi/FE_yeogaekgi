@@ -30,6 +30,9 @@ import ReviewEdit from './pages/Map/pages/ReviewEdit';
 import { fetchAndStoreExchangeRate } from './components/ExchangeRateManager/ExchangeRateManager';
 import MyReviews from './pages/MyReviews/MyReviews';
 
+import useAlertDialog from './hooks/useAlertDialog/useAlertDialog';
+import useConfirmDialog from './hooks/useConfirmDialog/useConfirmDialog';
+
 const PageLayout = ({ children, menuName }) => {
     return (
         <Box
@@ -65,12 +68,25 @@ export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
 
 function App() {
+    const { openAlertDialog, AlertDialog } = useAlertDialog();
+    const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
+    const dialog = {
+        confirm:{
+            openConfirmDialog,
+            ConfirmDialog
+        },
+        alert: {
+            openAlertDialog,
+            AlertDialog
+        }
+    };
+
     useEffect(() => {
         fetchAndStoreExchangeRate();
     }, []);
 
     return (
-        <AllStateContext.Provider value={{ protocol }}>
+        <AllStateContext.Provider value={{ protocol, dialog }}>
             <Router>
                 <ScrollToTop />
                 <Routes>

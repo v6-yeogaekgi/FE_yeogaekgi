@@ -74,8 +74,6 @@ const Images = ({ images, postId }) => {
 };
 
 const PostItem = ({
-    alertDialog,
-    confirmDialog,
     postId,
     memberId,
     nickname,
@@ -106,8 +104,10 @@ const PostItem = ({
     const [translatedHashtag, setTranslatedHashtag] = useState(null);
     const [isTranslated, setIsTranslated] = useState(false);
 
-    const { protocol, token } = useContext(AllStateContext);
-    useEffect(() => {}, [viewContent]);
+    const { protocol, dialog } = useContext(AllStateContext);
+    const token = localStorage.getItem('token');
+    useEffect(() => {
+    }, [viewContent]);
 
     // DeepL API
     const goDeepL = async () => {
@@ -146,7 +146,7 @@ const PostItem = ({
                 },
             })
             .then((res) => {
-                alertDialog(
+                dialog.alert.openAlertDialog(
                     'Success!',
                     'The post has been successfully deleted.',
                     () => navigate('/community'),
@@ -356,13 +356,10 @@ const PostItem = ({
                                         marginRight: 0,
                                     },
                                 }}
-                                onClick={() => {
-                                    confirmDialog(
-                                        'Confirm Deletion',
-                                        'Are you sure you want to delete this?',
-                                        deleteApi,
-                                    );
-                                }}
+                                    onClick={()=>{
+                                        dialog.confirm.openConfirmDialog("Confirm Deletion","Are you sure you want to delete this?",deleteApi);
+                                    }
+                                }
                             />
                         ) : (
                             <></>

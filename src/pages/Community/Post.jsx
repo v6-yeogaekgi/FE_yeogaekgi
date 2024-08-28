@@ -8,33 +8,29 @@ import PostItem from './components/PostItem';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AllStateContext } from '../../App';
-import useAlertDialog from '../../hooks/useAlertDialog/useAlertDialog';
-import useConfirmDialog from '../../hooks/useConfirmDialog/useConfirmDialog';
 
-const PageLayout = ({ menuName, children }) => (
-    <Box
-        sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: 900,
-            paddingBottom: '140px', // Footer 높이만큼 패딩 추가
-        }}
-    >
-        <Header menuName={menuName} />
-        <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
-        <Footer />
-    </Box>
-);
+// const PageLayout = ({ menuName, children }) => (
+//     <Box
+//         sx={{
+//             display: 'flex',
+//             flexDirection: 'column',
+//             minHeight: 900,
+//             paddingBottom: '140px', // Footer 높이만큼 패딩 추가
+//         }}
+//     >
+//         <Header menuName={menuName} />
+//         <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
+//         <Footer />
+//     </Box>
+// );
 
 export const CommentStateContext = React.createContext();
 export const CommentDispatchContext = React.createContext();
 
 const Post = () => {
-    const { openAlertDialog, AlertDialog } = useAlertDialog();
-    const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
     const [comment, setComment] = useState([]);
     const [post, setPost] = useState({});
-    const { protocol } = useContext(AllStateContext);
+    const { protocol, dialog } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
 
     const { postId } = useParams();
@@ -116,9 +112,9 @@ const Post = () => {
                 },
             })
             .then((res) => {
-                alert('The comment has been deleted');
-                getApi();
+                dialog.alert.openAlertDialog("Success!",'The comment has been deleted');
                 getPostApi();
+                getApi();
             })
             .catch((error) => {
                 console.error('API 호출 오류:', error);
@@ -161,12 +157,10 @@ const Post = () => {
         return <div>Loading...</div>;
     } else {
         return (
-            <PageLayout menuName="post">
+            // <PageLayout menuName="post">
                 <CommentStateContext.Provider value={{ comment, postId }}>
                     <CommentDispatchContext.Provider value={memoizedDispatch}>
                         <PostItem
-                            alertDialog={openAlertDialog}
-                            confirmDialog={openConfirmDialog}
                             key={post.postId}
                             postId={post.postId}
                             memberId={post.memberId}
@@ -187,10 +181,10 @@ const Post = () => {
                         <CommentList />
                         <CommentRegister />
                     </CommentDispatchContext.Provider>
-                    <AlertDialog></AlertDialog>
-                    <ConfirmDialog></ConfirmDialog>
+                    <dialog.alert.AlertDialog></dialog.alert.AlertDialog>
+                    <dialog.confirm.ConfirmDialog></dialog.confirm.ConfirmDialog>
                 </CommentStateContext.Provider>
-            </PageLayout>
+            // </PageLayout>
         );
     }
 };
