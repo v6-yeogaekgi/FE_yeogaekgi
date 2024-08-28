@@ -13,6 +13,7 @@ import FoodBankRoundedIcon from '@mui/icons-material/FoodBankRounded';
 import PhonelinkRingRoundedIcon from '@mui/icons-material/PhonelinkRingRounded';
 import TabletAndroidIcon from '@mui/icons-material/TabletAndroid';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
+import dgy from '../../../img/땡겨요_회색.png';
 
 const HomeCardItem = () => {
     return (
@@ -77,8 +78,14 @@ const HomeCardItem = () => {
                         justifyContent: 'center',
                     }}
                 >
-                    <FoodBankRoundedIcon
-                        sx={{ fontSize: 70, color: '#808080' }}
+                    <img
+                        src={dgy}
+                        alt="Delivery"
+                        style={{
+                            width: 70,
+                            height: 70,
+                            objectFit: 'contain',
+                        }}
                     />
                     <Typography
                         sx={{
