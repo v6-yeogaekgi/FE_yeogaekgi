@@ -62,3 +62,15 @@ export const getCountryCodeForTranslate = (code) => {
             return null;
     }
 };
+
+export const getCountryCodeToCurrency = (member) => {
+    if (member.country.code === 'US') {
+        return 'USD';
+    } else if (member.country.code === 'JP') {
+        return 'JPY';
+    } else if (member.country.code === 'CN') {
+        return 'CNY';
+    } else {
+        console.log('user country unknown');
+    }
+};

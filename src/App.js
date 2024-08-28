@@ -29,6 +29,7 @@ import ReviewRegister from './pages/Map/pages/ReviewRegister';
 import ReviewEdit from './pages/Map/pages/ReviewEdit';
 import { fetchAndStoreExchangeRate } from './components/ExchangeRateManager/ExchangeRateManager';
 import MyReviews from './pages/MyReviews/MyReviews';
+import CurrencyConverter from './pages/CurrencyConverter/CurrencyConverter';
 
 import useAlertDialog from './hooks/useAlertDialog/useAlertDialog';
 import useConfirmDialog from './hooks/useConfirmDialog/useConfirmDialog';
@@ -244,6 +245,15 @@ function App() {
                         element={
                             <PageLayout menuName={'My Reviews'}>
                                 <MyReviews />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/home/currency'}
+                        element={
+                            <PageLayout menuName={'Currency Converter'}>
+                                <CurrencyConverter />
                             </PageLayout>
                         }
                     />

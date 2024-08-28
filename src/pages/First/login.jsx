@@ -41,16 +41,16 @@ function Login() {
             });
             const { token } = response.data;
             localStorage.setItem('token', token);
-            const userDetailsResponse = await axios.post(memberUrl, data, {
+            const memberDetailsResponse = await axios.post(memberUrl, data, {
                 headers: {
-                    'Authorization': `${token}`,
+                    Authorization: `${token}`,
                     'Content-Type': 'application/json',
                 },
             });
-            const { user } = userDetailsResponse.data;
-            console.log(user);
-            localStorage.setItem('user', JSON.stringify(user));
+            const { user } = memberDetailsResponse.data;
+            localStorage.setItem('member', JSON.stringify(user));
             navigate('/home');
+            console.log(localStorage.getItem('member'));
         } catch (error) {
             console.error('API 호출 오류:', error);
         }
