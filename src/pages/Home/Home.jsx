@@ -6,6 +6,11 @@ import Header from '../../layout/Header/Header';
 import links from '../../img/Home_linkbtns.png';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import LocalActivityRoundedIcon from '@mui/icons-material/LocalActivityRounded';
+import FoodBankRoundedIcon from '@mui/icons-material/FoodBankRounded';
+import PhonelinkRingRoundedIcon from '@mui/icons-material/PhonelinkRingRounded';
+
+import Card from '@mui/material/Card';
 
 const STYLES = {
     pageLayout: {
@@ -41,32 +46,34 @@ const Home = () => {
             <Box sx={STYLES.contentBox}>
                 <Box sx={STYLES.cardContainer}>
                     <HomeCardItem />
-                    <br />
-                    <br />
-                    <br />
-                    <div
-                        style={{
+
+                    <Box
+                        sx={{
                             width: '100%',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             margin: '10px',
+                            mb: 6,
+                            mt: 6,
                         }}
                     >
-                        <img
-                            src={links}
-                            alt="links"
-                            style={{
-                                width: '90%',
-                            }}
-                        />
-                    </div>
-                    <br />
-                    <br />
-                    <br />
-                    <div onClick={handleClick}>
+                        <Card>
+                            <Box>
+                                <LocalActivityRoundedIcon />
+                            </Box>
+                            <Box>
+                                <FoodBankRoundedIcon />
+                            </Box>
+                            <Box>
+                                <PhonelinkRingRoundedIcon />
+                            </Box>
+                        </Card>
+                    </Box>
+
+                    <Box onClick={handleClick}>
                         <HomaCardRate />
-                    </div>
+                    </Box>
                 </Box>
             </Box>
             <Footer />
