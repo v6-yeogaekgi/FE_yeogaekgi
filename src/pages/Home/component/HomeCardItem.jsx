@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Card,
     CardContent,
@@ -8,10 +8,26 @@ import {
     Button,
     Grid,
 } from '@mui/material';
-import StarIcon from '@mui/icons-material/Star';
-import cardImg from '../../../img/Design.png';
+import { useNavigate } from 'react-router-dom';
+import StarCheckbox from '../../../components/StarCheckbox/StarCheckBox';
 
-const HomeCardItem = () => {
+const HomeCardItem = ({ data }) => {
+
+    const navigate = useNavigate();
+
+    const { design, status, cardName, payBalance, transitBalance, starred } = data;
+
+    const handleTopUpClick = (e) => {
+        e.stopPropagation(); // 이벤트 버블링 방지
+        navigate('/wallet/top-up', { state: { data } });
+    };
+
+    const handleBalanceConversionClick = (e) => {
+        e.stopPropagation(); // 이벤트 버블링 방지
+        // console.log("conversion 클릭, cardData paybalance: ", cardData.payBalance);
+        navigate('/wallet/conversion', { state: { data } });
+    };
+
     return (
         <Box
             sx={{
@@ -44,7 +60,7 @@ const HomeCardItem = () => {
                             }}
                         >
                             <img
-                                src={cardImg}
+                                src={design}
                                 alt="Card Image"
                                 style={{
                                     width: '80%',
@@ -54,16 +70,24 @@ const HomeCardItem = () => {
                             />
                         </Grid>
                         <Grid item xs={8}>
-                            <Typography
-                                variant="h6"
-                                sx={{
-                                    mt: 1,
-                                    fontFamily: 'Noto Sans, sans-serif',
-                                    fontWeight: 700,
-                                }}
-                            >
-                                서울 3456
-                            </Typography>
+                            <Grid container spacing={2}>
+                                <Grid item xs={8}>
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            mt: 1,
+                                            fontFamily: 'Noto Sans, sans-serif',
+                                            fontWeight: 700,
+                                        }}
+                                    >
+                                        {cardName}
+                                    </Typography>
+                                </Grid>
+
+                                <Grid item xs={2}>
+                                    <StarCheckbox />
+                                </Grid>
+                            </Grid>
 
                             <Grid container spacing={2} sx={{ mt: 0.5 }}>
                                 <Grid item xs={6}>
@@ -77,7 +101,7 @@ const HomeCardItem = () => {
                                         Pay
                                     </Typography>
                                     <Typography variant="h6">
-                                        15,000₩
+                                        ₩{payBalance}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={6}>
@@ -90,7 +114,9 @@ const HomeCardItem = () => {
                                     >
                                         Transit
                                     </Typography>
-                                    <Typography variant="h6">5,000₩</Typography>
+                                    <Typography variant="h6">
+                                        ₩{transitBalance}
+                                    </Typography>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -113,8 +139,9 @@ const HomeCardItem = () => {
                                         backgroundColor: '#1a6bb8',
                                     },
                                 }}
+                                onClick={handleTopUpClick}
                             >
-                                Charge
+                                Top Up
                             </Button>
                         </Grid>
                         <Grid item xs={6}>
@@ -133,6 +160,7 @@ const HomeCardItem = () => {
                                         backgroundColor: '#1a6bb8',
                                     },
                                 }}
+                                onClick={handleBalanceConversionClick}
                             >
                                 Transfer
                             </Button>
@@ -162,16 +190,6 @@ const HomeCardItem = () => {
                     </Grid>
                 </CardContent>
             </Card>
-            <IconButton
-                sx={{
-                    position: 'absolute',
-                    top: 18,
-                    right: 60,
-                    zIndex: 1,
-                }}
-            >
-                <StarIcon />
-            </IconButton>
         </Box>
     );
 };
