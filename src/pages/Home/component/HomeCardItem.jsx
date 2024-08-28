@@ -14,8 +14,8 @@ import StarCheckbox from '../../../components/StarCheckbox/StarCheckBox';
 const HomeCardItem = ({ data }) => {
 
     const navigate = useNavigate();
-
-    const { design, status, cardName, payBalance, transitBalance, starred } = data;
+    const [cardData, setCardData] = useState(data);
+    const { userCardId, design, status, cardName, payBalance, transitBalance, starred } = data;
 
     const handleTopUpClick = (e) => {
         e.stopPropagation(); // 이벤트 버블링 방지
@@ -27,6 +27,11 @@ const HomeCardItem = ({ data }) => {
         // console.log("conversion 클릭, cardData paybalance: ", cardData.payBalance);
         navigate('/wallet/conversion', { state: { data } });
     };
+
+    const handleHistoryClick = (e) => {
+        e.stopPropagation();
+        navigate('/wallet/detail', { state: { cardData } });
+    }
 
     return (
         <Box
@@ -84,7 +89,7 @@ const HomeCardItem = ({ data }) => {
                                 </Grid>
 
                                 <Grid item xs={2}>
-                                    <StarCheckbox />
+                                    <StarCheckbox initialChecked={starred === 1} userCardId={userCardId}/>
                                 </Grid>
                             </Grid>
 
@@ -182,6 +187,7 @@ const HomeCardItem = ({ data }) => {
                                         backgroundColor: '#3a43d1',
                                     },
                                 }}
+                                onClick={handleHistoryClick}
                             >
                                 History
                             </Button>
