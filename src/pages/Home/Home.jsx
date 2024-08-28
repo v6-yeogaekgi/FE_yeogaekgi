@@ -6,9 +6,8 @@ import Header from '../../layout/Header/Header';
 import links from '../../img/Home_linkbtns.png';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import LocalActivityRoundedIcon from '@mui/icons-material/LocalActivityRounded';
-import FoodBankRoundedIcon from '@mui/icons-material/FoodBankRounded';
-import PhonelinkRingRoundedIcon from '@mui/icons-material/PhonelinkRingRounded';
+
+import HomeLink from './component/HomeLink';
 import { useContext, useEffect, useState } from 'react';
 import { AllStateContext } from '../../App';
 import axios from 'axios';
@@ -33,6 +32,7 @@ const STYLES = {
         padding: 2,
     },
     cardContainer: {
+        mt: 2,
         height: 300,
         width: 360,
     },
@@ -117,26 +117,14 @@ const Home = () => {
 
                     <Box
                         sx={{
-                            width: '100%',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            margin: '10px',
-                            mb: 6,
-                            mt: 6,
+                            mb: 3,
+                            mt: 3,
                         }}
                     >
-                        <Card>
-                            <Box>
-                                <LocalActivityRoundedIcon />
-                            </Box>
-                            <Box>
-                                <FoodBankRoundedIcon />
-                            </Box>
-                            <Box>
-                                <PhonelinkRingRoundedIcon />
-                            </Box>
-                        </Card>
+                        <HomeLink />
                     </Box>
 
                     <Box onClick={handleClick}>

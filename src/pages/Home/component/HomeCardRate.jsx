@@ -82,6 +82,7 @@ const HomaCardRate = () => {
                                 textAlign: 'center',
                                 padding: '5px',
                                 fontFamily: 'Noto Sans, sans-serif',
+                                fontWeight: 600,
                             }}
                         >
                             {1} {getCountryCodeToCurrency(member)}
@@ -98,6 +99,7 @@ const HomaCardRate = () => {
                                 textAlign: 'center',
                                 padding: '5px',
                                 fontFamily: 'Noto Sans, sans-serif',
+                                fontWeight: 600,
                             }}
                         >
                             {191.1} {'KRW'}

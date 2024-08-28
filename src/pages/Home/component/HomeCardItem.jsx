@@ -31,8 +31,7 @@ const HomeCardItem = ({ data }) => {
     return (
         <Box
             sx={{
-                position: 'relative', // 부모 Box에 상대적 위치 설정
-                // width: 400, // 카드 너비
+                position: 'relative',
             }}
         >
             <Card
@@ -40,10 +39,10 @@ const HomeCardItem = ({ data }) => {
                     display: 'flex',
                     flexDirection: 'column',
                     height: 'auto',
-                    width: 360, // 가로 크기 360px 설정
-                    position: 'relative', // 카드 내부에서 절대 위치를 사용할 수 있도록 설정
-                    boxShadow: 'none', // 그림자 효과 제거
-                    borderRadius: 5, // 모서리를 둥글게 설정
+                    width: 360,
+                    position: 'relative',
+                    boxShadow: 'none',
+                    borderRadius: 5,
                 }}
             >
                 <CardContent
