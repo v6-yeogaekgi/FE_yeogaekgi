@@ -14,6 +14,7 @@ const ImageSwiper = ({images}) => {
                 slidesPerView={1}
                 navigation
                 pagination={{clickable: true}}
+                style={{height: '100%', marginBottom: '15px'}}
             >
                 {images.map((image, index) => (
                     <SwiperSlide key={index}>

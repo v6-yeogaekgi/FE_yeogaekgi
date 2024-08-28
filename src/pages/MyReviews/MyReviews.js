@@ -9,6 +9,8 @@ import {
     ListItemText,
     Paper,
     Typography,
+    Rating,
+    Divider,
 } from '@mui/material';
 import { format } from 'date-fns';
 import ImageSwiper from '../../components/ImageSwiper/ImageSwiper';
@@ -23,12 +25,13 @@ export default function MyReviews(props) {
     // console.log(reviews);
 
     function formatReviewDates(reviews) {
-        return reviews.map(review => (
-            { // 객체 리턴이라서 중괄호?
-                ...review,
-                formatRegDate : review.regDate ? format(review.regDate, 'PPpp') : 'N/A'
-            }
-        ));
+        return reviews.map((review) => ({
+            // 객체 리턴이라서 중괄호?
+            ...review,
+            formatRegDate: review.regDate
+                ? format(review.regDate, 'PPpp')
+                : 'N/A',
+        }));
     }
 
     useEffect(() => {
@@ -80,28 +83,57 @@ export default function MyReviews(props) {
                             {reviews.map((review, index) => (
                                 <ListItem key={index} divider>
                                     <ListItemText
-                                        primary={`Review ${index + 1}`}
+                                        primary={
+                                            <>
+                                                <Typography sx={{ ml: 0.4 }}>
+                                                    {review.serviceName}
+                                                </Typography>
+                                            </>
+                                        }
                                         secondary={
                                             <>
-                                                {/* 실제 데이터 구조에 맞게 수정 필요 */}
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <Rating
+                                                        value={review.score}
+                                                    />
+                                                    <Divider
+                                                        orientation="vertical"
+                                                        variant="middle"
+                                                        flexItem
+                                                        sx={{
+                                                            ml: 1,
+                                                            background: '#DDE1E6',
+                                                            borderBottomWidth: '5',
+                                                            height: '15px',
+                                                        }}
+                                                    />
+                                                    <Typography
+                                                        component="span"
+                                                        variant="body2"
+                                                        sx={{ml: 1}}
+                                                    >
+                                                        {review.formatRegDate ||
+                                                            'N/A'}
+                                                    </Typography>
+                                                </Box>
+
+                                                <ImageSwiper
+                                                    images={review.images}
+                                                />
+
                                                 <Typography
                                                     component="span"
                                                     variant="body2"
                                                     color="text.primary"
                                                 >
-                                                    Content:{' '}
                                                     {review.content || 'N/A'}
                                                 </Typography>
                                                 <br />
-                                                <Typography
-                                                    component="span"
-                                                    variant="body2"
-                                                >
-                                                    Date:{' '}
-                                                    {review.formatRegDate || 'N/A'}
-                                                </Typography>
-                                                <br/>
-                                                <ImageSwiper images={review.images}/>
                                                 {/* <ReviewImages images={review.images}/> */}
                                             </>
                                         }
