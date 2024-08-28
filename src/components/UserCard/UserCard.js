@@ -62,16 +62,12 @@ const Overlay = () => (
     </div>
 );
 
-export default function UserCard({ data, onCardClick, onStarChange }) {
+export default function UserCard({ data, onCardClick, onCardUpdate }) {
     const navigate = useNavigate();
     const { status, cardName, payBalance, transitBalance, starred } = data;
     const isActive = status !== 0;
 
     const [starredState, setStarredState] = useState(starred === 1);
-
-    const handleStarChange = (newStarredState) => {
-        setStarredState(newStarredState);
-    };
 
     useEffect(() => {
     }, []);
@@ -129,6 +125,10 @@ export default function UserCard({ data, onCardClick, onStarChange }) {
         </div>
     );
 
+    const handleCardDelete = () => {
+        onCardUpdate();
+    }
+
     return (
         <Paper
             style={commonPaperStyle(isActive)}
@@ -152,10 +152,15 @@ export default function UserCard({ data, onCardClick, onStarChange }) {
                         alignItems: 'center',
                     }}>
                         <div onClick={(e) => e.stopPropagation()}>
-                            <StarCheckbox checked={isActive && starredState} userCardId={data.userCardId} onChange={() => { onStarChange(); }} />
+                            <StarCheckbox
+                                // checked={isActive && starredState}
+                                initialChecked={starred === 1}
+                                userCardId={data.userCardId}
+                                isActive={status === 1}
+                            />
                         </div>
                         <div onClick={(e) => e.stopPropagation()}>
-                            <SettingsDrawer data={data} />
+                            <SettingsDrawer data={data} onCardDelete={handleCardDelete} />
                         </div>
                     </div>
                     <CardImage imageUrl={data.design} isOverlayActive={status === 0} />

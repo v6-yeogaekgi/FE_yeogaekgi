@@ -46,15 +46,13 @@ export default function Wallet(props) {
 
     const navigate = useNavigate();
     const [data, setData] = useState(null);
-    const [param, setParam] = useState({
-        page: 1,
-    });
 
-    const [starChanged, setStarChanged] = useState(false);
-
+    // const [starChanged, setStarChanged] = useState(false);
     const handleCardClick = (cardData) => {
         navigate('detail', { state: { cardData } });
     };
+
+    const [cards, setCards] = useState([]);
 
     const [error, setError] = useState(null);
 
@@ -63,6 +61,7 @@ export default function Wallet(props) {
     const uri = protocol + 'usercard/list';
 
     const getApi = () => {
+        //toDo 비활성화 카드(status === 0) 맨 아래에서 렌더링 되도록 수정
         axios
             .post(uri,
                 {},
@@ -89,10 +88,9 @@ export default function Wallet(props) {
                         cardName: item.cardName,
                         memberId: item.memberId,
                     }));
-
                     setData(formattedData);
-
-                }})
+                }
+            })
             .catch((err) => {
                 console.error('API 요청 중 오류 발생:', err);
                 setError('데이터를 불러오는 데 실패했습니다.');
@@ -100,17 +98,11 @@ export default function Wallet(props) {
     };
 
     useEffect(() => {
-            getApi();
+        getApi();
     }, []);
 
-    useEffect(() => {
-        if (starChanged) {
-            setStarChanged(false);
-        }
-    }, [starChanged]);
-
-    const handleStarChange = () => {
-        setStarChanged(true);
+    const handleCardUpdate = () => {
+        getApi();
     };
 
     return (
@@ -138,7 +130,12 @@ export default function Wallet(props) {
                 }}
             >
                 {data && data.map((cardData, index) => (
-                    <UserCard key={index} data={cardData} onCardClick={handleCardClick} onStarChange={handleStarChange} />
+                    <UserCard
+                        key={index}
+                        data={cardData}
+                        onCardClick={handleCardClick}
+                        onCardUpdate={handleCardUpdate}
+                        />
                 ))}
             </Box>
             {data && data.length === 0 && (

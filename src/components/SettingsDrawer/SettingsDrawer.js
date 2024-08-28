@@ -10,8 +10,15 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import useAlertDialog from '../../hooks/useAlertDialog/useAlertDialog';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useContext } from 'react';
+import { AllStateContext } from '../../App';
 
-const SettingsDrawer = ({ data }) => {
+const SettingsDrawer = ({ data, onCardDelete }) => {
+
+    const { protocol } = useContext(AllStateContext);
+    const token = localStorage.getItem('token');
+
     const [state, setState] = React.useState({
         bottom: false,
     });
@@ -29,6 +36,33 @@ const SettingsDrawer = ({ data }) => {
         }
 
         setState({ ...state, bottom: open });
+    };
+
+    const handleCardDelete = () => {
+        axios
+            .put(protocol + 'usercard/delete/card',
+                {
+                    userCardId: data.userCardId,
+                },
+                {
+                    headers: {
+                        Authorization: token,
+                        'Content-Type': 'application/json',
+                    },
+                },
+            )
+            .then((res) => {
+                if (res.status === 200) {
+                    console.log('카드 삭제');
+                    setState({ ...state, bottom: false });
+                    onCardDelete();
+                } else {
+                    console.log('카드 삭제');
+                }
+            })
+            .catch((err) => {
+                console.error('API 요청 중 오류 발생:', err);
+            });
     };
 
     const list = () => (
@@ -87,7 +121,7 @@ const SettingsDrawer = ({ data }) => {
                     <ListItem key={'카드 삭제'} disablePadding>
                         <ListItemButton onClick={(e) => {
                             e.stopPropagation();
-                            // 카드 삭제 로직 추가
+                            handleCardDelete();
                         }}>
                             <ListItemText primary={'카드 삭제'} />
                         </ListItemButton>
