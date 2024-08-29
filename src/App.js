@@ -43,6 +43,11 @@ const PageLayout = ({ children, menuName }) => {
                 flexDirection: 'column',
                 paddingTop: '64px', // header 높이만큼 패딩 추가
                 paddingBottom: '70px', // Footer 높이만큼 패딩 추가
+                height: '844px',
+                overflowY: 'auto', // Hide vertical scrolling
+                '&::-webkit-scrollbar': {
+                    display: 'none', // Hide scrollbar in Webkit browsers
+                },
             }}
         >
             <Header menuName={menuName} />
@@ -73,14 +78,14 @@ function App() {
     const { openAlertDialog, AlertDialog } = useAlertDialog();
     const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
     const dialog = {
-        confirm:{
+        confirm: {
             openConfirmDialog,
-            ConfirmDialog
+            ConfirmDialog,
         },
         alert: {
             openAlertDialog,
-            AlertDialog
-        }
+            AlertDialog,
+        },
     };
 
     useEffect(() => {
