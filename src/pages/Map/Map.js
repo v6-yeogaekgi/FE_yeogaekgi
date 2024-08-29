@@ -1,4 +1,3 @@
-import React from 'react';
 import Box from '@mui/material/Box';
 import ServicesMapShow from './components/ServicesMapShow';
 import ServiceInfoDrawer from './components/ServiceInfoDrawer';

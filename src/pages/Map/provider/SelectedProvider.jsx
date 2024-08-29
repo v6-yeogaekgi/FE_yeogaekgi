@@ -1,10 +1,4 @@
-import {
-    createContext,
-    useCallback,
-    useContext,
-    useEffect,
-    useState,
-} from 'react';
+import { createContext, useContext, useState } from 'react';
 import * as React from 'react';
 import axios from 'axios';
 import { AllStateContext } from '../../../App';
@@ -17,16 +11,11 @@ export const SelectedProvider = ({ children }) => {
     const [selectedService, setSelectedService] = useState(null);
     const [selectedServiceInfo, setSelectedServiceInfo] = useState({});
     const [open, setOpen] = useState(false);
-    const [state, setState] = useState({
-        Tour: false,
-        ACTIVITY: false,
-        ETC: false,
-    });
     const [servicesData, setData] = useState(null);
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
     const [like, setLike] = useState(false);
-    const [likeCounts, setLikeCounts] = useState(0);
+    const [viewLikeCount, setViewLikeCnt] = useState(0);
     const [apiLoading, setApiLoading] = useState(false);
     const api = axios.create({
         baseURL: protocol,
@@ -36,19 +25,19 @@ export const SelectedProvider = ({ children }) => {
         },
     });
 
-    const handleFilterChange = (event) => {
-        setState({
-            ...state,
-            [event.target.name]: event.target.checked,
-        });
-    };
-
-    const handleServiceSelect = (service, name, content, serviceType) => {
+    const handleServiceSelect = (
+        service,
+        name,
+        content,
+        serviceType,
+        likeCnt,
+    ) => {
         setSelectedService(service);
         setSelectedServiceInfo({
             name: name,
             content: content,
             serviceType: serviceType,
+            likeCnt: likeCnt,
         });
         setOpen(true);
     };
@@ -74,15 +63,19 @@ export const SelectedProvider = ({ children }) => {
 
     const handleLikeChange = async (event) => {
         const isChecked = event.target.checked;
-        setLike(isChecked);
         try {
             const response = await api.post(
                 `${protocol}services/like/${selectedService}`,
             );
-            setLike(response.data.likeCheckRs);
-            setLikeCounts(response.data.likeCounts);
-            console.log(like);
-            console.log(likeCounts);
+
+            // 응답 데이터 구조에 따라 처리
+            if (response.data['like add'] !== undefined) {
+                setViewLikeCnt(response.data['like add']);
+                setLike(response.data['likeCheckRs']);
+            } else if (response.data['like cancel'] !== undefined) {
+                setViewLikeCnt(response.data['like cancel']);
+                setLike(response.data['likeCheckRs']);
+            }
         } catch (error) {
             console.error('There was an error sending the like status:', error);
         }
@@ -97,9 +90,6 @@ export const SelectedProvider = ({ children }) => {
                 handleServiceSelect,
                 open,
                 setOpen,
-                state,
-                setState,
-                handleFilterChange,
                 like,
                 setLike,
                 handleLikeChange,
@@ -107,8 +97,9 @@ export const SelectedProvider = ({ children }) => {
                 apiLoading,
                 servicesData,
                 setData,
-                likeCounts,
                 toggleDrawer,
+                setViewLikeCnt,
+                viewLikeCount,
             }}
         >
             {children}

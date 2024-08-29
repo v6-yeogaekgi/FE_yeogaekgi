@@ -4,8 +4,20 @@ const MapContext = createContext();
 
 export const MapProvider = ({ children }) => {
     const [isMapLoaded, setIsMapLoaded] = useState(false);
+    const [state, setState] = useState({
+        Tour: false,
+        ACTIVITY: false,
+        ETC: false,
+    });
 
-    const MapLoad = () => {
+    const handleFilterChange = (event) => {
+        setState({
+            ...state,
+            [event.target.name]: event.target.checked,
+        });
+    };
+
+    useEffect(() => {
         const naverMapClientId = process.env.REACT_APP_NAVER_MAP_CLIENT_ID;
 
         if (!naverMapClientId) {
@@ -24,17 +36,15 @@ export const MapProvider = ({ children }) => {
         return () => {
             document.body.removeChild(script);
         };
-    };
-
-    useEffect(() => {
-        MapLoad();
     }, []);
 
     return (
         <MapContext.Provider
             value={{
+                state,
+                setState,
                 isMapLoaded,
-                MapLoad,
+                handleFilterChange,
             }}
         >
             {children}

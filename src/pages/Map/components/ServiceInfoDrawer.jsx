@@ -41,14 +41,18 @@ const ServiceInfoDrawer = () => {
         like,
         handleLikeChange,
         likeCheck,
-        likeCounts,
         toggleDrawer,
+        setViewLikeCnt,
+        viewLikeCount,
     } = useSelected();
     const { list } = useReview();
-
     useEffect(() => {
+        // selectedServiceInfo.likeCnt 값이 존재할 때만 업데이트
         likeCheck();
-    }, [selectedService]);
+        if (selectedServiceInfo && selectedServiceInfo.likeCnt !== undefined) {
+            setViewLikeCnt(selectedServiceInfo.likeCnt);
+        }
+    }, [selectedServiceInfo, setViewLikeCnt]);
 
     const handleNavigateToRegister = () => {
         const name = selectedServiceInfo.name;
@@ -167,7 +171,7 @@ const ServiceInfoDrawer = () => {
                                 justifyContent: 'center',
                             }}
                         />
-                        {likeCounts}
+                        {viewLikeCount}
                     </Box>
                 </Box>
 

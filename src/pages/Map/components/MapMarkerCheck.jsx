@@ -5,10 +5,10 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { useSelected } from '../provider/SelectedProvider';
+import { useMap } from '../provider/MapProvider';
 
 export default function MapMarkerCheck() {
-    const { state, handleFilterChange } = useSelected();
+    const { state, handleFilterChange } = useMap();
     const { Tour, ACTIVITY, ETC } = state;
 
     return (

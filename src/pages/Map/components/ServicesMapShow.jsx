@@ -7,15 +7,14 @@ import { useMap } from '../provider/MapProvider';
 
 const ServicesMapShow = () => {
     const mapRef = useRef(null);
-    const { MapLoad } = useMap();
-    const { handleServiceSelect, state } = useSelected();
+    const { state } = useMap();
+    const { handleServiceSelect } = useSelected();
     const { currentMyLocation, locationLoading } = useGeolocation();
     const { servicesData, apiLoading } = useServicesMarkerApi(state);
     const { naver } = window;
     const [map, setMap] = useState(null);
 
     useEffect(() => {
-        MapLoad();
         if (!naver || !mapRef.current) return;
 
         if (!map) {
@@ -68,6 +67,7 @@ const ServicesMapShow = () => {
                         service.name,
                         service.content,
                         service.serviceType,
+                        service.likeCnt,
                     );
                 });
             });
