@@ -21,7 +21,6 @@ const STYLES = {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        paddingTop: '64px',
         paddingBottom: '70px',
     },
     contentBox: {
@@ -41,7 +40,6 @@ const STYLES = {
 const Home = () => {
     const navigate = useNavigate();
     const [data, setData] = useState(null);
-
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
     const uri = protocol + 'usercard/list';
@@ -97,7 +95,6 @@ const Home = () => {
 
     return (
         <Box sx={STYLES.pageLayout}>
-            <Header menuName={'▾ Seoul'} />
             <Box sx={STYLES.contentBox}>
                 <Box sx={STYLES.cardContainer}>
                     <Swiper
@@ -105,7 +102,7 @@ const Home = () => {
                             dynamicBullets: true,
                         }}
                         modules={[Pagination]}
-                        style={{height: '100%'}}
+                        style={{height: '100%', borderRadius: 25}}
                     >
                         {data &&
                             data.map((cardData, index) => (
