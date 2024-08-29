@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     IconButton,
     Card,
@@ -12,20 +13,28 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { red } from '@mui/material/colors';
 import { useReview } from '../provider/ReviewProvider';
-import { useNavigate } from 'react-router-dom';
-import { AllStateContext } from '../../../App';
+import { useSelected } from '../provider/SelectedProvider';
+import { getCountryImgById } from '../../../util';
 
-const ReviewList = ({ list, selectedService, selectedServiceInfo }) => {
-    const { protocol } = useContext(AllStateContext);
-    const token = localStorage.getItem('token');
-    useEffect(() => {
-        console.log('ReviewList received new list:', list);
-    }, [list]);
-
-    const { selectedReview, setSelectedReview, onDelete } = useReview();
-
+const ReviewList = () => {
+    const {
+        list,
+        selectedReview,
+        setSelectedReview,
+        deleteReview,
+        ReviewImgList,
+        reviewList,
+    } = useReview();
+    const { selectedServiceInfo, selectedService, toggleDrawer } =
+        useSelected();
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
+
+    useEffect(() => {
+        ReviewImgList();
+        reviewList();
+        console.log(reviewList);
+    }, [selectedService]);
 
     const handleMenuClick = (event, reviewId) => {
         setAnchorEl(event.currentTarget);
@@ -38,7 +47,6 @@ const ReviewList = ({ list, selectedService, selectedServiceInfo }) => {
     };
 
     const handleEdit = () => {
-        console.log(`Edit review ${selectedReview}`);
         const name = selectedServiceInfo.name;
         navigate(`/map/edit/${name}/${selectedService}/${selectedReview}`);
         handleMenuClose();
@@ -49,10 +57,15 @@ const ReviewList = ({ list, selectedService, selectedServiceInfo }) => {
         handleMenuClose();
     };
 
-    const handleDelete = () => {
-        console.log(`Delete review ${selectedReview}`);
-        onDelete(selectedReview);
-        handleMenuClose();
+    const handleDelete = async () => {
+        try {
+            await deleteReview(selectedReview);
+            reviewList();
+            ReviewImgList();
+            await handleMenuClose();
+        } catch (error) {
+            console.error('Failed to delete review:', error);
+        }
     };
 
     if (!list || !list.content || !Array.isArray(list.content)) {
@@ -66,15 +79,14 @@ const ReviewList = ({ list, selectedService, selectedServiceInfo }) => {
                     <CardHeader
                         avatar={
                             <Avatar
-                                sx={{ bgcolor: red[500] }}
-                                aria-label="Nation"
-                            >
-                                R
-                            </Avatar>
+                                alt="Country Flag"
+                                src={getCountryImgById(
+                                    `${review.country.code}`,
+                                )}
+                            ></Avatar>
                         }
                         action={
                             <IconButton
-                                aria-label="settings"
                                 onClick={(e) =>
                                     handleMenuClick(e, review.reviewId)
                                 }

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import Box from '@mui/material/Box';
@@ -10,15 +9,15 @@ import Button from '@mui/material/Button';
 import React, { useContext, useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
 import { Rating } from '@mui/material';
-import useReviewListAPI from '../api/UseReviewListAPI';
-import useReviewImgListAPI from '../api/useReviewImgListAPI';
 import ReviewList from './ReviewList';
 import ReviewImgList from './ReviewImgList';
 import { useNavigate } from 'react-router-dom';
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
-import { AllStateContext } from '../../../App';
+
+import { useSelected } from '../provider/SelectedProvider';
+import { useReview } from '../provider/ReviewProvider';
 
 const drawerBleeding = 56;
 
@@ -32,66 +31,28 @@ const Puller = styled('div')(({ theme }) => ({
     left: 'calc(50% - 15px)',
 }));
 
-const ServiceInfoDrawer = ({
-    open,
-    setOpen,
-    selectedServiceInfo,
-    selectedService,
-    likeCnt,
-}) => {
+const ServiceInfoDrawer = () => {
     const navigate = useNavigate();
-    const { protocol } = useContext(AllStateContext);
-    const token = localStorage.getItem('token');
-    const [like, setLike] = useState(false);
-    const { list, listApiLoading } = useReviewListAPI(selectedService);
-    const { img, imgApiLoading } = useReviewImgListAPI(selectedService);
-    const [viewLikeCnt, setViewLikeCnt] = useState(0);
     const [score, setScore] = useState(0);
+    const {
+        open,
+        selectedServiceInfo,
+        selectedService,
+        like,
+        handleLikeChange,
+        likeCheck,
+        likeCounts,
+        toggleDrawer,
+    } = useSelected();
+    const { list } = useReview();
 
-    const toggleDrawer = (newOpen) => {
-        setOpen(newOpen);
-    };
-    console.log(likeCnt);
     useEffect(() => {
-        if (selectedService != null) {
-            axios
-                .get(`${protocol}services/like/${selectedService}/check`, {
-                    headers: {
-                        Authorization: token,
-                    },
-                })
-                .then((res) => {
-                    setLike(res.data);
-                })
-                .catch((error) => {
-                    console.error('Error fetching services data:', error);
-                });
-        }
+        likeCheck();
     }, [selectedService]);
 
     const handleNavigateToRegister = () => {
         const name = selectedServiceInfo.name;
         navigate(`/map/register/${selectedService}/${name}`);
-    };
-
-    const handleFilterChange = async (event) => {
-        const isChecked = event.target.checked;
-        setViewLikeCnt((prev) => (isChecked ? prev + 1 : prev - 1));
-        setLike(isChecked);
-        try {
-            const response = await axios.post(
-                `${protocol}services/like/${selectedService}`,
-                null,
-                {
-                    headers: {
-                        Authorization: token,
-                    },
-                },
-            );
-            console.log('Response:', response.data);
-        } catch (error) {
-            console.error('There was an error sending the like status:', error);
-        }
     };
 
     useEffect(() => {
@@ -104,10 +65,6 @@ const ServiceInfoDrawer = ({
             setScore(avgScore);
         }
     }, [list]);
-
-    useEffect(() => {
-        if (likeCnt ? setViewLikeCnt(likeCnt) : 0);
-    }, [likeCnt, list]);
 
     return (
         <>
@@ -201,7 +158,7 @@ const ServiceInfoDrawer = ({
                         <Checkbox
                             checked={like}
                             icon={<FavoriteBorder />}
-                            onChange={handleFilterChange}
+                            onChange={handleLikeChange}
                             checkedIcon={<Favorite sx={{ color: 'red' }} />}
                             sx={{
                                 p: 0,
@@ -210,7 +167,7 @@ const ServiceInfoDrawer = ({
                                 justifyContent: 'center',
                             }}
                         />
-                        {viewLikeCnt}
+                        {likeCounts}
                     </Box>
                 </Box>
 
@@ -264,12 +221,8 @@ const ServiceInfoDrawer = ({
                         overflow: 'auto',
                     }}
                 >
-                    <ReviewImgList img={img} />
-                    <ReviewList
-                        list={list}
-                        selectedServiceInfo={selectedServiceInfo}
-                        selectedService={selectedService}
-                    />
+                    <ReviewImgList />
+                    <ReviewList />
                 </Box>
                 <Box sx={{ px: 2, pb: 2 }}>
                     <Button

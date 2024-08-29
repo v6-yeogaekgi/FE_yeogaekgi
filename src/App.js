@@ -29,6 +29,8 @@ import ReviewRegister from './pages/Map/pages/ReviewRegister';
 import ReviewEdit from './pages/Map/pages/ReviewEdit';
 import { fetchAndStoreExchangeRate } from './components/ExchangeRateManager/ExchangeRateManager';
 import MyReviews from './pages/MyReviews/MyReviews';
+import { SelectedProvider } from './pages/Map/provider/SelectedProvider';
+import { MapProvider } from './pages/Map/provider/MapProvider';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -95,7 +97,9 @@ function App() {
                         path={'/map'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <Map />
+                                <MapProvider>
+                                    <Map />
+                                </MapProvider>
                             </PageLayout>
                         }
                     />
@@ -103,9 +107,11 @@ function App() {
                         path={'/map/register/:serviceId/:name'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <ReviewProvider>
-                                    <ReviewRegister />
-                                </ReviewProvider>
+                                <SelectedProvider>
+                                    <ReviewProvider>
+                                        <ReviewRegister />
+                                    </ReviewProvider>
+                                </SelectedProvider>
                             </PageLayout>
                         }
                     />
@@ -113,9 +119,11 @@ function App() {
                         path={'/map/edit/:name/:serviceId/:reviewId'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <ReviewProvider>
-                                    <ReviewEdit />
-                                </ReviewProvider>
+                                <SelectedProvider>
+                                    <ReviewProvider>
+                                        <ReviewEdit />
+                                    </ReviewProvider>
+                                </SelectedProvider>
                             </PageLayout>
                         }
                     />

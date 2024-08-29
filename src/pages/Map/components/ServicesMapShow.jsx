@@ -2,16 +2,20 @@ import React, { useEffect, useRef, useState } from 'react';
 import useGeolocation from './UseGeolocation';
 import useServicesMarkerApi from '../api/UseServicesMarkerApi';
 import Box from '@mui/material/Box';
+import { useSelected } from '../provider/SelectedProvider';
+import { useMap } from '../provider/MapProvider';
 
-const ServicesMapShow = ({ handleServiceSelect, state }) => {
+const ServicesMapShow = () => {
     const mapRef = useRef(null);
-
+    const { MapLoad } = useMap();
+    const { handleServiceSelect, state } = useSelected();
     const { currentMyLocation, locationLoading } = useGeolocation();
-    const { data: servicesData, apiLoading } = useServicesMarkerApi(state);
+    const { servicesData, apiLoading } = useServicesMarkerApi(state);
     const { naver } = window;
     const [map, setMap] = useState(null);
 
     useEffect(() => {
+        MapLoad();
         if (!naver || !mapRef.current) return;
 
         if (!map) {

@@ -15,7 +15,7 @@ const ReviewEdit = () => {
     const [score, setScore] = useState(0);
     const inputRef = useRef();
 
-    const { onUpdate } = useReview();
+    const { updateReview } = useReview();
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
 
@@ -80,7 +80,7 @@ const ReviewEdit = () => {
         });
 
         try {
-            await onUpdate(serviceId, reviewId, formData);
+            await updateReview(serviceId, reviewId, formData);
             // 성공 처리 (예: 리뷰 목록 페이지로 리다이렉트)
         } catch (error) {
             console.error('Error updating review:', error);
