@@ -41,9 +41,6 @@ const Registration = () => (
 );
 
 export default function Wallet(props) {
-    const rates = getExchangeRate();
-    console.log(rates);
-
     const navigate = useNavigate();
     const [data, setData] = useState(null);
 
@@ -57,6 +54,12 @@ export default function Wallet(props) {
     const handleCardDelete = () => {
         getApi();
     }
+
+    const renderEmptyBoxes = (count) => {
+        return Array(count).fill().map((_, index) => (
+            <Box key={index} sx={{ height: '134px', width: '100%' }} />
+        ));
+    };
 
     const [error, setError] = useState(null);
 
@@ -93,11 +96,15 @@ export default function Wallet(props) {
                         memberId: item.memberId,
                     }));
                     setData(formattedData);
+
+                    console.log("data: " + data.length)
                 }})
             .catch((err) => {
                 console.error('API 요청 중 오류 발생:', err);
                 setError('데이터를 불러오는 데 실패했습니다.');
             });
+
+        console.log('data : ' + data);
     };
 
     useEffect(() => {
@@ -129,23 +136,28 @@ export default function Wallet(props) {
                     gap: 2,
                     paddingTop: '20px',
                     flexGrow: 1,
-                    paddingBottom: '150px', // 하단 여백 추가
+                    paddingBottom: '150px',
                 }}
             >
-                {data && data.map((cardData, index) => (
-                    <UserCard key={index} data={cardData} onCardClick={handleCardClick} onStarChange={handleStarChange} onCardDelete={handleCardDelete}/>
-                ))}
+                {data === null ? (
+                    renderEmptyBoxes(3)
+                ) : data.length === 0 ? (
+                    renderEmptyBoxes(3)
+                ) : (
+                    <>
+                        {data.map((cardData, index) => (
+                            <UserCard
+                                key={index}
+                                data={cardData}
+                                onCardClick={handleCardClick}
+                                onStarChange={handleStarChange}
+                                onCardDelete={handleCardDelete}
+                            />
+                        ))}
+                        {data.length === 1 && renderEmptyBoxes(1)}
+                    </>
+                )}
             </Box>
-            {data && data.length === 0 && (
-                <>
-                    <Box sx={{ height: '134px', width: '100%' }} />
-                    <Box sx={{ height: '134px', width: '100%' }} />
-                </>
-            )}
-
-            {data && data.length === 1 && (
-                <Box sx={{ height: '134px', width: '100%' }} /> // 빈 박스 추가
-            )}
             <Registration />
         </Box>
     );
