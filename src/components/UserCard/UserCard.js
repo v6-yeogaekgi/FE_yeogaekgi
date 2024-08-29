@@ -64,7 +64,7 @@ const Overlay = () => (
 
 export default function UserCard({ data, onCardClick, onStarChange, onCardDelete }) {
     const navigate = useNavigate();
-    const { status, cardName, payBalance, transitBalance, starred } = data;
+    const { userCardId, status, cardName, payBalance, transitBalance, starred } = data;
     const isActive = status !== 0;
     const imageUrl = status === 0 ? '../../img/exp_design.png' : data.design;
 
@@ -163,13 +163,10 @@ export default function UserCard({ data, onCardClick, onStarChange, onCardDelete
                     }}>
                         <div onClick={(e) => e.stopPropagation()}>
                             <StarCheckbox
-                                initialChecked={starred === 1}
-                                userCardId={data.userCardId}
-                                onStarChange={(newState) => {
-                                    setStarredState(newState);
-                                    handleStarChange();
-                                }}
-                                isActive={status === 1}
+                                initialChecked={starred}
+                                userCardId={userCardId}
+                                onStarChange={handleStarChange}
+                                isActive={isActive}
                             />
                         </div>
                         <div onClick={(e) => e.stopPropagation()}>

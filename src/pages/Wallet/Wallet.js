@@ -81,37 +81,41 @@ export default function Wallet(props) {
             )
             .then((res) => {
                 if (Array.isArray(res.data) && res.data.length > 0) {
-                    const filteredData = res.data.filter(item => item.status !== 2);
-                    const formattedData = filteredData.map(item => ({
-                        userCardId: item.userCardId,
-                        expiryDate: item.expiryDate,
-                        payBalance: item.payBalance,
-                        transitBalance: item.transitBalance,
-                        starred: item.starred,
-                        status: item.status,
-                        cardId: item.cardId,
-                        design: item.design,
-                        area: item.area,
-                        cardName: item.cardName,
-                        memberId: item.memberId,
-                    }));
-                    setData(formattedData);
+                    const filteredData = res.data
+                        .filter(item => item.status !== 2)
+                        .map(item => ({
+                            ...item,
+                            starred: item.starred === 1
+                        }));
 
-                    console.log("data: " + data.length)
+                    const sortedData = [...filteredData].sort((a, b) => {
+                        if (a.starred && !b.starred) return -1;
+                        if (!a.starred && b.starred) return 1;
+                        if (a.status === 0 && b.status !== 0) return 1;
+                        if (a.status !== 0 && b.status === 0) return -1;
+                        return 0;
+                    });
+
+                    setData(sortedData);
                 }})
             .catch((err) => {
                 console.error('API 요청 중 오류 발생:', err);
                 setError('데이터를 불러오는 데 실패했습니다.');
             });
-
-        console.log('data : ' + data);
     };
 
     useEffect(() => {
         getApi();
     }, [updateTrigger]);
 
-    const handleStarChange = () => {
+    const handleStarChange = (changedCardId, newStarredState) => {
+        setData(prevData =>
+            prevData.map(card =>
+                card.userCardId === changedCardId
+                    ? { ...card, starred: newStarredState }
+                    : card
+            )
+        );
         setUpdateTrigger(prev => prev + 1);
     };
 
@@ -150,7 +154,8 @@ export default function Wallet(props) {
                                 key={index}
                                 data={cardData}
                                 onCardClick={handleCardClick}
-                                onStarChange={handleStarChange}
+                                // onStarChange={handleStarChange}
+                                onStarChange={(newState) => handleStarChange(cardData.userCardId, newState)}
                                 onCardDelete={handleCardDelete}
                             />
                         ))}
