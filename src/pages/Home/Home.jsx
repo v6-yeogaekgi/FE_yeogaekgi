@@ -85,8 +85,38 @@ const Home = () => {
             });
     };
 
+    const handleStorageChange = () => {
+        const newSelectArea = localStorage.getItem('selectArea');
+        console.log('selectArea changed:', newSelectArea);
+        
+        // Axios POST 요청
+        axios.post(
+            '/usercard/home/list', 
+            { selectArea: newSelectArea }, 
+            {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                console.log('POST request successful', response.data);
+            })
+            .catch(error => {
+                console.error('Error in POST request', error);
+            });
+    };
+
     useEffect(() => {
         getApi();
+
+        // 이벤트 리스너 등록
+        window.addEventListener('localStorageChange', handleStorageChange);
+
+        // 컴포넌트 언마운트 시 이벤트 리스너 제거
+        return () => {
+            window.removeEventListener('localStorageChange', handleStorageChange);
+        };
     }, []);
 
     const handleClick = () => {

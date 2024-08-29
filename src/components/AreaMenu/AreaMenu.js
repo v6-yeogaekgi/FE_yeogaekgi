@@ -75,6 +75,9 @@ export default function AreaMenu({areas}) {
         setSelectArea(item);
         localStorage.setItem('selectArea', item);
         handleClose();
+
+        // 커스텀 이벤트 발생
+        window.dispatchEvent(new Event('localStorageChange'));
       };
 
     return (
