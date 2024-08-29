@@ -132,18 +132,18 @@ const PostEditor = () => {
 
             return;
         }
-        const data = new FormData();
-        fileImgs.forEach((file, index) => {
-            data.append('multipartFile', file); // 파일 추가
+        const formData = new FormData();
+        fileImgs.forEach((file) => {
+            formData.append('multipartFile', file); // 파일 추가
         });
-        data.append('hashtag', hashtag);
-        data.append('content', content);
+        formData.append('hashtag', hashtag);
+        formData.append('content', content);
 
 
         if(location.state?.type === "mod"){
             // modifyApi(data);
         }else{
-            registerApi(data);
+            registerApi(formData);
         }
     }
 
@@ -164,7 +164,7 @@ const PostEditor = () => {
             <BasicTextField name="hashtag" label={'Hashtag'} variant={'outlined'} sx={{ width: '100%' }}
                             fullWidth={true}
                             onChange={(e)=>{setHashtag(e.target.value)}}
-                            value={hashtag}
+                            defaultValue={hashtag}
                             inputProps={{ maxLength: 20 }}>
             </BasicTextField>
             <div style={{ width: '100%', textAlign: 'right' }}>
@@ -176,7 +176,7 @@ const PostEditor = () => {
                             fullWidth={true} rows={5}
                             multiline={true}
                             onChange={(e)=>{setContent(e.target.value)}}
-                            value={content}
+                            defaultValue={content}
                             inputProps={{ maxLength: 500 }}
             >
             </BasicTextField>
