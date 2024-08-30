@@ -20,7 +20,7 @@ const Header = ({ menuName, areas }) => {
     };
 
     return (
-        <Box sx={{ flexGrow: 1, color: '000' }} className="header">
+        <Box sx={{ flexGrow: 1, color: '000', padding: 0 }} className="header">
             <AppBar
                 position="static" elevation={0}
                 sx={{ backgroundColor: 'white', color: 'black' }}

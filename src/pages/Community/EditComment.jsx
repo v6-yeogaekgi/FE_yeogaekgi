@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useContext } from 'react';
 import { AllStateContext } from '../../App';
 import { useEffect } from 'react';
+import { Card, Box } from '@mui/material';
 
 const EditComment = () => {
     const [initialComment, setInitialComment] = useState([]);
@@ -58,13 +59,12 @@ const EditComment = () => {
     }, []);
 
     return (
-        <>
-            <br></br>
+        <Box sx={{ mt: 2 }}>
             <CommentEditor
                 initialComment={initialComment}
                 onUpdate={onUpdate}
             />
-        </>
+        </Box>
     );
 };
 export default EditComment;

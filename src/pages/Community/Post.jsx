@@ -112,7 +112,10 @@ const Post = () => {
                 },
             })
             .then((res) => {
-                dialog.alert.openAlertDialog("Success!",'The comment has been deleted');
+                dialog.alert.openAlertDialog(
+                    'Success!',
+                    'The comment has been deleted',
+                );
                 getPostApi();
                 getApi();
             })
@@ -158,8 +161,10 @@ const Post = () => {
     } else {
         return (
             // <PageLayout menuName="post">
-                <CommentStateContext.Provider value={{ comment, postId }}>
-                    <CommentDispatchContext.Provider value={memoizedDispatch}>
+
+            <CommentStateContext.Provider value={{ comment, postId }}>
+                <CommentDispatchContext.Provider value={memoizedDispatch}>
+                    <Box sx={{ mr: 2, ml: 2, mt: 1 }}>
                         <PostItem
                             key={post.postId}
                             postId={post.postId}
@@ -179,11 +184,23 @@ const Post = () => {
                             deepLApi={deepLApi}
                         />
                         <CommentList />
+                    </Box>
+                    <Box
+                        sx={{
+                            position: 'fixed',
+                            bottom: '70px',
+                            zIndex: 1000,
+                            padding: '10px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                        }}
+                    >
                         <CommentRegister />
-                    </CommentDispatchContext.Provider>
-                    <dialog.alert.AlertDialog></dialog.alert.AlertDialog>
-                    <dialog.confirm.ConfirmDialog></dialog.confirm.ConfirmDialog>
-                </CommentStateContext.Provider>
+                    </Box>
+                </CommentDispatchContext.Provider>
+                <dialog.alert.AlertDialog></dialog.alert.AlertDialog>
+                <dialog.confirm.ConfirmDialog></dialog.confirm.ConfirmDialog>
+            </CommentStateContext.Provider>
             // </PageLayout>
         );
     }

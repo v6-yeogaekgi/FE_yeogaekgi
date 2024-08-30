@@ -34,20 +34,14 @@ const ServicesMapShow = () => {
 
             const mapInstance = new naver.maps.Map(mapRef.current, mapOptions);
             naver.maps.Event.addListener(mapInstance, 'init', () => {
-                console.log('지도 초기화 완료:', mapInstance);
                 setMap(mapInstance);
             });
         }
     }, [currentMyLocation, locationLoading, naver]);
 
     useEffect(() => {
-        if (!map) {
-            console.log('map 상태가 null이어서 초기화를 시도합니다.');
-            initializeMap();
-        } else {
-            console.log('이미 초기화된 map 상태:', map);
-        }
-    }, [initializeMap, map]);
+        initializeMap();
+    }, [initializeMap, servicesData]);
 
     const createMarkers = useCallback(() => {
         if (map && !apiLoading && servicesData) {
@@ -60,8 +54,6 @@ const ServicesMapShow = () => {
                     position: new naver.maps.LatLng(service.lat, service.lon),
                     map: map,
                 });
-
-                console.log('생성된 마커:', marker);
 
                 naver.maps.Event.addListener(marker, 'click', () => {
                     const markerPosition = new naver.maps.LatLng(
@@ -110,6 +102,7 @@ const ServicesMapShow = () => {
             <div ref={mapRef} style={{ width: '400px', height: '800px' }} />
         </Box>
     );
+    //asd
 };
 
 export default ServicesMapShow;
