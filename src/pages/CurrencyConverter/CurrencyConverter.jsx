@@ -14,7 +14,7 @@ const CurrencyConverter = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 transform: 'translateY(-7%)',
-                overflow: 'hidden',
+                overflow: 'auto',
             }}
         >
             <CurrencyConverForm />

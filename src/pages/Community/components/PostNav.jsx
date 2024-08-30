@@ -1,44 +1,54 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import BasicTextField from '../../../components/BasicTextField/BasicTextField'
-import BasicButton from '../../../components/BasicButton/BasicButton'
+import BasicTextField from '../../../components/BasicTextField/BasicTextField';
+import BasicButton from '../../../components/BasicButton/BasicButton';
 import SearchIcon from '@mui/icons-material/Search';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import PersonIcon from '@mui/icons-material/Person';
 import InputAdornment from '@mui/material/InputAdornment';
 import Box from '@mui/material/Box';
-import axios from 'axios';
 
-
-
-
-export default function PostNav({handleSearch}) {
-
-
+export default function PostNav({ handleSearch, search }) {
     const navigate = useNavigate();
-    const onClickMy=(event) =>{
-        handleSearch({'myPost':true});
-    };
 
-    // 해시태그/내용 검색어 입력
-    const serachKeyword = (event) =>{
-        if(event.key == 'Enter'){
-            const keyword = event.target.value;
-            if(keyword.length > 1 && keyword[0] == '#'){
-                handleSearch({'hashtag':keyword.substr(1)});
-            }else{
-                handleSearch({'content':keyword});
-            }
+    const onClickMy = () => {
+        handleSearch({
+                content: '',
+                hashtag: '',
+                myPost: true,
+                page: 0
+        });
+        // navigate('/community', { state: { myPost: true } });
+    };
+    // 키보드 입력 처리
+    const handleChange = (event) => {
+        const keyword = event.target.value.trim();
+        if (keyword.length > 1 && keyword[0] === '#') {
+            handleSearch({
+                    content: '',
+                    hashtag: keyword.substr(1),
+                    myPost: false,
+                    page: 0
+            });
+            // navigate('/community', { state: { hashtag: keyword.substr(1) } });
+        } else {
+            handleSearch({
+                content: keyword,
+                hashtag: '',
+                myPost: false,
+                page: 0
+            });
+            // navigate('/community', { state: { content: keyword } });
         }
     };
 
 
     return (
-        <Box sx={{padding:"10px", backgroundColor:"#F0F0F0"}}>
+        <Box sx={{ padding: "10px", backgroundColor: "#F0F0F0" }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <BasicTextField
                     sx={{
-                        width:"100%",
+                        width: "100%",
                         padding: "10px",
                     }}
                     InputProps={{
@@ -48,33 +58,37 @@ export default function PostNav({handleSearch}) {
                             </InputAdornment>
                         ),
                     }}
-                    variant={"standard"} onKeyDown={serachKeyword} placeholder={"Enter search keywords"}></BasicTextField>
-                {/*<SearchIcon sx={{color:"gray"}}></SearchIcon>*/}
+                    value={search.hashtag ? `#${search.hashtag}` : undefined}
+                    variant={"standard"}
+                    onChange={handleChange}
+                    // onKeyDown={searchKeyword}
+                    placeholder={"Enter search keywords"}
+                />
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: "space-around" }}>
-                <BasicButton className={"new-btn"}
-                             variant={"contained"}
-                             startIcon={<NoteAddIcon/>}
-                             size = {"small"}
-                             text={"New Post"}
-                             width={"45%"}
-                             onClick={() => {
-                                 navigate('/community/regist'); // 네비게이션할 경로
-                             }}
-                             btnColor={'#4653f9'}
-                ></BasicButton>
-
-                <BasicButton className={"my-btn"}
-                             variant={"contained"}
-                             onClick={onClickMy}
-                             startIcon={<PersonIcon/>}
-                             size = {"small"}
-                             text={"My Post"}
-                             width={"45%"}
-                             btnColor={'#4653f9'}
-                ></BasicButton>
+                <BasicButton
+                    className={"new-btn"}
+                    variant={"contained"}
+                    startIcon={<NoteAddIcon />}
+                    size={"small"}
+                    text={"New Post"}
+                    width={"45%"}
+                    onClick={() => {
+                        navigate('/community/regist'); // 네비게이션할 경로
+                    }}
+                    btnColor={'#4653f9'}
+                />
+                <BasicButton
+                    className={"my-btn"}
+                    variant={"contained"}
+                    onClick={onClickMy}
+                    startIcon={<PersonIcon />}
+                    size={"small"}
+                    text={"My Post"}
+                    width={"45%"}
+                    btnColor={'#4653f9'}
+                />
             </div>
-
         </Box>
     );
 }
