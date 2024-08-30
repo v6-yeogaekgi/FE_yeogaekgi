@@ -5,11 +5,15 @@ import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
 import Box from '@mui/material/Box';
 import { useContext, useRef, useState } from 'react';
-import axios from 'axios';
-import { CommentDispatchContext, PostDetailDispatchContext } from '../Post';
+import { CommentDispatchContext } from '../Post';
+import { Avatar } from '@mui/material';
+import { getCountryImgById } from '../../../util';
 
 const CommentRegister = () => {
     const [content, setContent] = useState('');
+    const [member, setMember] = useState(
+        JSON.parse(localStorage.getItem('member')),
+    );
     const inputRef = useRef();
     const { onCreate } = useContext(CommentDispatchContext);
 
@@ -36,37 +40,46 @@ const CommentRegister = () => {
     };
 
     return (
-        <Box
+        <Paper
+            component="form"
             sx={{
-                position: 'fixed', // 고정 위치
-                bottom: '70px', // Footer 높이 만큼 위로 이동
-                zIndex: 1000, // Footer보다 위에 위치
-                padding: '10px', // 적절한 패딩 추가
+                p: '2px 1px',
+                display: 'flex',
+                alignItems: 'center',
+                width: 380,
+                borderRadius: '16px',
             }}
+            onSubmit={onSubmit}
         >
-            <Paper
-                component="form"
+            <Avatar
+                alt="Country Flag"
+                src={getCountryImgById(member.country.code)}
                 sx={{
-                    p: '2px 1px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    width: 370,
+                    width: 25,
+                    height: 25,
+                    ml: 2,
                 }}
-                onSubmit={onSubmit}
+            />
+            <InputBase
+                sx={{ ml: 2, flex: 1, fontFamily: 'Noto Sans' }}
+                placeholder="Leave a comment ..."
+                value={content}
+                onChange={onChangeContent}
+                onKeyDown={onKeyDown}
+                inputRef={inputRef}
+            />
+            <IconButton
+                type="button"
+                sx={{
+                    p: '8px',
+                    color: '#4653f9',
+                    mr: 1,
+                }}
+                onClick={onSubmit}
             >
-                <InputBase
-                    sx={{ ml: 1, flex: 1 }}
-                    placeholder="Leave a comment ..."
-                    value={content}
-                    onChange={onChangeContent}
-                    onKeyDown={onKeyDown}
-                    inputRef={inputRef}
-                />
-                <IconButton type="button" sx={{ p: '10px' }} onClick={onSubmit}>
-                    <SendIcon />
-                </IconButton>
-            </Paper>
-        </Box>
+                <SendIcon />
+            </IconButton>
+        </Paper>
     );
 };
 
