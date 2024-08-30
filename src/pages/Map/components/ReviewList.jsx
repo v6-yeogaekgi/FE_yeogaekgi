@@ -14,7 +14,9 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { red } from '@mui/material/colors';
 import { useReview } from '../provider/ReviewProvider';
 import { useSelected } from '../provider/SelectedProvider';
-import { getCountryImgById } from '../../../util';
+import { getCountryCodeForTranslate, getCountryImgById } from '../../../util';
+import TranslateIcon from '@mui/icons-material/Translate';
+import Button from '@mui/material/Button';
 
 const ReviewList = () => {
     const {
@@ -24,16 +26,18 @@ const ReviewList = () => {
         deleteReview,
         ReviewImgList,
         reviewList,
+        deepLApi,
     } = useReview();
     const { selectedServiceInfo, selectedService, toggleDrawer } =
         useSelected();
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
+    const [isTranslated, setIsTranslated] = useState(false);
+    const [translatedContent, setTranslatedContent] = useState(null);
 
     useEffect(() => {
         ReviewImgList();
         reviewList();
-        console.log(reviewList);
     }, [selectedService]);
 
     const handleMenuClick = (event, reviewId) => {
@@ -62,9 +66,28 @@ const ReviewList = () => {
             await deleteReview(selectedReview);
             reviewList();
             ReviewImgList();
-            await handleMenuClose();
+            handleMenuClose();
         } catch (error) {
             console.error('Failed to delete review:', error);
+        }
+    };
+
+    const handleTranslate = async (content, lang) => {
+        if (isTranslated) {
+            // Cancel translation (restore original content)
+            setIsTranslated(false);
+            setTranslatedContent(null);
+        } else {
+            try {
+                const translatedContentText = await deepLApi(
+                    content,
+                    getCountryCodeForTranslate(lang),
+                );
+                setTranslatedContent(translatedContentText);
+                setIsTranslated(true);
+            } catch (error) {
+                console.error('Translation failed:', error);
+            }
         }
     };
 
@@ -83,7 +106,7 @@ const ReviewList = () => {
                                 src={getCountryImgById(
                                     `${review.country.code}`,
                                 )}
-                            ></Avatar>
+                            />
                         }
                         action={
                             <IconButton
@@ -97,10 +120,42 @@ const ReviewList = () => {
                         title={review.nickname}
                         subheader={`Score: ${review.score} ${review.modDate.substring(0, 10)}`}
                     />
-                    <CardContent>
+                    <CardContent
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                        }}
+                    >
                         <Typography variant="body2" color="text.secondary">
-                            {review.content}
+                            {isTranslated ? translatedContent : review.content}
                         </Typography>
+                        <Button
+                            id="translate-button"
+                            size="small"
+                            aria-label="translate"
+                            startIcon={<TranslateIcon />}
+                            sx={{
+                                color: '#4653f9',
+                                padding: '4px 8px',
+                                fontSize: '0.75rem',
+                                height: '24px',
+                                minWidth: '32px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                textAlign: 'center',
+                                '& .MuiButton-startIcon': {
+                                    marginRight: 0,
+                                },
+                            }}
+                            onClick={() =>
+                                handleTranslate(
+                                    review.content,
+                                    review.country.code,
+                                )
+                            }
+                        />
                     </CardContent>
                 </Card>
             ))}

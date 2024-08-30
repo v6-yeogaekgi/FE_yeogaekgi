@@ -34,33 +34,31 @@ const ServicesMapShow = () => {
             };
 
             const mapInstance = new naver.maps.Map(mapRef.current, mapOptions);
-            setMap(mapInstance);
+            // setMap(mapInstance);
+            naver.maps.Event.addListener(mapInstance, 'init', () => {
+                setMap(mapInstance);
+            });
         }
     }, [currentMyLocation, locationLoading, naver]);
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            initializeMap();
-        }, 100);
-
-        return () => {
-            clearTimeout(timer);
-        };
-    }, [initializeMap]);
+        initializeMap();
+    }, [initializeMap, servicesData]);
 
     // 마커를 생성하는 함수
     const createMarkers = useCallback(() => {
         if (map && !apiLoading && servicesData) {
-            // 기존 마커 모두 제거
-            markers.forEach(({ marker }) => {
-                marker.setMap(null);
-            });
+            console.log('지도 준비 완료, 마커를 생성합니다...');
+            markers.forEach((marker) => marker.setMap(null));
 
             const newMarkers = servicesData.map((service) => {
+                console.log('마커 좌표:', service.lat, service.lon);
                 const marker = new naver.maps.Marker({
                     position: new naver.maps.LatLng(service.lat, service.lon),
                     map: map,
                 });
+
+                console.log('생성된 마커:', marker); // 마커 상태 확인
 
                 naver.maps.Event.addListener(marker, 'click', () => {
                     const markerPosition = new naver.maps.LatLng(
@@ -85,10 +83,11 @@ const ServicesMapShow = () => {
                     );
                 });
 
-                return { marker, service };
+                return marker;
             });
 
-            setMarkers(newMarkers); // 새로운 마커 상태로 업데이트
+            console.log('새 마커 생성 완료:', newMarkers);
+            setMarkers(newMarkers);
         }
     }, [map, servicesData, apiLoading, handleServiceSelect]);
 
@@ -108,6 +107,7 @@ const ServicesMapShow = () => {
             <div ref={mapRef} style={{ width: '400px', height: '800px' }} />
         </Box>
     );
+    //asd
 };
 
 export default ServicesMapShow;
