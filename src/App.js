@@ -29,11 +29,15 @@ import ReviewRegister from './pages/Map/pages/ReviewRegister';
 import ReviewEdit from './pages/Map/pages/ReviewEdit';
 import { fetchAndStoreExchangeRate } from './components/ExchangeRateManager/ExchangeRateManager';
 import MyReviews from './pages/MyReviews/MyReviews';
+import { SelectedProvider } from './pages/Map/provider/SelectedProvider';
+import { MapProvider } from './pages/Map/provider/MapProvider';
 import CurrencyConverter from './pages/CurrencyConverter/CurrencyConverter';
-
 import useAlertDialog from './hooks/useAlertDialog/useAlertDialog';
 import useConfirmDialog from './hooks/useConfirmDialog/useConfirmDialog';
 import axios from 'axios';
+
+import MyLikes from './pages/MyLikes/MyLikes';
+import Faq from './pages/Faq/Faq';
 
 const PageLayout = ({ children, menuName, areas }) => {
     return (
@@ -48,6 +52,7 @@ const PageLayout = ({ children, menuName, areas }) => {
                 '&::-webkit-scrollbar': {
                     display: 'none', // Hide scrollbar in Webkit browsers
                 },
+                backgroundColor: '#f0f4f8',
             }}
         >
             <Header menuName={menuName} areas={areas}/>
@@ -137,7 +142,9 @@ function App() {
                         path={'/map'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <Map />
+                                <MapProvider>
+                                    <Map />
+                                </MapProvider>
                             </PageLayout>
                         }
                     />
@@ -145,9 +152,11 @@ function App() {
                         path={'/map/register/:serviceId/:name'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <ReviewProvider>
-                                    <ReviewRegister />
-                                </ReviewProvider>
+                                <SelectedProvider>
+                                    <ReviewProvider>
+                                        <ReviewRegister />
+                                    </ReviewProvider>
+                                </SelectedProvider>
                             </PageLayout>
                         }
                     />
@@ -155,9 +164,11 @@ function App() {
                         path={'/map/edit/:name/:serviceId/:reviewId'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <ReviewProvider>
-                                    <ReviewEdit />
-                                </ReviewProvider>
+                                <SelectedProvider>
+                                    <ReviewProvider>
+                                        <ReviewEdit />
+                                    </ReviewProvider>
+                                </SelectedProvider>
                             </PageLayout>
                         }
                     />
@@ -275,10 +286,28 @@ function App() {
                     />
 
                     <Route
+                        path={'/mypage/likes'}
+                        element={
+                            <PageLayout menuName={'My Likes'}>
+                                <MyLikes />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
                         path={'/home/currency'}
                         element={
                             <PageLayout menuName={'Currency Converter'}>
                                 <CurrencyConverter />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/faq'}
+                        element={
+                            <PageLayout menuName={'FAQ'}>
+                                <Faq />
                             </PageLayout>
                         }
                     />

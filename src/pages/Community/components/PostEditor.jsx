@@ -7,6 +7,7 @@ import Avatar from '@mui/material/Avatar';
 import { getCountryImgById } from '../../../util';
 import Typography from '@mui/material/Typography';
 import AddPhotoAlternateSharpIcon from '@mui/icons-material/AddPhotoAlternateSharp';
+import CancelSharpIcon from '@mui/icons-material/CancelSharp';
 import axios from 'axios';
 import { AllStateContext } from '../../../App';
 import PersonIcon from '@mui/icons-material/Person';
@@ -15,52 +16,91 @@ import PersonIcon from '@mui/icons-material/Person';
 
 
 
-const SelectImage = ({fileImgs, setFileImgs}) => {
-    // const [fileImgs, setFileImgs] = useState(images);
-    const imageInput1 = useRef(null);
-
-    const handleChange = (e) => {
-        if(e.target.files.length > 3) {
-            // 3장 이상이면 안된다는 내용
+const SelectImage = ({existingImgs, handleDeleteImg, setNewImgs, newImgs}) => {
+    const imageInputButton = useRef(null);
+    const onClick = (e, ref) => {
+        ref.current?.click();
+    }
+    const handleAdd = (e) => {
+        if(e.target.files.length +  newImgs.length + existingImgs.length > 3) {
+            // 사진은 최대 3개까지만 가능하다는 내용
         }else{
-            let temp = [];
-            for(let i = 0; i<e.target.files.length; i++){
-                temp.push(e.target.files[i]);
-            }
-            setFileImgs(temp);
+            setNewImgs([...newImgs, ...e.target.files])
+            console.log(newImgs);
         }
+    };
+    const handleCancel = (indexToRemove) => {
+        setNewImgs([...newImgs.slice(0, indexToRemove), ...newImgs.slice(indexToRemove + 1)])
+    }
 
+
+    const cancelBtnStyle = {
+        position: 'absolute',
+        top: '5px', // 조정할 위치
+        right: '5px', // 조정할 위치
+        backgroundColor: 'white', // 배경색 (투명도 조절)
+        borderRadius: '50%', // 둥근 버튼
+        padding: '1px',
     };
 
-    const onClick = (e, ref) => {
-            ref.current?.click();
-    }
-    const inputStyle = {visibility: 'hidden', position: 'absolute' };
-    const imageStyle = { height: '120px', width: '120px', marginLeft:"5px"};
     return (
         <div>
             <div style={{display:'flex'}}>
-                {/*실제 input file 요소는 숨김*/}
-                <input ref={imageInput1}
+                {/*image 추가 버튼*/}
+                <input ref={imageInputButton}
                        type="file"
-                       onChange={handleChange}
+                       onChange={handleAdd}
                        multiple
-                       style={inputStyle} />
+                       style={{
+                           visibility: 'hidden',
+                           position: 'absolute'
+                       }}
+                />
                 <AddPhotoAlternateSharpIcon
                     sx={{ color: 'gray', height: '100px', width: '100px' }}
-                    onClick={(event) => onClick(event, imageInput1)}
-                 >
+                    onClick={(event) => onClick(event, imageInputButton)}
+                >
                 </AddPhotoAlternateSharpIcon>
+
+                {/*image 미리보기*/}
                 <div style={{  width: '280px', height:'125px',overflow: 'auto' }}>
-                    <div style={{ width: `${125*fileImgs.length}px`, height: '120px', justifyContent: 'space-around',}}>
-                        {fileImgs.map((image) => (
+                    <div style={{ width: `${125*(existingImgs.length + newImgs.length)}px`, height: '120px', justifyContent: 'space-around',}}>
+                        {existingImgs.map((image, index) => (
+                            <div style={{ position: 'relative', display: 'inline-block', marginLeft: '5px' }}>
+                                <img
+                                    src={image}
+                                    alt={`img-${index}`}
+                                    style={{ height: '120px', width: '120px' }}
+                                />
+                                <CancelSharpIcon
+                                    onClick={() => handleDeleteImg(index)}
+                                    style={cancelBtnStyle}
+                                >
+                                </CancelSharpIcon>
+                            </div>
+                    //     ))}
+                    //         <img
+                    //         idx={index}
+                    //     src={image}
+                    //     alt="img"
+                    //     style={{ height: '120px', width: '120px', marginLeft: '5px' }}
+                    // />
+                    ))}
+                    {newImgs.map((image, index) => (
+                        <div style={{ position: 'relative', display: 'inline-block', marginLeft: '5px' }}>
                             <img
-                                src={typeof image == 'string' ? fileImgs : URL.createObjectURL(image)}
-                                alt="미리보기"
-                                style={{ height: '120px', width: '120px', marginLeft:"5px"}}
+                                src={URL.createObjectURL(image)}
+                                alt="img"
+                                style={{ height: '120px', width: '120px'}}
                             />
-                        ))}
-                    </div>
+                            <CancelSharpIcon
+                                onClick={() => handleCancel(index)}
+                                style={cancelBtnStyle}
+                            >
+                            </CancelSharpIcon>
+                        </div>
+                    ))}
+                </div>
                 </div>
             </div>
         </div>
@@ -89,7 +129,10 @@ const PostEditor = () => {
                 },
             )
             .then((res) => {
-                dialog.alert.openAlertDialog("Success!", "Go check out your post.", ()=>navigate('/community/post/'+res.data));
+                dialog.alert.openAlertDialog(
+                    "Success!",
+                    "Go check out your post.",
+                    ()=>navigate('/community/post/'+res.data));
             })
             .catch((error) => {
                 console.error('API 호출 오류:', error);
@@ -110,7 +153,10 @@ const PostEditor = () => {
                 },
             )
             .then((res) => {
-                dialog.alert.openAlertDialog("Success!", "Go check out your post.", ()=>navigate('/community/post/'+postId));
+                dialog.alert.openAlertDialog(
+                    "Success!",
+                    "Go check out your post.",
+                    ()=>navigate('/community/post/'+postId));
             })
             .catch((error) => {
                 console.error('API 호출 오류:', error);
@@ -119,52 +165,54 @@ const PostEditor = () => {
     };
 
     const location = useLocation();
+    const [newImgs, setNewImgs] = useState([]);
+    const [existingImgs, setExistingImgs] = useState(location.state?.images || []);
+    const [deleteImgs, setDeleteImgs] = useState([])
     const [fileImgs, setFileImgs] = useState(location.state?.images || []);
     const [hashtag, setHashtag] = useState(location.state?.hashtag || '');
     const [content, setContent] = useState(location.state?.content || '');
+
+    const handleDeleteImg = (indexToRemove) => {
+        setDeleteImgs([...deleteImgs, existingImgs[indexToRemove]]);
+        setExistingImgs([...existingImgs.slice(0, indexToRemove), ...existingImgs.slice(indexToRemove + 1)])
+    }
 
     const onClick = (e) => {
         e.preventDefault(); // 폼 제출 시 새로고침 방지
 
         if (!content.trim()) {
             // alert('Please enter the content');
-            dialog.alert.openAlertDialog('Error', 'Please enter the content');
-
+            dialog.alert.openAlertDialog(
+                'Error',
+                'Please enter the content'
+            );
             return;
         }
-        const data = new FormData();
-        fileImgs.forEach((file, index) => {
-            data.append('multipartFile', file); // 파일 추가
+        const formData = new FormData();
+        newImgs.forEach((file) => {
+            formData.append('multipartFile', file); // 파일 추가
         });
-        data.append('hashtag', hashtag);
-        data.append('content', content);
+        formData.append('deleteImages', deleteImgs);
+        formData.append('existingImages', existingImgs);
+        formData.append('hashtag', hashtag);
+        formData.append('content', content);
 
 
         if(location.state?.type === "mod"){
-            // modifyApi(data);
+            modifyApi(formData);
         }else{
-            registerApi(data);
+            registerApi(formData);
         }
     }
 
     return (
         <div className="post-editor" style={{ margin: '10px', height: '600px' }}>
-            {/*<div className="profile"*/}
-            {/*     style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', marginBottom: '10px' }}*/}
-            {/*     // member={member.email}*/}
-            {/*>*/}
-            {/*    <Avatar alt="Remy Sharp"*/}
-            {/*            // src={getCountryImgById(member.country == undefined? "" : member.country.code)} sx={{ marginRight: '10px' }}*/}
-            {/*    />*/}
-            {/*    <Typography>*/}
-            {/*        /!*{member.nickname}*!/*/}
-            {/*    </Typography>*/}
-            {/*</div>*/}
+
             <br />
             <BasicTextField name="hashtag" label={'Hashtag'} variant={'outlined'} sx={{ width: '100%' }}
                             fullWidth={true}
                             onChange={(e)=>{setHashtag(e.target.value)}}
-                            value={hashtag}
+                            defaultValue={hashtag}
                             inputProps={{ maxLength: 20 }}>
             </BasicTextField>
             <div style={{ width: '100%', textAlign: 'right' }}>
@@ -176,7 +224,7 @@ const PostEditor = () => {
                             fullWidth={true} rows={5}
                             multiline={true}
                             onChange={(e)=>{setContent(e.target.value)}}
-                            value={content}
+                            defaultValue={content}
                             inputProps={{ maxLength: 500 }}
             >
             </BasicTextField>
@@ -184,7 +232,7 @@ const PostEditor = () => {
                 <Typography variant="caption" color="text.secondary">{content.length} / 500</Typography>
             </div>
             <br />
-            <SelectImage fileImgs={fileImgs} setFileImgs={setFileImgs} />
+            <SelectImage existingImgs={existingImgs} handleDeleteImg={handleDeleteImg} setNewImgs={setNewImgs} newImgs={newImgs}/>
 
             <div style={{ width: '100%', textAlign: 'center', marginTop:'10px'}}>
                 <BasicButton

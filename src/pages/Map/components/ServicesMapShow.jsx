@@ -2,17 +2,23 @@ import React, { useEffect, useRef, useState } from 'react';
 import useGeolocation from './UseGeolocation';
 import useServicesMarkerApi from '../api/UseServicesMarkerApi';
 import Box from '@mui/material/Box';
+import { useSelected } from '../provider/SelectedProvider';
+import { useMap } from '../provider/MapProvider';
 
-const ServicesMapShow = ({ handleServiceSelect, state }) => {
+const ServicesMapShow = () => {
     const mapRef = useRef(null);
-
+    const { state } = useMap();
+    const { handleServiceSelect } = useSelected();
     const { currentMyLocation, locationLoading } = useGeolocation();
-    const { data: servicesData, apiLoading } = useServicesMarkerApi(state);
+    const { servicesData, apiLoading } = useServicesMarkerApi(state);
     const { naver } = window;
     const [map, setMap] = useState(null);
 
     useEffect(() => {
-        if (!naver || !mapRef.current) return;
+        if (!naver || !mapRef.current) {
+            console.log('');
+            return;
+        }
 
         if (!map) {
             if (
@@ -64,6 +70,7 @@ const ServicesMapShow = ({ handleServiceSelect, state }) => {
                         service.name,
                         service.content,
                         service.serviceType,
+                        service.likeCnt,
                     );
                 });
             });
