@@ -34,6 +34,7 @@ import CurrencyConverter from './pages/CurrencyConverter/CurrencyConverter';
 import useAlertDialog from './hooks/useAlertDialog/useAlertDialog';
 import useConfirmDialog from './hooks/useConfirmDialog/useConfirmDialog';
 import MyLikes from './pages/MyLikes/MyLikes';
+import Faq from './pages/Faq/Faq';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -269,6 +270,15 @@ function App() {
                         element={
                             <PageLayout menuName={'Currency Converter'}>
                                 <CurrencyConverter />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/faq'}
+                        element={
+                            <PageLayout menuName={'FAQ'}>
+                                <Faq />
                             </PageLayout>
                         }
                     />
