@@ -38,6 +38,7 @@ const useServicesMarkerApi = (state) => {
         fetchServiceList();
     }, [fetchServiceList, state]); // state가 추가되어야 함
 
+
     return { servicesData, apiLoading };
 };
 
