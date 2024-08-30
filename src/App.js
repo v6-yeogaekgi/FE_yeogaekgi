@@ -179,7 +179,10 @@ function App() {
                     />
                     <Route
                         path={'/community/imageDetail/:postId'}
-                        element={<ImageDetail />}
+                        element={
+                            <PageLayout menuName={''}>
+                                <ImageDetail />
+                            </PageLayout>}
                     />
                     <Route
                         path={'/mypage'}
