@@ -33,6 +33,7 @@ import CurrencyConverter from './pages/CurrencyConverter/CurrencyConverter';
 
 import useAlertDialog from './hooks/useAlertDialog/useAlertDialog';
 import useConfirmDialog from './hooks/useConfirmDialog/useConfirmDialog';
+import MyLikes from './pages/MyLikes/MyLikes';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -250,6 +251,15 @@ function App() {
                         element={
                             <PageLayout menuName={'My Reviews'}>
                                 <MyReviews />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/mypage/likes'}
+                        element={
+                            <PageLayout menuName={'My Likes'}>
+                                <MyLikes />
                             </PageLayout>
                         }
                     />
