@@ -95,6 +95,7 @@ function App() {
             .get(areaUrl)
                 .then((res) => {
                     if(res) {
+                        console.log(res.data);
                         setArea(res.data);
                         const defaultArea = res.data.includes('서울') ? '서울' : res.data[0];
                         localStorage.setItem('selectArea', defaultArea);

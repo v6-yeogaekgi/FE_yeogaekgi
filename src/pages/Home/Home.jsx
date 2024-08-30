@@ -88,21 +88,22 @@ const Home = () => {
     const handleStorageChange = () => {
         const newSelectArea = localStorage.getItem('selectArea');
         console.log('selectArea changed:', newSelectArea);
-        
+        // const formData = new FormData();
+        // formData.append('area', newSelectArea);
+        // console.log("formData: ",formData);
+
         // Axios POST 요청
-        axios.post(
-            '/usercard/home/list', 
-            { selectArea: newSelectArea }, 
-            {
+        axios
+            .post('usercard/area', JSON.stringify(newSelectArea), {
                 headers: {
                     Authorization: token,
                     'Content-Type': 'application/json',
                 },
             })
-            .then(response => {
+            .then((response) => {
                 console.log('POST request successful', response.data);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error in POST request', error);
             });
     };
@@ -115,7 +116,10 @@ const Home = () => {
 
         // 컴포넌트 언마운트 시 이벤트 리스너 제거
         return () => {
-            window.removeEventListener('localStorageChange', handleStorageChange);
+            window.removeEventListener(
+                'localStorageChange',
+                handleStorageChange,
+            );
         };
     }, []);
 
@@ -132,12 +136,12 @@ const Home = () => {
                             dynamicBullets: true,
                         }}
                         modules={[Pagination]}
-                        style={{height: '100%', borderRadius: 25}}
+                        style={{ height: '100%', borderRadius: 25 }}
                     >
                         {data &&
                             data.map((cardData, index) => (
                                 <SwiperSlide key={index}>
-                                    <HomeCardItem data={cardData}/>
+                                    <HomeCardItem data={cardData} />
                                 </SwiperSlide>
                             ))}
                     </Swiper>
