@@ -32,7 +32,6 @@ import MyReviews from './pages/MyReviews/MyReviews';
 import { SelectedProvider } from './pages/Map/provider/SelectedProvider';
 import { MapProvider } from './pages/Map/provider/MapProvider';
 import CurrencyConverter from './pages/CurrencyConverter/CurrencyConverter';
-
 import useAlertDialog from './hooks/useAlertDialog/useAlertDialog';
 import useConfirmDialog from './hooks/useConfirmDialog/useConfirmDialog';
 import MyLikes from './pages/MyLikes/MyLikes';
