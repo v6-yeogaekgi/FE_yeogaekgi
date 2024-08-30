@@ -35,6 +35,7 @@ import CurrencyConverter from './pages/CurrencyConverter/CurrencyConverter';
 import useAlertDialog from './hooks/useAlertDialog/useAlertDialog';
 import useConfirmDialog from './hooks/useConfirmDialog/useConfirmDialog';
 import MyLikes from './pages/MyLikes/MyLikes';
+import Faq from './pages/Faq/Faq';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -49,6 +50,7 @@ const PageLayout = ({ children, menuName }) => {
                 '&::-webkit-scrollbar': {
                     display: 'none', // Hide scrollbar in Webkit browsers
                 },
+                backgroundColor: '#f0f4f8',
             }}
         >
             <Header menuName={menuName} />
@@ -276,6 +278,15 @@ function App() {
                         element={
                             <PageLayout menuName={'Currency Converter'}>
                                 <CurrencyConverter />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/faq'}
+                        element={
+                            <PageLayout menuName={'FAQ'}>
+                                <Faq />
                             </PageLayout>
                         }
                     />
