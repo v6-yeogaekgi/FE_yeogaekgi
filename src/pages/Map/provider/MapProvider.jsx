@@ -17,6 +17,10 @@ export const MapProvider = ({ children }) => {
         });
     };
 
+    Object.keys(state).forEach((key) => {
+        console.log(key, state[key]);
+    });
+
     useEffect(() => {
         console.log('다시실행중');
         const naverMapClientId = process.env.REACT_APP_NAVER_MAP_CLIENT_ID;
