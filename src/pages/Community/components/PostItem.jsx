@@ -311,20 +311,27 @@ const PostItem = ({
                         </Typography>
                     </CardContent>
                     {images && images.length > 0 && (
-                        <CardContent
+                        <Box
                             onClick={(e) => {
                                 e.stopPropagation();
                                 clickImgs(postId);
                             }}
                             className="imageArea"
                             sx={{
-                                width: '348px',
-                                maxHeight: '220px',
-                                zIndex: '100',
+                                width: '100%',
+                                height: '100%',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                img: {
+                                    width: '100%',
+                                    height: 'auto',
+                                    borderRadius: 5,
+                                },
                             }}
                         >
                             <Images images={images} postId={postId}></Images>
-                        </CardContent>
+                        </Box>
                     )}
                 </CardActionArea>
                 <CardActions
