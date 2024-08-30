@@ -44,21 +44,19 @@ const Home = () => {
     const token = localStorage.getItem('token');
     const uri = protocol + 'usercard/list';
 
+    const selectArea = localStorage.getItem('selectArea');
+
     // console.log(data);
 
     const getApi = () => {
         //toDo 비활성화 카드(status === 0) 맨 아래에서 렌더링 되도록 수정
         axios
-            .post(
-                uri,
-                {},
-                {
-                    headers: {
-                        Authorization: token,
-                        'Content-Type': 'application/json',
-                    },
+            .post(protocol + 'usercard/area', selectArea, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'text/plain',
                 },
-            )
+            })
             .then((res) => {
                 if (Array.isArray(res.data) && res.data.length > 0) {
                     const filteredData = res.data.filter(
@@ -94,14 +92,33 @@ const Home = () => {
 
         // Axios POST 요청
         axios
-            .post('usercard/area', JSON.stringify(newSelectArea), {
+            .post(protocol + 'usercard/area', newSelectArea, {
                 headers: {
                     Authorization: token,
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'text/plain',
                 },
             })
-            .then((response) => {
-                console.log('POST request successful', response.data);
+            .then((res) => {
+                console.log('POST request successful', res.data);
+                if (Array.isArray(res.data) && res.data.length > 0) {
+                    const filteredData = res.data.filter(
+                        (item) => item.status !== 2,
+                    );
+                    const formattedData = filteredData.map((item) => ({
+                        userCardId: item.userCardId,
+                        expiryDate: item.expiryDate,
+                        payBalance: item.payBalance,
+                        transitBalance: item.transitBalance,
+                        starred: item.starred,
+                        status: item.status,
+                        cardId: item.cardId,
+                        design: item.design,
+                        area: item.area,
+                        cardName: item.cardName,
+                        memberId: item.memberId,
+                    }));
+                    setData(formattedData);
+                }
             })
             .catch((error) => {
                 console.error('Error in POST request', error);
