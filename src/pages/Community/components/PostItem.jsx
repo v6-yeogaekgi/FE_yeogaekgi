@@ -15,7 +15,6 @@ import { getCountryImgById } from '../../../util';
 import BasicButton from '../../../components/BasicButton/BasicButton';
 import { AllStateContext } from '../../../App';
 import axios from 'axios';
-import { CommentDispatchContext } from '../Post';
 import { getCountryCodeForTranslate } from '../../../util';
 
 const Images = ({ images, postId }) => {
@@ -282,17 +281,13 @@ const PostItem = ({
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 img: {
-                                    width: '80%',
+                                    width: '100%',
                                     height: 'auto',
-                                    borderRadius: 5, // 부모의 borderRadius를 상속받음
+                                    borderRadius: 5,
                                 },
                             }}
                         >
-                            <Images
-                                images={images}
-                                postId={postId}
-                                sx={{ borderRadius: 200, overflow: 'hidden' }}
-                            ></Images>
+                            <Images images={images} postId={postId}></Images>
                         </Box>
                     </CardContent>
                 </CardActionArea>
@@ -331,8 +326,12 @@ const PostItem = ({
                             {commentCnt}
                         </Typography>
                     </div>
-                    <div
-                        style={{ display: 'flex', justifyContent: 'flex-end' }}
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            mr: 0.5,
+                        }}
                     >
                         {currentMemberId == memberId ? (
                             <Button
@@ -420,7 +419,7 @@ const PostItem = ({
                             }}
                             onClick={goDeepL}
                         />
-                    </div>
+                    </Box>
                 </CardActions>
             </Card>
 
