@@ -1,11 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect, useContext } from 'react';
-import {
-    Button,
-    CardActionArea,
-    CardActions,
-    ListItemAvatar,
-} from '@mui/material';
+import { Button, CardActionArea, CardActions, Box } from '@mui/material';
 import { ImageList, ImageListItem } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -90,7 +85,7 @@ const PostItem = ({
     currentMemberId,
     currentMemberCode,
     deepLApi,
-    clickMethod
+    clickMethod,
 }) => {
     const navigate = useNavigate();
     const [viewLikeState, setViewLikeState] = useState(likeState);
@@ -102,24 +97,27 @@ const PostItem = ({
     });
     // const { deepLApi } = useContext(CommentDispatchContext);
     const clickHashtag = (hashtagParam) => {
-        console.log(hashtagParam)
+        console.log(hashtagParam);
         navigate('/community', {
             state: {
-                hashtag: hashtagParam
+                hashtag: hashtagParam,
             },
         });
-    }
+    };
     const clickImgs = (postIdParam) => {
-        navigate('/community/imageDetail/'+postIdParam);
-    }
+        navigate('/community/imageDetail/' + postIdParam, {
+            state: {
+                images: images,
+            },
+        });
+    };
     const [translatedContent, setTranslatedContent] = useState(null);
     const [translatedHashtag, setTranslatedHashtag] = useState(null);
     const [isTranslated, setIsTranslated] = useState(false);
 
     const { protocol, dialog } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
-    useEffect(() => {
-    }, [viewContent]);
+    useEffect(() => {}, [viewContent]);
 
     // DeepL API
     const goDeepL = async () => {
@@ -203,7 +201,15 @@ const PostItem = ({
 
     return (
         <div className="PostItem" style={{ marginBottom: '5px' }}>
-            <Card sx={{ padding: '10px' }}>
+            <Card
+                sx={{
+                    padding: '10px',
+                    boxShadow: 'none',
+                    borderRadius: 5,
+                    backgroundColor: '#ffffff',
+                    mb: 2,
+                }}
+            >
                 <CardActions
                     className="post-header"
                     sx={{
@@ -224,8 +230,18 @@ const PostItem = ({
                         <Avatar
                             alt="Country Flag"
                             src={getCountryImgById(code)}
+                            sx={{
+                                width: 25,
+                                height: 25,
+                            }}
                         />
-                        <Typography sx={{ marginLeft: '8px' }}>
+                        <Typography
+                            sx={{
+                                marginLeft: '8px',
+                                fontWeight: 'bold',
+                                fontFamily: 'Noto Sans',
+                            }}
+                        >
                             {nickname}
                         </Typography>
                     </div>
@@ -234,6 +250,7 @@ const PostItem = ({
                             component="span"
                             variant="caption"
                             color="text.secondary"
+                            sx={{ fontFamily: 'Noto Sans', mr: 0.5 }}
                         >
                             {new Date(regDate).toLocaleDateString()}
                             {modDate && modDate !== regDate && (
@@ -254,7 +271,6 @@ const PostItem = ({
                     onClick={(event) => {
                         event.stopPropagation();
                     }}
-
                 >
                     <CardContent
                         onClick={() => {
@@ -264,48 +280,59 @@ const PostItem = ({
                         }}
                     >
                         <div
-                            // onClick={(e)=> {
-                            //     e.stopPropagation();
-                            //     clickHashtag(hashtag);
-                            // }}
-                            // style={{
-                            //     zIndex:"100"
-                            // }}
+                        // onClick={(e)=> {
+                        //     e.stopPropagation();
+                        //     clickHashtag(hashtag);
+                        // }}
+                        // style={{
+                        //     zIndex:"100"
+                        // }}
                         >
-                            {hashtag && <a 
-                                href={'#'}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    clickHashtag(hashtag);
-                                }}
-                            >
-                                #{isTranslated ? translatedHashtag : hashtag}
-                            </a>}
-                            
+                            {hashtag && (
+                                <a
+                                    href={'#'}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        clickHashtag(hashtag);
+                                    }}
+                                >
+                                    #
+                                    {isTranslated ? translatedHashtag : hashtag}
+                                </a>
+                            )}
                         </div>
                         <Typography
                             className="post-content"
                             variant="body2"
                             color="text.primary"
+                            sx={{ fontFamily: 'Noto Sans' }}
                         >
                             {isTranslated ? translatedContent : content}
                         </Typography>
                     </CardContent>
-                    {images && images.length > 0 &&
-                        <CardContent
-                            onClick={(e)=> {
+                    {images && images.length > 0 && (
+                        <Box
+                            onClick={(e) => {
                                 e.stopPropagation();
                                 clickImgs(postId);
                             }}
                             className="imageArea"
-                            sx={{ width: '348px', maxHeight: '220px', zIndex:"100" }}
+                            sx={{
+                                width: '100%',
+                                height: '100%',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                img: {
+                                    width: '100%',
+                                    height: 'auto',
+                                    borderRadius: 5,
+                                },
+                            }}
                         >
-                            <Images
-                                images={images}
-                                postId={postId}
-                            ></Images>
-                        </CardContent>
-                    }
+                            <Images images={images} postId={postId}></Images>
+                        </Box>
+                    )}
                 </CardActionArea>
                 <CardActions
                     className="post-footer"
@@ -342,8 +369,12 @@ const PostItem = ({
                             {commentCnt}
                         </Typography>
                     </div>
-                    <div
-                        style={{ display: 'flex', justifyContent: 'flex-end' }}
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            mr: 0.5,
+                        }}
                     >
                         {currentMemberId == memberId ? (
                             <Button
@@ -399,10 +430,13 @@ const PostItem = ({
                                         marginRight: 0,
                                     },
                                 }}
-                                    onClick={()=>{
-                                        dialog.confirm.openConfirmDialog("Confirm Deletion","Are you sure you want to delete this?",deleteApi);
-                                    }
-                                }
+                                onClick={() => {
+                                    dialog.confirm.openConfirmDialog(
+                                        'Confirm Deletion',
+                                        'Are you sure you want to delete this?',
+                                        deleteApi,
+                                    );
+                                }}
                             />
                         ) : (
                             <></>
@@ -428,7 +462,7 @@ const PostItem = ({
                             }}
                             onClick={goDeepL}
                         />
-                    </div>
+                    </Box>
                 </CardActions>
             </Card>
 

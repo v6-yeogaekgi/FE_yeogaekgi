@@ -34,10 +34,8 @@ export default function MyPage(props) {
         navigate('/mypage/Likes');
     };
 
-
-
     return (
-        <>
+        <div>
             <Box
                 sx={{
                     minHeight: '100vh',
@@ -45,26 +43,32 @@ export default function MyPage(props) {
                     flexDirection: 'column',
                     justifyContent: 'space-between',
                     position: 'relative', //
-                    overflow: 'hidden', //
+                    overflow: 'hidden',
+                    backgroundColor: 'white',
+                    paddingTop: 0,
+                    marginTop: 0,
                     // paddingBottom: '70px',
                 }}
             >
                 <List>
+                    <Divider variant="middle"/>
                     <ListItem>
-                        <ListItemButton onClick={onClickMyReviews}>My Reviews</ListItemButton>
+                        <ListItemButton onClick={onClickMyReviews}>
+                            My Reviews
+                        </ListItemButton>
                     </ListItem>
-                    <Divider />
+                    <Divider variant="middle" />
                     <ListItem>
-                        <ListItemButton onClick={onClickMyLikes}>My Likes</ListItemButton>
+                        <ListItemButton onClick={onClickMyLikes}>
+                            My Likes
+                        </ListItemButton>
                     </ListItem>
-                    <Divider />
+                    <Divider variant="middle" />
                     <ListItem
                         onClick={onClickLogout}
                         sx={{ paddingBottom: 0, marginBottom: 0 }}
                     >
-                        <ListItemButton>
-                            Logout
-                        </ListItemButton>
+                        <ListItemButton>Logout</ListItemButton>
                     </ListItem>
                     {/* <ListItem sx={{ paddingTop: 0, marginTop: 0 }}>
                         <Typography
@@ -80,6 +84,6 @@ export default function MyPage(props) {
                     </ListItem> */}
                 </List>
             </Box>
-        </>
+        </div>
     );
 }

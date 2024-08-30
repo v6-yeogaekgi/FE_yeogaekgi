@@ -17,6 +17,7 @@ import cardImg from '../../img/Design.png';
 import axios from 'axios';
 import { AllStateContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
+import BasicButton from '../../components/BasicButton/BasicButton';
 
 const StyledTextField = styled(TextField)({
     '& .MuiInputBase-input': {
@@ -45,8 +46,8 @@ export default function Conversion({ data }) {
         balance: transitBalance,
     });
 
-    React.useEffect(()=>{
-        if(transferAmount > leftSide.balance) {
+    React.useEffect(() => {
+        if (transferAmount > leftSide.balance) {
             setTransferAmount(leftSide.balance);
         }
     }, [transferAmount, leftSide.balance]);
@@ -76,31 +77,34 @@ export default function Conversion({ data }) {
         // alert(
         //     `Transferring ${transferAmount}₩ from ${leftSide.label} to ${rightSide.label}`,
         // );
-        axios.post(
-            conversionUrl,
-            {
-                krwAmount: transferAmount,
-                transferType: transferType,
-                userCardNo: userCardId,
-            },
-            {
-                headers: {
-                    Authorization: token,
-                    'Content-Type': 'application/json',
+        axios
+            .post(
+                conversionUrl,
+                {
+                    krwAmount: transferAmount,
+                    transferType: transferType,
+                    userCardNo: userCardId,
                 },
+                {
+                    headers: {
+                        Authorization: token,
+                        'Content-Type': 'application/json',
+                    },
+                },
+            )
+            .then(function (res) {
+                if (res.ok) {
+                    console.log('conversion success');
+                    navigate('/wallet/detail', { state: { cardData } });
+                }
             })
-        .then(function(res) {
-            if(res.ok) {
-                console.log("conversion success");
-                navigate('/wallet/detail', {state: {cardData}});
-            }
-        })
-        .catch(function(error) {
-            console.log("axios api error");
-        })
-        .then(function() { // always
-            navigate('/wallet/detail', {state: {cardData}});
-        });
+            .catch(function (error) {
+                console.log('axios api error');
+            })
+            .then(function () {
+                // always
+                navigate('/wallet/detail', { state: { cardData } });
+            });
     };
     return (
         <>
@@ -144,80 +148,107 @@ export default function Conversion({ data }) {
                                 alt="Card Design"
                             />
                         </Card>
-
-                        <Grid
-                            container
-                            spacing={2}
-                            alignItems="center"
-                            sx={{ mb: 2, mt: 2 }}
+                        {/* ----- 절취선 ----- */}
+                        <Box
+                            sx={{
+                                width: '90%',
+                                backgroundColor: 'white',
+                                // marginLeft: 'calc(-45vw + 50%)',
+                                // paddingLeft: 'calc(60vw - 50%)',
+                                paddingRight: 'calc(5vw)',
+                                paddingLeft: 'calc(5vw)',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                                paddingBottom: '20px',
+                                borderRadius: '20px',
+                                // borderRadius: '80px',
+                            }}
                         >
-                            <Grid item xs={5}>
-                                <Typography>{leftSide.label}</Typography>
-                                <StyledTextField
-                                    fullWidth
-                                    variant="outlined"
-                                    value={Math.max(leftSide.balance - transferAmount, 0)}
-                                    InputProps={{ readOnly: true }}
-                                />
-                            </Grid>
                             <Grid
-                                item
-                                xs={2}
-                                sx={{ textAlign: 'center', mt: 3 }}
+                                container
+                                spacing={2}
+                                alignItems="center"
+                                sx={{ mb: 4, mt: 2 }}
                             >
-                                <ArrowForward />
+                                <Grid item xs={5}>
+                                    <Typography variant='subtitle1' marginBottom="8px">{leftSide.label}</Typography>
+                                    <StyledTextField
+                                        fullWidth
+                                        variant="outlined"
+                                        value={Math.max(
+                                            leftSide.balance - transferAmount,
+                                            0,
+                                        )}
+                                        InputProps={{ readOnly: true }}
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={2}
+                                    sx={{ textAlign: 'center', mt: 5 }}
+                                >
+                                    <ArrowForward />
+                                </Grid>
+                                <Grid item xs={5}>
+                                    <Typography variant='subtitle1' marginBottom="8px">{rightSide.label}</Typography>
+                                    <StyledTextField
+                                        fullWidth
+                                        variant="outlined"
+                                        value={
+                                            rightSide.balance + transferAmount
+                                        }
+                                        InputProps={{ readOnly: true }}
+                                    />
+                                </Grid>
                             </Grid>
-                            <Grid item xs={5}>
-                                <Typography>{rightSide.label}</Typography>
-                                <StyledTextField
+
+                            <BasicButton
+                                variant="contained"
+                                text="Switch"
+                                startIcon={<SwapVert />}
+                                onClick={handleSwitch}
+                                btnColor="#2e85e0"
+                                width="100%"
+                                height=""
+                            >
+                                Switch
+                            </BasicButton>
+
+                            <Box sx={{ display: 'flex', mb: 4, mt: 4 }}>
+                                <TextField
                                     fullWidth
                                     variant="outlined"
-                                    value={rightSide.balance + transferAmount}
-                                    InputProps={{ readOnly: true }}
+                                    type="text"
+                                    inputProps={{
+                                        inputMode: 'numeric',
+                                        pattern: '[0-9]*',
+                                    }}
+                                    value={
+                                        transferAmount === null
+                                            ? ''
+                                            : transferAmount
+                                    }
+                                    onChange={handleTransferAmountChange}
+                                    placeholder="0"
                                 />
-                            </Grid>
-                        </Grid>
+                                <IconButton
+                                    onClick={() => setTransferAmount(null)}
+                                    sx={{ ml: -5, zIndex: 1 }}
+                                >
+                                    <Clear />
+                                </IconButton>
+                            </Box>
 
-                        <Button
-                            fullWidth
-                            variant="outlined"
-                            startIcon={<SwapVert />}
-                            onClick={handleSwitch}
-                            sx={{ mb: 2, mt: 1 }}
-                        >
-                            Switch
-                        </Button>
-
-                        <Box sx={{ display: 'flex', mb: 2, mt: 1 }}>
-                            <TextField
-                                fullWidth
-                                variant="outlined"
-                                type="text"
-                                inputProps={{
-                                    inputMode: 'numeric',
-                                    pattern: '[0-9]*'
-                                }}
-                                value={transferAmount === null ? '' : transferAmount}
-                                onChange={handleTransferAmountChange}
-                                placeholder="0"
-                            />
-                            <IconButton
-                                onClick={() => setTransferAmount(null)}
-                                sx={{ ml: -5, zIndex: 1 }}
-                            >
-                                <Clear />
-                            </IconButton>
+                            <BasicButton
+                                variant="contained"
+                                color="primary"
+                                onClick={handleTransfer}
+                                text="Transfer"
+                                width="100%"
+                                height=""
+                                btnColor="#2e85e0"
+                            ></BasicButton>
                         </Box>
-
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            onClick={handleTransfer}
-                            sx={{ mt: 2 }}
-                        >
-                            Transfer
-                        </Button>
                     </Box>
                 </Box>
             </Box>
