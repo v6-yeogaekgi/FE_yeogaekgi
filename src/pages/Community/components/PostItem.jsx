@@ -1,11 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect, useContext } from 'react';
-import {
-    Button,
-    CardActionArea,
-    CardActions,
-    ListItemAvatar,
-} from '@mui/material';
+import { Button, CardActionArea, CardActions, Box } from '@mui/material';
 import { ImageList, ImageListItem } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -106,8 +101,7 @@ const PostItem = ({
 
     const { protocol, dialog } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
-    useEffect(() => {
-    }, [viewContent]);
+    useEffect(() => {}, [viewContent]);
 
     // DeepL API
     const goDeepL = async () => {
@@ -191,7 +185,15 @@ const PostItem = ({
 
     return (
         <div className="PostItem" style={{ marginBottom: '5px' }}>
-            <Card sx={{ padding: '10px' }}>
+            <Card
+                sx={{
+                    padding: '10px',
+                    boxShadow: 'none',
+                    borderRadius: 5,
+                    backgroundColor: '#ffffff',
+                    mb: 2,
+                }}
+            >
                 <CardActions
                     className="post-header"
                     sx={{
@@ -212,8 +214,18 @@ const PostItem = ({
                         <Avatar
                             alt="Country Flag"
                             src={getCountryImgById(code)}
+                            sx={{
+                                width: 25,
+                                height: 25,
+                            }}
                         />
-                        <Typography sx={{ marginLeft: '8px' }}>
+                        <Typography
+                            sx={{
+                                marginLeft: '8px',
+                                fontWeight: 'bold',
+                                fontFamily: 'Noto Sans',
+                            }}
+                        >
                             {nickname}
                         </Typography>
                     </div>
@@ -222,6 +234,7 @@ const PostItem = ({
                             component="span"
                             variant="caption"
                             color="text.secondary"
+                            sx={{ fontFamily: 'Noto Sans', mr: 0.5 }}
                         >
                             {new Date(regDate).toLocaleDateString()}
                             {modDate && modDate !== regDate && (
@@ -246,22 +259,41 @@ const PostItem = ({
                     }}
                 >
                     <CardContent>
-                        <Typography className="hashtag" color="primary">
+                        <Typography
+                            className="hashtag"
+                            color="primary"
+                            sx={{ fontFamily: 'Noto Sans' }}
+                        >
                             {isTranslated ? translatedHashtag : hashtag}
                         </Typography>
                         <Typography
                             className="post-content"
                             variant="body2"
                             color="text.primary"
+                            sx={{ fontFamily: 'Noto Sans' }}
                         >
                             {isTranslated ? translatedContent : content}
                         </Typography>
-                    </CardContent>
-                    <CardContent
-                        className="imageArea"
-                        style={{ width: '348px', maxHeight: '220px' }}
-                    >
-                        <Images images={images} postId={postId}></Images>
+                        <Box
+                            sx={{
+                                width: '100%',
+                                height: '100%',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                img: {
+                                    width: '80%',
+                                    height: 'auto',
+                                    borderRadius: 5, // 부모의 borderRadius를 상속받음
+                                },
+                            }}
+                        >
+                            <Images
+                                images={images}
+                                postId={postId}
+                                sx={{ borderRadius: 200, overflow: 'hidden' }}
+                            ></Images>
+                        </Box>
                     </CardContent>
                 </CardActionArea>
                 <CardActions
@@ -356,10 +388,13 @@ const PostItem = ({
                                         marginRight: 0,
                                     },
                                 }}
-                                    onClick={()=>{
-                                        dialog.confirm.openConfirmDialog("Confirm Deletion","Are you sure you want to delete this?",deleteApi);
-                                    }
-                                }
+                                onClick={() => {
+                                    dialog.confirm.openConfirmDialog(
+                                        'Confirm Deletion',
+                                        'Are you sure you want to delete this?',
+                                        deleteApi,
+                                    );
+                                }}
                             />
                         ) : (
                             <></>

@@ -1,12 +1,13 @@
 import * as React from 'react';
 import PostItem from './PostItem';
+import { Box } from '@mui/material';
 
-
-const PostList = ({ posts, likeList=[], alertDialog, confirmDialog }) => {
+const PostList = ({ posts, likeList = [], alertDialog, confirmDialog }) => {
     return (
-        <div className="PostList">
+        <Box className="PostList" sx={{ mr: 2, ml: 2 }}>
             {posts.map((post) => (
-                <PostItem key={post.postId}
+                <PostItem
+                    key={post.postId}
                     alertDialog={alertDialog}
                     confirmDialog={confirmDialog}
                     postId={post.postId}
@@ -21,13 +22,12 @@ const PostList = ({ posts, likeList=[], alertDialog, confirmDialog }) => {
                     regDate={post.regDate}
                     modDate={post.modDate}
                     likeState={likeList.includes(post.postId)}
-                    parentPage={"list"}
+                    parentPage={'list'}
                     currentMemberId={post.currentMemberId}
-
                 />
             ))}
-        </div>
+        </Box>
     );
-}
+};
 
 export default PostList;
