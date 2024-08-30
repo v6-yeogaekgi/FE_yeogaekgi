@@ -11,7 +11,8 @@ export default function Main(props) {
     // ======================== 무한스크롤 구현 ========================
     const observeTarget = useRef(null);    // observe 타겟이 될 요소
     const callback = (entries) =>{ // target이 화면에 나타날때만 호출됨.
-        if(isLoading || !hasNext){ return; } // 로딩중이면 무사
+        if(isLoading || !hasNext){ return; }// 로딩중이면 무사
+        console.log("hasNext: ",hasNext)
         entries.forEach(entry => {
             if(entry.isIntersecting){
                 setSearch({
@@ -50,26 +51,29 @@ export default function Main(props) {
     useEffect(() => {
         observer.observe(observeTarget.current);    // observe 타겟 요소 관측 시작
         getLikeListApi();
-        if (location.state && location.state.hashtag) {
+        if (location.state && location.state.hashtag) { // hashtag 클릭 시
+            setPosts([]);
+            setIsLoading(false)
             console.log(location.state.hashtag)
             setSearch(prevSearch =>({
                 ...prevSearch,
                 type: "hashtag",
                 keyword: location.state.hashtag,
             }));
-            // 데이터 사용 후 상태를 클리어
-            // navigate('/community', { replace: true });
+
+            navigate('/community', { replace: true }); // 데이터 사용 후 상태를 클리어
         }
         return () => {
             // 컴포넌트가 언마운트될 때 실행될 작업
         };
-    }, []);
+    }, [location.state]);
 
     // 처음 렌더링 && search 조건 바뀔때 실행
     useEffect(() => {
         if (!isLoading) { // Api 호출 중이 아닐 때
             getListApi();
         }
+        console.log("hasNext: ",hasNext)
 
     }, [search]);
 
@@ -102,17 +106,14 @@ export default function Main(props) {
                 'Content-Type': 'application/json', // 데이터 형식을 명시
             },
         }).then((res) => {
-            console.log(res.data.hasNext);
             setPosts(prevPosts => [...prevPosts, ...res?.data?.content]); // 데이터 추가
-            // setPage(prevPage => { // page +1 해주기
-            //     const newPage = prevPage + 1;
-            //     return newPage;
-            // });
             setIsLoading(false);
             setHasNext(res.data.hasNext);
+            console.log('res.data:', res.data);
         }).catch((error) => {
             console.error('API 호출 오류:', error);
             setIsLoading(false);
+            setPosts(prevPosts => [...prevPosts]);
         });
     };
     const getLikeListApi = () => {

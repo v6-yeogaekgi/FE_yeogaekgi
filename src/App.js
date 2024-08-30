@@ -52,7 +52,7 @@ const PageLayout = ({ children, menuName, areas }) => {
                 '&::-webkit-scrollbar': {
                     display: 'none', // Hide scrollbar in Webkit browsers
                 },
-                backgroundColor: '#f0f4f8',
+                backgroundColor: menuName === "Account" ? 'white' : '#f0f4f8',
             }}
         >
             <Header menuName={menuName} areas={areas} />
@@ -225,7 +225,10 @@ function App() {
                     />
                     <Route
                         path={'/community/imageDetail/:postId'}
-                        element={<ImageDetail />}
+                        element={
+                            <PageLayout menuName={''}>
+                                <ImageDetail />
+                            </PageLayout>}
                     />
                     <Route
                         path={'/mypage'}
