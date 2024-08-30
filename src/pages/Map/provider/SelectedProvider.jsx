@@ -62,19 +62,17 @@ export const SelectedProvider = ({ children }) => {
     };
 
     const handleLikeChange = async (event) => {
-        const isChecked = event.target.checked;
         try {
             const response = await api.post(
                 `${protocol}services/like/${selectedService}`,
             );
 
-            // 응답 데이터 구조에 따라 처리
-            if (response.data['like add'] !== undefined) {
-                setViewLikeCnt(response.data['like add']);
-                setLike(response.data['likeCheckRs']);
-            } else if (response.data['like cancel'] !== undefined) {
-                setViewLikeCnt(response.data['like cancel']);
-                setLike(response.data['likeCheckRs']);
+            if (response.data === 'like add') {
+                setLike(true);
+                setViewLikeCnt((prevCount) => prevCount + 1);
+            } else if (response.data === 'like cancel') {
+                setLike(false);
+                setViewLikeCnt((prevCount) => prevCount - 1);
             }
         } catch (error) {
             console.error('There was an error sending the like status:', error);
