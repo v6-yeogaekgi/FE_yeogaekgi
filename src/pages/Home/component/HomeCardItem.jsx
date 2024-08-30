@@ -89,7 +89,7 @@ const HomeCardItem = ({ data }) => {
                                 </Grid>
 
                                 <Grid item xs={2}>
-                                    <StarCheckbox initialChecked={starred === 1} userCardId={userCardId}/>
+                                    <StarCheckbox initialChecked={starred === 1} userCardId={userCardId} isActive={status === 1}/>
                                 </Grid>
                             </Grid>
 
@@ -105,7 +105,7 @@ const HomeCardItem = ({ data }) => {
                                         Pay
                                     </Typography>
                                     <Typography variant="h6">
-                                        ₩{payBalance}
+                                        ₩ {payBalance}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={6}>
@@ -119,7 +119,7 @@ const HomeCardItem = ({ data }) => {
                                         Transit
                                     </Typography>
                                     <Typography variant="h6">
-                                        ₩{transitBalance}
+                                        ₩ {transitBalance}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -166,7 +166,7 @@ const HomeCardItem = ({ data }) => {
                                 }}
                                 onClick={handleBalanceConversionClick}
                             >
-                                Transfer
+                                Conversion
                             </Button>
                         </Grid>
                     </Grid>

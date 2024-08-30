@@ -15,6 +15,7 @@ import { getCountryImgById } from '../../../util';
 import BasicButton from '../../../components/BasicButton/BasicButton';
 import { AllStateContext } from '../../../App';
 import axios from 'axios';
+import { PostItemEventContext } from '../Main';
 import { getCountryCodeForTranslate } from '../../../util';
 
 const Images = ({ images, postId }) => {
@@ -84,6 +85,7 @@ const PostItem = ({
     currentMemberId,
     currentMemberCode,
     deepLApi,
+    clickMethod,
 }) => {
     const navigate = useNavigate();
     const [viewLikeState, setViewLikeState] = useState(likeState);
@@ -94,6 +96,21 @@ const PostItem = ({
         translateContent: null,
     });
     // const { deepLApi } = useContext(CommentDispatchContext);
+    const clickHashtag = (hashtagParam) => {
+        console.log(hashtagParam);
+        navigate('/community', {
+            state: {
+                hashtag: hashtagParam,
+            },
+        });
+    };
+    const clickImgs = (postIdParam) => {
+        navigate('/community/imageDetail/' + postIdParam, {
+            state: {
+                images: images,
+            },
+        });
+    };
     const [translatedContent, setTranslatedContent] = useState(null);
     const [translatedHashtag, setTranslatedHashtag] = useState(null);
     const [isTranslated, setIsTranslated] = useState(false);
@@ -196,7 +213,7 @@ const PostItem = ({
                 <CardActions
                     className="post-header"
                     sx={{
-                        dispaly: 'flex',
+                        display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
                     }}
@@ -251,20 +268,39 @@ const PostItem = ({
                 </CardActions>
                 <CardActionArea
                     className="post-content"
-                    onClick={() => {
-                        if (parentPage == 'list') {
-                            navigate('/community/post/' + postId);
-                        }
+                    onClick={(event) => {
+                        event.stopPropagation();
                     }}
                 >
-                    <CardContent>
-                        <Typography
-                            className="hashtag"
-                            color="primary"
-                            sx={{ fontFamily: 'Noto Sans' }}
+                    <CardContent
+                        onClick={() => {
+                            if (parentPage === 'list') {
+                                navigate('/community/post/' + postId);
+                            }
+                        }}
+                    >
+                        <div
+                        // onClick={(e)=> {
+                        //     e.stopPropagation();
+                        //     clickHashtag(hashtag);
+                        // }}
+                        // style={{
+                        //     zIndex:"100"
+                        // }}
                         >
-                            {isTranslated ? translatedHashtag : hashtag}
-                        </Typography>
+                            {hashtag && (
+                                <a
+                                    href={'#'}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        clickHashtag(hashtag);
+                                    }}
+                                >
+                                    #
+                                    {isTranslated ? translatedHashtag : hashtag}
+                                </a>
+                            )}
+                        </div>
                         <Typography
                             className="post-content"
                             variant="body2"
@@ -273,23 +309,23 @@ const PostItem = ({
                         >
                             {isTranslated ? translatedContent : content}
                         </Typography>
-                        <Box
+                    </CardContent>
+                    {images && images.length > 0 && (
+                        <CardContent
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                clickImgs(postId);
+                            }}
+                            className="imageArea"
                             sx={{
-                                width: '100%',
-                                height: '100%',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                img: {
-                                    width: '100%',
-                                    height: 'auto',
-                                    borderRadius: 5,
-                                },
+                                width: '348px',
+                                maxHeight: '220px',
+                                zIndex: '100',
                             }}
                         >
                             <Images images={images} postId={postId}></Images>
-                        </Box>
-                    </CardContent>
+                        </CardContent>
+                    )}
                 </CardActionArea>
                 <CardActions
                     className="post-footer"
