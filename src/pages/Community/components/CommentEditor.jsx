@@ -1,12 +1,11 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import Avatar from '@mui/material/Avatar';
-import { getCountryImgById } from '../../../util';
 import BasicButton from '../../../components/BasicButton/BasicButton';
+import { Card, Box } from '@mui/material';
+import BasicTextField from '../../../components/BasicTextField/BasicTextField';
 
 const CommentEditor = ({ initialComment, onUpdate }) => {
     const [commentState, setCommentState] = useState([]);
@@ -37,68 +36,44 @@ const CommentEditor = ({ initialComment, onUpdate }) => {
     };
 
     return (
-        <div
-            className="post-editor"
-            style={{ margin: '10px', height: '600px' }}
-        >
-            <div
-                className="profile"
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    marginBottom: '10px',
+        <Box sx={{ ml: 2, mr: 2 }}>
+            <Card
+                sx={{
+                    padding: '10px',
+                    boxShadow: 'none',
+                    borderRadius: 5,
+                    backgroundColor: '#ffffff',
+                    mb: 2,
                 }}
-                member={initialComment.memberId}
             >
-                <Avatar
-                    src={getCountryImgById(initialComment.code)}
+                <BasicTextField
+                    name="content"
+                    value={commentState.content}
+                    onChange={handleChangeContent}
+                    rows={5}
                     sx={{
-                        marginRight: '10px',
-                        fontFamily: 'Noto Sans, sans-serif',
+                        mt: 2,
+                        width: '100%',
+                        fontFamily: 'Noto Sans',
+                        borderRadius: 2,
+                        '& .MuiOutlinedInput-root': {
+                            borderRadius: 5,
+                        },
+                        '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#4653f9',
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#c0c0c0',
+                        },
                     }}
                 />
-                <Typography component="span" variant="h6">
-                    {initialComment.nickname}
-                </Typography>
-                <Typography
-                    component="span"
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ marginLeft: '8px' }}
-                >
-                    {new Date(initialComment.regDate).toLocaleDateString()}
-                    {initialComment.modDate &&
-                        initialComment.modDate !== initialComment.regDate && (
-                            <Typography
-                                component="span"
-                                variant="body2"
-                                color="text.secondary"
-                                sx={{ marginLeft: '4px' }}
-                            >
-                                (modified)
-                            </Typography>
-                        )}
-                </Typography>
-            </div>
 
-            <br />
-            <TextField
-                id="outlined-multiline-static"
-                sx={{ width: '100%', fontFamily: 'Noto Sans, sans-serif' }}
-                multiline
-                rows={4}
-                placeholder="Please edit the comment"
-                value={commentState.content}
-                onChange={handleChangeContent}
-                fullWidth
-            />
-
-            <div style={{ width: '100%', textAlign: 'right' }}>
-                <Typography variant="caption" color="text.secondary">
-                    {`${(commentState.content || '').length} / 500`}
-                </Typography>
-            </div>
+                <div style={{ width: '100%', textAlign: 'right' }}>
+                    <Typography variant="caption" color="text.secondary">
+                        {`${(commentState.content || '').length} / 500`}
+                    </Typography>
+                </div>
+            </Card>
 
             <div
                 style={{
@@ -116,7 +91,7 @@ const CommentEditor = ({ initialComment, onUpdate }) => {
                 text={'Confirm'}
                 onClick={handleSubmit}
             ></BasicButton>
-        </div>
+        </Box>
     );
 };
 
