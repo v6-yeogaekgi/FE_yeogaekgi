@@ -49,6 +49,7 @@ const PageLayout = ({ children, menuName }) => {
                 '&::-webkit-scrollbar': {
                     display: 'none', // Hide scrollbar in Webkit browsers
                 },
+                backgroundColor: '#f0f4f8',
             }}
         >
             <Header menuName={menuName} />
