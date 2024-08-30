@@ -1,34 +1,66 @@
-import { createContext, useContext, useState } from 'react';
-import * as React from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import axios from 'axios';
 import { useSelected } from './SelectedProvider';
+import { AllStateContext } from '../../../App';
 
-// Context 생성
 const ReviewContext = createContext();
 
-// Provider 컴포넌트
-export const ReviewProvider = ({
-    children,
-    selectedService,
-    selectedServiceInfo,
-}) => {
+export const ReviewProvider = ({ children }) => {
     const [selectedReview, setSelectedReview] = useState(null);
     const [list, setList] = useState(null);
     const [img, setImg] = useState([]);
-    const token = localStorage.getItem("token");
-    const ContentType = 'multipart/form-data';
-    const http = 'http://localhost:8090';
-    const onCreate = async (serviceId, reviewData) => {
+    const [apiLoading, setApiLoading] = useState(false);
+    const { protocol } = useContext(AllStateContext);
+    const { selectedService } = useSelected();
+    const token = localStorage.getItem('token');
+    const api = axios.create({
+        baseURL: protocol,
+        headers: {
+            Authorization: token,
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+
+    const reviewList = async () => {
+        if (!selectedService) return;
+        setApiLoading(true);
         try {
-            const response = await axios.post(
-                `${http}/review/${serviceId}/register`,
+            const response = await api.get(
+                `review/${selectedService}/reviewList?page=0&size=3&sort=modDate,DESC`,
+            );
+            setList(response.data);
+        } catch (error) {
+            console.error('Error fetching review list:', error);
+        } finally {
+            setApiLoading(false);
+        }
+    };
+
+    const ReviewImgList = async () => {
+        if (!selectedService) return;
+        setApiLoading(true);
+        try {
+            const response = await api.get(`review/${selectedService}/ImgList`);
+            const parsedData = response.data.flatMap((item) =>
+                item.images.map((image) => ({
+                    imageUrl: image,
+                    nickname: item.nickname,
+                    countryCode: item.country.code,
+                })),
+            );
+            setImg(parsedData);
+        } catch (error) {
+            console.error('Error fetching image list:', error);
+        } finally {
+            setApiLoading(false);
+        }
+    };
+
+    const createReview = async (serviceId, reviewData) => {
+        try {
+            const response = await api.post(
+                `review/${serviceId}/register`,
                 reviewData,
-                {
-                    headers: {
-                        Authorization: token,
-                        'Content-Type': ContentType,
-                    },
-                },
             );
             console.log('Review registered with ID:', response.data);
             return response.data;
@@ -38,17 +70,11 @@ export const ReviewProvider = ({
         }
     };
 
-    const onUpdate = async (serviceId, reviewId, updateData) => {
+    const updateReview = async (serviceId, reviewId, updateData) => {
         try {
-            const response = await axios.put(
-                `${http}/review/${serviceId}/${reviewId}`,
+            const response = await api.put(
+                `review/${serviceId}/${reviewId}`,
                 updateData,
-                {
-                    headers: {
-                        Authorization: token,
-                        'Content-Type': ContentType,
-                    },
-                },
             );
             console.log('Review updated:', response.data);
             return response.data;
@@ -58,15 +84,12 @@ export const ReviewProvider = ({
         }
     };
 
-    const onDelete = async (selectedReview) => {
+    const deleteReview = async (reviewId) => {
         try {
-            const response = await axios.delete(
-                `${http}/review/${selectedService}/${selectedReview}`,
-                {
-                    headers: {
-                        Authorization: token,
-                    },
-                },
+            console.log({ selectedService });
+            console.log(reviewId);
+            const response = await api.delete(
+                `review/${selectedService}/${reviewId}`,
             );
             console.log('Review deleted:', response.data);
             return response.data;
@@ -75,32 +98,28 @@ export const ReviewProvider = ({
             throw error;
         }
     };
-
     return (
         <ReviewContext.Provider
             value={{
-                img,
-                setImg,
-                onCreate,
-                onUpdate,
-                onDelete,
-                list,
-                setList,
                 selectedReview,
                 setSelectedReview,
-                selectedServiceInfo,
+                list,
+                setList,
+                img,
+                setImg,
+                apiLoading,
+                reviewList,
+                ReviewImgList,
+                createReview,
+                updateReview,
+                deleteReview,
             }}
         >
             {children}
         </ReviewContext.Provider>
     );
 };
-
-// Context를 사용하는 커스텀 훅
 export const useReview = () => {
     const context = useContext(ReviewContext);
-    if (!context) {
-        throw new Error('useReview must be used within a ReviewProvider');
-    }
     return context;
 };
