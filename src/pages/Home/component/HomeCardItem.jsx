@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Card,
     CardContent,
@@ -8,15 +8,35 @@ import {
     Button,
     Grid,
 } from '@mui/material';
-import StarIcon from '@mui/icons-material/Star';
-import cardImg from '../../../img/Design.png';
+import { useNavigate } from 'react-router-dom';
+import StarCheckbox from '../../../components/StarCheckbox/StarCheckBox';
 
-const HomeCardItem = () => {
+const HomeCardItem = ({ data }) => {
+
+    const navigate = useNavigate();
+    const [cardData, setCardData] = useState(data);
+    const { userCardId, design, status, cardName, payBalance, transitBalance, starred } = data;
+
+    const handleTopUpClick = (e) => {
+        e.stopPropagation(); // 이벤트 버블링 방지
+        navigate('/wallet/top-up', { state: { data } });
+    };
+
+    const handleBalanceConversionClick = (e) => {
+        e.stopPropagation(); // 이벤트 버블링 방지
+        // console.log("conversion 클릭, cardData paybalance: ", cardData.payBalance);
+        navigate('/wallet/conversion', { state: { data } });
+    };
+
+    const handleHistoryClick = (e) => {
+        e.stopPropagation();
+        navigate('/wallet/detail', { state: { cardData } });
+    }
+
     return (
         <Box
             sx={{
-                position: 'relative', // 부모 Box에 상대적 위치 설정
-                // width: 400, // 카드 너비
+                position: 'relative',
             }}
         >
             <Card
@@ -24,10 +44,10 @@ const HomeCardItem = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     height: 'auto',
-                    width: 360, // 가로 크기 360px 설정
-                    position: 'relative', // 카드 내부에서 절대 위치를 사용할 수 있도록 설정
-                    boxShadow: 'none', // 그림자 효과 제거
-                    borderRadius: 5, // 모서리를 둥글게 설정
+                    width: 360,
+                    position: 'relative',
+                    boxShadow: 'none',
+                    borderRadius: 5,
                 }}
             >
                 <CardContent
@@ -44,7 +64,7 @@ const HomeCardItem = () => {
                             }}
                         >
                             <img
-                                src={cardImg}
+                                src={design}
                                 alt="Card Image"
                                 style={{
                                     width: '80%',
@@ -54,16 +74,24 @@ const HomeCardItem = () => {
                             />
                         </Grid>
                         <Grid item xs={8}>
-                            <Typography
-                                variant="h6"
-                                sx={{
-                                    mt: 1,
-                                    fontFamily: 'Noto Sans, sans-serif',
-                                    fontWeight: 700,
-                                }}
-                            >
-                                서울 3456
-                            </Typography>
+                            <Grid container spacing={2}>
+                                <Grid item xs={8}>
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            mt: 1,
+                                            fontFamily: 'Noto Sans, sans-serif',
+                                            fontWeight: 700,
+                                        }}
+                                    >
+                                        {cardName}
+                                    </Typography>
+                                </Grid>
+
+                                <Grid item xs={2}>
+                                    <StarCheckbox initialChecked={starred === 1} userCardId={userCardId} isActive={status === 1}/>
+                                </Grid>
+                            </Grid>
 
                             <Grid container spacing={2} sx={{ mt: 0.5 }}>
                                 <Grid item xs={6}>
@@ -77,7 +105,7 @@ const HomeCardItem = () => {
                                         Pay
                                     </Typography>
                                     <Typography variant="h6">
-                                        15,000₩
+                                        ₩ {payBalance}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={6}>
@@ -90,7 +118,9 @@ const HomeCardItem = () => {
                                     >
                                         Transit
                                     </Typography>
-                                    <Typography variant="h6">5,000₩</Typography>
+                                    <Typography variant="h6">
+                                        ₩ {transitBalance}
+                                    </Typography>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -113,8 +143,9 @@ const HomeCardItem = () => {
                                         backgroundColor: '#1a6bb8',
                                     },
                                 }}
+                                onClick={handleTopUpClick}
                             >
-                                Charge
+                                Top Up
                             </Button>
                         </Grid>
                         <Grid item xs={6}>
@@ -133,8 +164,9 @@ const HomeCardItem = () => {
                                         backgroundColor: '#1a6bb8',
                                     },
                                 }}
+                                onClick={handleBalanceConversionClick}
                             >
-                                Transfer
+                                Conversion
                             </Button>
                         </Grid>
                     </Grid>
@@ -155,6 +187,7 @@ const HomeCardItem = () => {
                                         backgroundColor: '#3a43d1',
                                     },
                                 }}
+                                onClick={handleHistoryClick}
                             >
                                 History
                             </Button>
@@ -162,16 +195,6 @@ const HomeCardItem = () => {
                     </Grid>
                 </CardContent>
             </Card>
-            <IconButton
-                sx={{
-                    position: 'absolute',
-                    top: 18,
-                    right: 60,
-                    zIndex: 1,
-                }}
-            >
-                <StarIcon />
-            </IconButton>
         </Box>
     );
 };

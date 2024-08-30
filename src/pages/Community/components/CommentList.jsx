@@ -1,6 +1,6 @@
 import ListSubheader from '@mui/material/ListSubheader';
 import List from '@mui/material/List';
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import CommentItem from './CommentItem';
 import { CommentDispatchContext, CommentStateContext } from '../Post';
 
@@ -15,7 +15,12 @@ const CommentList = () => {
 
     return (
         <List
-            sx={{ width: '100%', maxWidth: 400, bgcolor: 'background.paper', paddingBottom:'70px'}}
+            sx={{
+                width: '100%',
+                maxWidth: 400,
+                bgcolor: 'background.paper',
+                paddingBottom: '70px',
+            }}
             component="nav"
             aria-labelledby="nested-list-subheader"
             subheader={

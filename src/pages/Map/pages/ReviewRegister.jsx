@@ -9,7 +9,7 @@ const ReviewRegister = () => {
     const [content, setContent] = useState('');
     const [images, setImages] = useState([]); // 이미지들을 배열로 관리
     const { serviceId, name } = useParams();
-    const { onCreate } = useReview();
+    const { createReview } = useReview();
     const [score, setScore] = useState(0); // 초기값을 0으로 설정하여 숫자로 유지
 
     const inputRef = useRef();
@@ -49,7 +49,7 @@ const ReviewRegister = () => {
             reviewData.append('files', image);
         });
 
-        onCreate(serviceId, reviewData); // formData 객체를 제출
+        createReview(serviceId, reviewData); // formData 객체를 제출
         setContent(''); // 제출 후 입력창 초기화
         setScore(0); // Rating 값 초기화
         setImages([]); // 이미지 초기화
