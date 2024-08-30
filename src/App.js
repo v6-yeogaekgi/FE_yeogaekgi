@@ -34,10 +34,12 @@ import { MapProvider } from './pages/Map/provider/MapProvider';
 import CurrencyConverter from './pages/CurrencyConverter/CurrencyConverter';
 import useAlertDialog from './hooks/useAlertDialog/useAlertDialog';
 import useConfirmDialog from './hooks/useConfirmDialog/useConfirmDialog';
+import axios from 'axios';
+
 import MyLikes from './pages/MyLikes/MyLikes';
 import Faq from './pages/Faq/Faq';
 
-const PageLayout = ({ children, menuName }) => {
+const PageLayout = ({ children, menuName, areas }) => {
     return (
         <Box
             sx={{
@@ -53,7 +55,7 @@ const PageLayout = ({ children, menuName }) => {
                 backgroundColor: '#f0f4f8',
             }}
         >
-            <Header menuName={menuName} />
+            <Header menuName={menuName} areas={areas}/>
             <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
             <Footer />
         </Box>
@@ -78,6 +80,8 @@ export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
 
 function App() {
+    const areaUrl = protocol + 'usercard/area';
+    const [area, setArea] = useState([]);
     const { openAlertDialog, AlertDialog } = useAlertDialog();
     const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
     const dialog = {
@@ -91,8 +95,25 @@ function App() {
         },
     };
 
+    const getArea = () => {
+        axios
+            .get(areaUrl)
+                .then((res) => {
+                    if(res) {
+                        console.log(res.data);
+                        setArea(res.data);
+                        const defaultArea = res.data.includes('서울') ? '서울' : res.data[0];
+                        localStorage.setItem('selectArea', defaultArea);
+                    }
+                })
+                .catch((err) => {
+                    console.error("API 요청 실패:", err);
+                })
+    }
+
     useEffect(() => {
         fetchAndStoreExchangeRate();
+        getArea();
     }, []);
 
     return (
@@ -108,7 +129,7 @@ function App() {
                             </FirstPage>
                         }
                     />
-                    <Route path={'/home'} element={<HomePage />} />
+                    <Route path={'/home'} element={<PageLayout menuName={'Home'} areas={area}><HomePage /></PageLayout>} />
                     <Route
                         path={'/wallet'}
                         element={
