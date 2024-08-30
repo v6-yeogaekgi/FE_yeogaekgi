@@ -5,15 +5,19 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { Global } from '@emotion/react';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button'; // Import Button component
-import React, { useEffect, useState } from 'react';
+import Button from '@mui/material/Button';
+import React, { useContext, useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
 import { Rating } from '@mui/material';
-import useReviewListAPI from '../api/UseReviewListAPI';
-import useReviewImgListAPI from '../api/useReviewImgListAPI';
 import ReviewList from './ReviewList';
 import ReviewImgList from './ReviewImgList';
 import { useNavigate } from 'react-router-dom';
+import Checkbox from '@mui/material/Checkbox';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import Favorite from '@mui/icons-material/Favorite';
+
+import { useSelected } from '../provider/SelectedProvider';
+import { useReview } from '../provider/ReviewProvider';
 
 const drawerBleeding = 56;
 
@@ -27,21 +31,28 @@ const Puller = styled('div')(({ theme }) => ({
     left: 'calc(50% - 15px)',
 }));
 
-const ServiceInfoDrawer = ({
-    open,
-    setOpen,
-    selectedServiceInfo,
-    selectedService,
-}) => {
-    const navigate = useNavigate(); // Initialize useNavigate
-
-    const { list, listApiLoading } = useReviewListAPI(selectedService);
-    const { img, imgApiLoading } = useReviewImgListAPI(selectedService);
+const ServiceInfoDrawer = () => {
+    const navigate = useNavigate();
     const [score, setScore] = useState(0);
+    const {
+        open,
+        selectedServiceInfo,
+        selectedService,
+        like,
+        handleLikeChange,
+        likeCheck,
+        toggleDrawer,
+        setViewLikeCnt,
+        viewLikeCount,
+    } = useSelected();
+    const { list } = useReview();
 
-    const toggleDrawer = (newOpen) => {
-        setOpen(newOpen);
-    };
+    useEffect(() => {
+        if (selectedServiceInfo && selectedServiceInfo.likeCnt !== undefined) {
+            setViewLikeCnt(selectedServiceInfo.likeCnt);
+            likeCheck();
+        }
+    }, [selectedServiceInfo]);
 
     const handleNavigateToRegister = () => {
         const name = selectedServiceInfo.name;
@@ -89,48 +100,123 @@ const ServiceInfoDrawer = ({
                     sx: {
                         width: '400px',
                         left: 'calc(50% - 200px)',
+                        borderTopLeftRadius: 30,
+                        borderTopRightRadius: 30,
+                        visibility: 'visible',
                     },
                 }}
             >
+                <Box sx={{ mb: 2 }}>
+                    <Puller />
+                </Box>
+
                 <Box
                     sx={{
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                        visibility: 'visible',
-                        right: 0,
-                        left: 0,
+                        display: 'flex',
+                        pl: 2,
                     }}
                 >
-                    <Puller />
-                    <Typography sx={{ pl: 2, pt: 2, color: 'text.primary' }}>
-                        {selectedServiceInfo?.name}{' '}
-                        {selectedServiceInfo?.serviceType}
-                    </Typography>
-                    <Typography sx={{ pl: 2, color: 'text.secondary' }}>
-                        {selectedServiceInfo?.content}
-                    </Typography>
                     <Box
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'flex-start',
-                            pl: 2,
+                            flexGrow: 1,
                         }}
                     >
-                        <Typography sx={{ color: 'text.warning' }}>
-                            {score}
+                        <Typography
+                            sx={{
+                                color: 'text.primary',
+                                fontWeight: 'bold',
+                                display: 'flex', // flexbox를 사용해 수직 중앙 정렬
+                                alignItems: 'center', // 텍스트를 수직 중앙에 배치
+                                height: 40, // 고정 높이 설정
+                            }}
+                            variant="h6"
+                        >
+                            {selectedServiceInfo?.name}
                         </Typography>
-                        <Stack spacing={1}>
-                            <Rating
-                                name="half-rating-read"
-                                value={score}
-                                precision={0.5}
-                                readOnly
-                                size="small"
-                            />
-                        </Stack>
+                        <Typography
+                            sx={{
+                                color: 'text.secondary',
+                                fontSize: '0.875rem',
+                                ml: 1,
+                                display: 'flex', // flexbox를 사용해 수직 중앙 정렬
+                                pt: 0.5,
+                                alignItems: 'center', // 텍스트를 수직 중앙에 배치
+                                height: 40, // 고정 높이 설정
+                            }}
+                        ></Typography>
+                    </Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: 40,
+                            height: 40,
+                            borderRadius: '50%',
+                            backgroundColor: 'lightgrey',
+                            mr: 3,
+                        }}
+                    >
+                        <Checkbox
+                            checked={like}
+                            icon={<FavoriteBorder />}
+                            onChange={handleLikeChange}
+                            checkedIcon={<Favorite sx={{ color: 'red' }} />}
+                            sx={{
+                                p: 0,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        />
+                        {viewLikeCount}
                     </Box>
                 </Box>
+
+                <Typography
+                    sx={{
+                        pl: 2,
+                        pr: 3,
+                        color: 'text.secondary',
+                    }}
+                >
+                    {selectedServiceInfo?.content}
+                </Typography>
+
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        pl: 2,
+                    }}
+                >
+                    <Typography
+                        sx={{
+                            color: 'text.primary',
+                            mr: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            fontWeight: 'medium',
+                        }}
+                    >
+                        {score}
+                    </Typography>
+                    <Stack
+                        spacing={1}
+                        sx={{ mr: 1, display: 'flex', alignItems: 'center' }}
+                    >
+                        <Rating
+                            name="half-rating-read"
+                            value={score}
+                            precision={0.5}
+                            readOnly
+                            size="medium"
+                        />
+                    </Stack>
+                </Box>
+
                 <Box
                     sx={{
                         px: 2,
@@ -139,12 +225,8 @@ const ServiceInfoDrawer = ({
                         overflow: 'auto',
                     }}
                 >
-                    <ReviewImgList img={img} />
-                    <ReviewList
-                        list={list}
-                        selectedServiceInfo={selectedServiceInfo}
-                        selectedService={selectedService}
-                    />
+                    <ReviewImgList />
+                    <ReviewList />
                 </Box>
                 <Box sx={{ px: 2, pb: 2 }}>
                     <Button

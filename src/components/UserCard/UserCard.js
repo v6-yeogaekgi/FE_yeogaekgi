@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import SettingsDrawer from '../SettingsDrawer/SettingsDrawer';
+import { useEffect, useState } from 'react';
 
 const commonPaperStyle = (isActive) => ({
     width: '90%',
@@ -37,7 +38,7 @@ const CardImage = ({ imageUrl, isOverlayActive }) => (
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
-                ...(isOverlayActive ? { filter: 'brightness(80%)' } : {})
+                ...(isOverlayActive ? { filter: 'brightness(80%)' } : {}),
             }}
         />
     </div>
@@ -61,11 +62,25 @@ const Overlay = () => (
     </div>
 );
 
-export default function UserCard({ data, onCardClick }) {
+export default function UserCard({ data, onCardClick, onStarChange, onCardDelete }) {
     const navigate = useNavigate();
-    const { status, cardName, payBalance, transitBalance, starred } = data;
+    const { userCardId, status, cardName, payBalance, transitBalance, starred } = data;
     const isActive = status !== 0;
     const imageUrl = status === 0 ? '../../img/exp_design.png' : data.design;
+
+    const [starredState, setStarredState] = useState(starred === 1);
+
+    const handleStarChange = () => {
+        if (onStarChange) {
+            onStarChange();
+        }
+    };
+
+    useEffect(() => {
+        if (onStarChange) {
+            onStarChange();
+        }
+    }, [starredState]);
 
     const handleCardClick = (e) => {
 
@@ -92,6 +107,10 @@ export default function UserCard({ data, onCardClick }) {
     const handleBalanceConversionClick = (e) => {
         e.stopPropagation(); // 이벤트 버블링 방지
         navigate('/wallet/conversion', { state: { data } });
+    };
+
+    const handleCardDelete = () => {
+        onCardDelete();
     };
 
     const CardButtons = ({ isActive }) => (
@@ -142,9 +161,16 @@ export default function UserCard({ data, onCardClick }) {
                         display: 'flex',
                         alignItems: 'center',
                     }}>
-                        <StarCheckbox checked={isActive && starred === 1} />
                         <div onClick={(e) => e.stopPropagation()}>
-                            <SettingsDrawer data={data} />
+                            <StarCheckbox
+                                initialChecked={starred}
+                                userCardId={userCardId}
+                                onStarChange={handleStarChange}
+                                isActive={isActive}
+                            />
+                        </div>
+                        <div onClick={(e) => e.stopPropagation()}>
+                            <SettingsDrawer data={data} onCardDelete={handleCardDelete}/>
                         </div>
                     </div>
                     <CardImage imageUrl={imageUrl} isOverlayActive={status === 0} />

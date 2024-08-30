@@ -29,9 +29,13 @@ import ReviewRegister from './pages/Map/pages/ReviewRegister';
 import ReviewEdit from './pages/Map/pages/ReviewEdit';
 import { fetchAndStoreExchangeRate } from './components/ExchangeRateManager/ExchangeRateManager';
 import MyReviews from './pages/MyReviews/MyReviews';
-
+import { SelectedProvider } from './pages/Map/provider/SelectedProvider';
+import { MapProvider } from './pages/Map/provider/MapProvider';
+import CurrencyConverter from './pages/CurrencyConverter/CurrencyConverter';
 import useAlertDialog from './hooks/useAlertDialog/useAlertDialog';
 import useConfirmDialog from './hooks/useConfirmDialog/useConfirmDialog';
+import MyLikes from './pages/MyLikes/MyLikes';
+import Faq from './pages/Faq/Faq';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -41,6 +45,12 @@ const PageLayout = ({ children, menuName }) => {
                 flexDirection: 'column',
                 paddingTop: '64px', // header 높이만큼 패딩 추가
                 paddingBottom: '70px', // Footer 높이만큼 패딩 추가
+                height: '844px',
+                overflowY: 'auto', // Hide vertical scrolling
+                '&::-webkit-scrollbar': {
+                    display: 'none', // Hide scrollbar in Webkit browsers
+                },
+                backgroundColor: '#f0f4f8',
             }}
         >
             <Header menuName={menuName} />
@@ -71,14 +81,14 @@ function App() {
     const { openAlertDialog, AlertDialog } = useAlertDialog();
     const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
     const dialog = {
-        confirm:{
+        confirm: {
             openConfirmDialog,
-            ConfirmDialog
+            ConfirmDialog,
         },
         alert: {
             openAlertDialog,
-            AlertDialog
-        }
+            AlertDialog,
+        },
     };
 
     useEffect(() => {
@@ -111,7 +121,9 @@ function App() {
                         path={'/map'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <Map />
+                                <MapProvider>
+                                    <Map />
+                                </MapProvider>
                             </PageLayout>
                         }
                     />
@@ -119,9 +131,11 @@ function App() {
                         path={'/map/register/:serviceId/:name'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <ReviewProvider>
-                                    <ReviewRegister />
-                                </ReviewProvider>
+                                <SelectedProvider>
+                                    <ReviewProvider>
+                                        <ReviewRegister />
+                                    </ReviewProvider>
+                                </SelectedProvider>
                             </PageLayout>
                         }
                     />
@@ -129,9 +143,11 @@ function App() {
                         path={'/map/edit/:name/:serviceId/:reviewId'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <ReviewProvider>
-                                    <ReviewEdit />
-                                </ReviewProvider>
+                                <SelectedProvider>
+                                    <ReviewProvider>
+                                        <ReviewEdit />
+                                    </ReviewProvider>
+                                </SelectedProvider>
                             </PageLayout>
                         }
                     />
@@ -244,6 +260,33 @@ function App() {
                         element={
                             <PageLayout menuName={'My Reviews'}>
                                 <MyReviews />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/mypage/likes'}
+                        element={
+                            <PageLayout menuName={'My Likes'}>
+                                <MyLikes />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/home/currency'}
+                        element={
+                            <PageLayout menuName={'Currency Converter'}>
+                                <CurrencyConverter />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/faq'}
+                        element={
+                            <PageLayout menuName={'FAQ'}>
+                                <Faq />
                             </PageLayout>
                         }
                     />

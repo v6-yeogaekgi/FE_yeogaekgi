@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import { getCountryImgById } from '../../../util';
+import BasicButton from '../../../components/BasicButton/BasicButton';
 
 const CommentEditor = ({ initialComment, onUpdate }) => {
     const [commentState, setCommentState] = useState([]);
@@ -107,44 +108,14 @@ const CommentEditor = ({ initialComment, onUpdate }) => {
                     gap: '8px',
                 }}
             ></div>
-            <Button
-                variant="contained"
-                sx={{
-                    width: '100%',
-                    mt: 3,
-                    borderRadius: 5,
-                    textTransform: 'capitalize',
-                    height: 50,
-                    fontSize: '16px',
-                    fontFamily: 'Noto Sans, sans-serif',
-                    backgroundColor: '#4653f9',
-                    '&:hover': {
-                        backgroundColor: '#3a43d1',
-                    },
-                }}
+
+            <BasicButton
+                variant={'contained'}
+                size={'small'}
+                width={'100%'}
+                text={'Confirm'}
                 onClick={handleSubmit}
-            >
-                Edit
-            </Button>
-            <Button
-                variant="contained"
-                sx={{
-                    width: '100%',
-                    mt: 2,
-                    borderRadius: 5,
-                    textTransform: 'capitalize',
-                    height: 50,
-                    fontSize: '16px',
-                    fontFamily: 'Noto Sans, sans-serif',
-                    backgroundColor: '#9e9e9e',
-                    '&:hover': {
-                        backgroundColor: '#757575',
-                    },
-                }}
-                onClick={handleOnGoBack}
-            >
-                Cancel
-            </Button>
+            ></BasicButton>
         </div>
     );
 };
