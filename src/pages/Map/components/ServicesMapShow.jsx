@@ -15,7 +15,10 @@ const ServicesMapShow = () => {
     const [map, setMap] = useState(null);
 
     useEffect(() => {
-        if (!naver || !mapRef.current) return;
+        if (!naver || !mapRef.current) {
+            console.log('');
+            return;
+        }
 
         if (!map) {
             if (
