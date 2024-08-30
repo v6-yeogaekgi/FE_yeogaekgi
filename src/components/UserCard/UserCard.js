@@ -62,8 +62,6 @@ const Overlay = () => (
     </div>
 );
 
-//pull request test
-
 export default function UserCard({ data, onCardClick, onStarChange, onCardDelete }) {
     const navigate = useNavigate();
     const { userCardId, status, cardName, payBalance, transitBalance, starred } = data;
