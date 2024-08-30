@@ -46,13 +46,13 @@ const ServiceInfoDrawer = () => {
         viewLikeCount,
     } = useSelected();
     const { list } = useReview();
+
     useEffect(() => {
-        // selectedServiceInfo.likeCnt 값이 존재할 때만 업데이트
-        likeCheck();
         if (selectedServiceInfo && selectedServiceInfo.likeCnt !== undefined) {
             setViewLikeCnt(selectedServiceInfo.likeCnt);
+            likeCheck();
         }
-    }, [selectedServiceInfo, setViewLikeCnt]);
+    }, [selectedServiceInfo]);
 
     const handleNavigateToRegister = () => {
         const name = selectedServiceInfo.name;
