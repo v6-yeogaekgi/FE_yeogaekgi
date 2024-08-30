@@ -34,8 +34,11 @@ const useServicesMarkerApi = (state) => {
 
     // Fetch data when the state changes
     useEffect(() => {
+
+        console.log('새로운 상태로 데이터를 가져옵니다:', state); // 상태 변경 시 로깅
         fetchServiceList();
-    }, [fetchServiceList]);
+    }, [fetchServiceList, state]); // state가 추가되어야 함
+
 
     return { servicesData, apiLoading };
 };

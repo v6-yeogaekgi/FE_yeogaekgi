@@ -55,7 +55,7 @@ const PageLayout = ({ children, menuName, areas }) => {
                 backgroundColor: menuName === "Account" ? 'white' : '#f0f4f8',
             }}
         >
-            <Header menuName={menuName} areas={areas}/>
+            <Header menuName={menuName} areas={areas} />
             <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
             <Footer />
         </Box>
@@ -98,18 +98,20 @@ function App() {
     const getArea = () => {
         axios
             .get(areaUrl)
-                .then((res) => {
-                    if(res) {
-                        console.log(res.data);
-                        setArea(res.data);
-                        const defaultArea = res.data.includes('서울') ? '서울' : res.data[0];
-                        localStorage.setItem('selectArea', defaultArea);
-                    }
-                })
-                .catch((err) => {
-                    console.error("API 요청 실패:", err);
-                })
-    }
+            .then((res) => {
+                if (res) {
+                    console.log(res.data);
+                    setArea(res.data);
+                    const defaultArea = res.data.includes('서울')
+                        ? '서울'
+                        : res.data[0];
+                    localStorage.setItem('selectArea', defaultArea);
+                }
+            })
+            .catch((err) => {
+                console.error('API 요청 실패:', err);
+            });
+    };
 
     useEffect(() => {
         fetchAndStoreExchangeRate();
@@ -129,7 +131,14 @@ function App() {
                             </FirstPage>
                         }
                     />
-                    <Route path={'/home'} element={<PageLayout menuName={'Home'} areas={area}><HomePage /></PageLayout>} />
+                    <Route
+                        path={'/home'}
+                        element={
+                            <PageLayout menuName={'Home'} areas={area}>
+                                <HomePage />
+                            </PageLayout>
+                        }
+                    />
                     <Route
                         path={'/wallet'}
                         element={

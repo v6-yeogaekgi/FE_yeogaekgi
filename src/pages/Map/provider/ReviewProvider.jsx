@@ -98,6 +98,29 @@ export const ReviewProvider = ({ children }) => {
             throw error;
         }
     };
+
+    const deepLApi = (text, target_lang) => {
+        const data = {
+            text: [text],
+            target_lang: target_lang,
+        };
+        console.log('dkssud');
+        return axios
+            .post(protocol + 'api/translate', data, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((res) => {
+                console.log(res.data.translations[0].text);
+                return res.data.translations[0].text;
+            })
+            .catch((error) => {
+                console.error('API 호출 오류:', error);
+                throw error;
+            });
+    };
     return (
         <ReviewContext.Provider
             value={{
@@ -113,6 +136,7 @@ export const ReviewProvider = ({ children }) => {
                 createReview,
                 updateReview,
                 deleteReview,
+                deepLApi,
             }}
         >
             {children}
