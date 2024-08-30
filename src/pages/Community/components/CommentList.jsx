@@ -15,7 +15,7 @@ const CommentList = () => {
 
     return (
         <List
-            sx={{ width: '100%', maxWidth: 400, bgcolor: 'background.paper' }}
+            sx={{ width: '100%', maxWidth: 400, bgcolor: 'background.paper', paddingBottom:'70px'}}
             component="nav"
             aria-labelledby="nested-list-subheader"
             subheader={

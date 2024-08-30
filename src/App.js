@@ -31,6 +31,10 @@ import { fetchAndStoreExchangeRate } from './components/ExchangeRateManager/Exch
 import MyReviews from './pages/MyReviews/MyReviews';
 import { SelectedProvider } from './pages/Map/provider/SelectedProvider';
 import { MapProvider } from './pages/Map/provider/MapProvider';
+import CurrencyConverter from './pages/CurrencyConverter/CurrencyConverter';
+import useAlertDialog from './hooks/useAlertDialog/useAlertDialog';
+import useConfirmDialog from './hooks/useConfirmDialog/useConfirmDialog';
+import MyLikes from './pages/MyLikes/MyLikes';
 
 const PageLayout = ({ children, menuName }) => {
     return (
@@ -40,6 +44,11 @@ const PageLayout = ({ children, menuName }) => {
                 flexDirection: 'column',
                 paddingTop: '64px', // header 높이만큼 패딩 추가
                 paddingBottom: '70px', // Footer 높이만큼 패딩 추가
+                height: '844px',
+                overflowY: 'auto', // Hide vertical scrolling
+                '&::-webkit-scrollbar': {
+                    display: 'none', // Hide scrollbar in Webkit browsers
+                },
             }}
         >
             <Header menuName={menuName} />
@@ -67,12 +76,25 @@ export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
 
 function App() {
+    const { openAlertDialog, AlertDialog } = useAlertDialog();
+    const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
+    const dialog = {
+        confirm: {
+            openConfirmDialog,
+            ConfirmDialog,
+        },
+        alert: {
+            openAlertDialog,
+            AlertDialog,
+        },
+    };
+
     useEffect(() => {
         fetchAndStoreExchangeRate();
     }, []);
 
     return (
-        <AllStateContext.Provider value={{ protocol }}>
+        <AllStateContext.Provider value={{ protocol, dialog }}>
             <Router>
                 <ScrollToTop />
                 <Routes>
@@ -198,7 +220,7 @@ function App() {
                         }
                     />
                     <Route
-                        path={'/wallet/topup'}
+                        path={'/wallet/top-up'}
                         element={
                             <PageLayout menuName={'top-up'}>
                                 <TopUp />
@@ -236,6 +258,24 @@ function App() {
                         element={
                             <PageLayout menuName={'My Reviews'}>
                                 <MyReviews />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/mypage/likes'}
+                        element={
+                            <PageLayout menuName={'My Likes'}>
+                                <MyLikes />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/home/currency'}
+                        element={
+                            <PageLayout menuName={'Currency Converter'}>
+                                <CurrencyConverter />
                             </PageLayout>
                         }
                     />
