@@ -9,8 +9,6 @@ import { AllStateContext } from '../../App';
 import { getExchangeRate } from '../../components/ExchangeRateManager/ExchangeRateManager';
 
 const Registration = () => (
-    // TODO 
-    // exp_date 만료인 카드 처리 
     <Paper
         onClick={() => alert('Registration')}
         sx={{
@@ -43,17 +41,24 @@ const Registration = () => (
 );
 
 export default function Wallet(props) {
-    const rates = getExchangeRate();
-    console.log(rates);
-
     const navigate = useNavigate();
     const [data, setData] = useState(null);
-    const [param, setParam] = useState({
-        page: 1,
-    });
+
+    // const [starChanged, setStarChanged] = useState(false);
+    const [updateTrigger, setUpdateTrigger] = useState(0);
 
     const handleCardClick = (cardData) => {
         navigate('detail', { state: { cardData } });
+    };
+
+    const handleCardDelete = () => {
+        getApi();
+    }
+
+    const renderEmptyBoxes = (count) => {
+        return Array(count).fill().map((_, index) => (
+            <Box key={index} sx={{ height: '134px', width: '100%' }} />
+        ));
     };
 
     const [error, setError] = useState(null);
@@ -75,23 +80,22 @@ export default function Wallet(props) {
             )
             .then((res) => {
                 if (Array.isArray(res.data) && res.data.length > 0) {
-                    const filteredData = res.data.filter(item => item.status !== 2);
-                    const formattedData = filteredData.map(item => ({
-                        userCardId: item.userCardId,
-                        expiryDate: item.expiryDate,
-                        payBalance: item.payBalance,
-                        transitBalance: item.transitBalance,
-                        starred: item.starred,
-                        status: item.status,
-                        cardId: item.cardId,
-                        design: item.design,
-                        area: item.area,
-                        cardName: item.cardName,
-                        memberId: item.memberId,
-                    }));
+                    const filteredData = res.data
+                        .filter(item => item.status !== 2)
+                        .map(item => ({
+                            ...item,
+                            starred: item.starred === 1
+                        }));
 
-                    setData(formattedData);
+                    const sortedData = [...filteredData].sort((a, b) => {
+                        if (a.starred && !b.starred) return -1;
+                        if (!a.starred && b.starred) return 1;
+                        if (a.status === 0 && b.status !== 0) return 1;
+                        if (a.status !== 0 && b.status === 0) return -1;
+                        return 0;
+                    });
 
+                    setData(sortedData);
                 }})
             .catch((err) => {
                 console.error('API 요청 중 오류 발생:', err);
@@ -100,8 +104,19 @@ export default function Wallet(props) {
     };
 
     useEffect(() => {
-            getApi();
-    }, []);
+        getApi();
+    }, [updateTrigger]);
+
+    const handleStarChange = (changedCardId, newStarredState) => {
+        setData(prevData =>
+            prevData.map(card =>
+                card.userCardId === changedCardId
+                    ? { ...card, starred: newStarredState }
+                    : card
+            )
+        );
+        setUpdateTrigger(prev => prev + 1);
+    };
 
     return (
         <Box sx={{
@@ -124,23 +139,29 @@ export default function Wallet(props) {
                     gap: 2,
                     paddingTop: '20px',
                     flexGrow: 1,
-                    paddingBottom: '150px', // 하단 여백 추가
+                    paddingBottom: '150px',
                 }}
             >
-                {data && data.map((cardData, index) => (
-                    <UserCard key={index} data={cardData} onCardClick={handleCardClick} />
-                ))}
+                {data === null ? (
+                    renderEmptyBoxes(3)
+                ) : data.length === 0 ? (
+                    renderEmptyBoxes(3)
+                ) : (
+                    <>
+                        {data.map((cardData, index) => (
+                            <UserCard
+                                key={index}
+                                data={cardData}
+                                onCardClick={handleCardClick}
+                                // onStarChange={handleStarChange}
+                                onStarChange={(newState) => handleStarChange(cardData.userCardId, newState)}
+                                onCardDelete={handleCardDelete}
+                            />
+                        ))}
+                        {data.length === 1 && renderEmptyBoxes(1)}
+                    </>
+                )}
             </Box>
-            {data && data.length === 0 && (
-                <>
-                    <Box sx={{ height: '134px', width: '100%' }} />
-                    <Box sx={{ height: '134px', width: '100%' }} />
-                </>
-            )}
-
-            {data && data.length === 1 && (
-                <Box sx={{ height: '134px', width: '100%' }} /> // 빈 박스 추가
-            )}
             <Registration />
         </Box>
     );
