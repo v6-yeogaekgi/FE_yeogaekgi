@@ -145,7 +145,6 @@ export default function Refund() {
                     alignItems: 'center', // 이 줄을 추가
                     position: 'relative', //
                     overflow: 'hidden', //
-                    // paddingBottom: '70px',
                 }}
             >
                 <Box
@@ -162,8 +161,15 @@ export default function Refund() {
                     }}
                 >
                     <UserCardOnRefund data={data} />
-                    <div style={{ width: '100%' }}>
-                        <Grid container spacing={2} sx={{ maxWidth: '100%', margin: 'auto', paddingTop: '20px' }}>
+                    <div style={{
+                        width: '100%',
+                        backgroundColor: 'white',
+                        marginLeft: 'calc(-45vw + 50%)',
+                        paddingLeft: 'calc(60vw - 50%)',
+                        paddingRight: 'calc(60vw - 50%)',
+                        borderRadius: '80px',
+                    }}>
+                        <Grid container spacing={2} sx={{ width: '100%', margin: 'auto', paddingTop: '20px' }}>
                             <Grid item xs={12}>
                                 <Typography component="h1"
                                             variant="h5">Balance <b>₩{data.payBalance > fee ? fee.toLocaleString() : 0} </b></Typography>
