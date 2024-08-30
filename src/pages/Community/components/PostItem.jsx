@@ -110,7 +110,11 @@ const PostItem = ({
         });
     }
     const clickImgs = (postIdParam) => {
-        navigate('/community/imageDetail/'+postIdParam);
+        navigate('/community/imageDetail/'+postIdParam, {
+            state: {
+                images: images,
+            },
+        });
     }
     const [translatedContent, setTranslatedContent] = useState(null);
     const [translatedHashtag, setTranslatedHashtag] = useState(null);

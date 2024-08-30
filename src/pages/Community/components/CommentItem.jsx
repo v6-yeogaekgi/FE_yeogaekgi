@@ -35,10 +35,10 @@ const CommentItem = ({
     const [isTranslated, setIsTranslated] = useState(false);
 
     const onClickDeleteComment = () => {
-        const isConfirmed = window.confirm(
-            'Would you like to delete the comment?',
-        );
-        dialog.confirm.openConfirmDialog("Confirm Deletion","Would you like to delete the comment?",onDelete(commentId, postId));
+        // const isConfirmed = window.confirm(
+        //     'Would you like to delete the comment?',
+        // );
+        dialog.confirm.openConfirmDialog("Confirm Deletion","Would you like to delete the comment?",()=>onDelete(commentId, postId));
 
     };
 

@@ -2,11 +2,12 @@ import { useEffect, useState, useCallback, useContext } from 'react';
 import axios from 'axios';
 import { AllStateContext } from '../../../App';
 
-const UseServicesMarkerApi = (state) => {
-    const [servicesData, setData] = useState(null);
+const useServicesMarkerApi = (state) => {
+    const [servicesData, setServicesData] = useState(null);
     const [apiLoading, setApiLoading] = useState(false);
     const { protocol } = useContext(AllStateContext);
 
+    // Build the query string based on the state
     const buildQueryString = useCallback(() => {
         const params = [];
         if (state.Tour) params.push('type=TouristAttraction');
@@ -15,26 +16,28 @@ const UseServicesMarkerApi = (state) => {
         return params.length > 0 ? `?${params.join('&')}` : '';
     }, [state]);
 
-    const serviceListAPI = useCallback(() => {
+    // Function to fetch service list data
+    const fetchServiceList = useCallback(() => {
         setApiLoading(true);
         const queryString = buildQueryString();
-        console.log(`${protocol}services/servicesList${queryString}`);
         axios
             .get(`${protocol}services/servicesList${queryString}`)
             .then((res) => {
-                setData(res.data);
+                setServicesData(res.data);
                 setApiLoading(false);
             })
             .catch((error) => {
                 setApiLoading(false);
                 console.error('Error fetching services data:', error);
             });
-    }, [buildQueryString]);
+    }, [buildQueryString, protocol]);
 
+    // Fetch data when the state changes
     useEffect(() => {
-        serviceListAPI();
-    }, [serviceListAPI]);
+        fetchServiceList();
+    }, [fetchServiceList]);
+
     return { servicesData, apiLoading };
 };
 
-export default UseServicesMarkerApi;
+export default useServicesMarkerApi;
