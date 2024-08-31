@@ -161,7 +161,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                     <Grid item xs={4} style={{ textAlign: 'center' }}>
                         <b>{currentDate.getFullYear()}/{currentDate.getMonth() + 1}</b>
                     </Grid>
-                    <Grid item xs={1} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Grid item xs={1} style={{ display: 'flex', justifyContent: 'flex-start' }}>
                         <ArrowForwardIosIcon onClick={() => handleMonthChange('next')} />
                     </Grid>
                     <Grid item xs={2}
