@@ -1,8 +1,7 @@
 import { useContext, useState } from 'react';
 import axios from 'axios';
 import * as React from 'react';
-import { Grid, Paper, Typography } from '@mui/material';
-import BasicButton from '../BasicButton/BasicButton';
+import { Grid, IconButton, Paper, Typography } from '@mui/material';
 import CustomizedSwitches from '../CustomizedSwitches/CustomizedSwitches';
 import Divider from '@mui/material/Divider';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -13,10 +12,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Drawer from '@mui/material/Drawer';
 import { AllStateContext } from '../../App';
 import { format } from 'date-fns';
-
-// TODO
-// 상세 날짜 추가
-
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
     const userCardNo = cardData.userCardId;
@@ -143,7 +140,6 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                     width: '100%',
                     minHeight: '500px',
                     flexGrow: 1,
-                    border: '1px solid #ccc',
                     borderRadius: '10px 10px 0 0',
                     padding: '20px',
                     display: 'flex',
@@ -157,15 +153,22 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
             >
                 <Grid container spacing={2}
                       style={{ zIndex: 2, justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Grid item xs={2}
+                    ></Grid>
                     <Grid item xs={1} style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                        <BasicButton text={'<'} onClick={() => handleMonthChange('prev')} />
+                        <ArrowBackIosIcon onClick={() => handleMonthChange('prev')} />
                     </Grid>
-                    <Grid item xs={10} style={{ textAlign: 'center' }}>
+                    <Grid item xs={4} style={{ textAlign: 'center' }}>
                         <b>{currentDate.getFullYear()}/{currentDate.getMonth() + 1}</b>
                     </Grid>
                     <Grid item xs={1} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <BasicButton text={'>'} onClick={() => handleMonthChange('next')} />
+                        <ArrowForwardIosIcon onClick={() => handleMonthChange('next')} />
                     </Grid>
+                    <Grid item xs={2}
+                    ></Grid>
+                </Grid>
+
+                <Grid container spacing={1}>
                     <Grid item xs={10}>
                     </Grid>
                     <Grid item xs={2}>
@@ -176,9 +179,10 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                 {filteredData && filteredData.length > 0 ? (
                     Object.entries(groupDataByDate(filteredData)).map(([date, items]) => (
                         <React.Fragment key={date}>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={1}>
                                 <Grid item xs={12}>
-                                    <Typography variant="subtitle1" style={{ fontWeight: 'bold', margin: '20px 0 10px' }}>
+                                    <Typography variant="subtitle1"
+                                                style={{ fontWeight: 'bold', margin: '20px 0 10px' }}>
                                         {format(new Date(date), 'MM/dd')}
                                     </Typography>
                                 </Grid>
@@ -195,27 +199,28 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                         spacing={2}
                                         sx={{
                                             cursor: 'pointer',
+                                            paddingBottom: '5px',
                                         }}
                                         onClick={() => handleItemClick(item)}
                                     >
-                                        <Grid item xs={12}>
-                                            <Typography variant="body2" color="textSecondary">
-                                                {item.payment ? `Payment no: ${item.pno}` : `Transaction no: ${item.tno}`}
-                                            </Typography>
-                                        </Grid>
                                         <Grid item xs={1} sx={{ display: 'flex', alignItems: 'center' }}>
-                                            {item.payment ? <RemoveIcon /> :
+                                            {item.payment ? <RemoveIcon sx={{color: '#E84B54'}} /> :
                                                 (item.tranType === 0 ?
                                                         (paymentType === 0 ?
-                                                                (item.transferType === 0 ? <RemoveIcon /> : <AddIcon />) :
-                                                                (item.transferType === 0 ? <AddIcon /> : <RemoveIcon />)
+                                                                (item.transferType === 0 ? <RemoveIcon sx={{color: '#E84B54'}}  /> :
+                                                                    <AddIcon sx={{color: '#6899ED'}}/>) :
+                                                                (item.transferType === 0 ? <AddIcon sx={{color: '#6899ED'}} /> : <RemoveIcon sx={{color: '#E84B54'}} />)
                                                         ) :
-                                                        (item.tranType === 1 ? <AddIcon /> : <RemoveIcon />)
+                                                        (item.tranType === 1 ? <AddIcon sx={{color: '#6899ED'}} /> : <RemoveIcon sx={{color: '#E84B54'}}/>)
                                                 )
                                             }
                                         </Grid>
                                         <Grid item xs={3}>
-                                            <Grid container direction="column" spacing={1}>
+                                            <Grid container direction="column" spacing={1}
+                                                  sx={{
+                                                      marginTop: '5px',
+                                                  }}
+                                            >
                                                 <Grid item>
                                                     <Typography variant="body2">
                                                         {item.payment ? 'Payment' : 'Transaction'}
@@ -233,7 +238,8 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                         <Grid item xs={2}>
                                             <Grid container direction="column" spacing={1}>
                                                 <Grid item>
-                                                    <Typography variant="body2" color="transparent">placeholder</Typography>
+                                                    <Typography variant="body2"
+                                                                color="transparent">placeholder</Typography>
                                                 </Grid>
                                                 <Grid item>
                                                     <Typography variant="body2" color="textSecondary">
@@ -246,8 +252,16 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                             </Grid>
                                         </Grid>
                                         <Grid item xs={6}
-                                              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                            <Grid container direction="column" spacing={1} style={{ textAlign: 'right' }}>
+                                              sx={{
+                                                  display: 'flex',
+                                                  alignItems: 'center',
+                                                  justifyContent: 'flex-end',
+                                              }}>
+                                            <Grid container direction="column" spacing={1}
+                                                  style={{
+                                                      textAlign: 'right',
+                                                      paddingTop: '7px'
+                                            }}>
                                                 <Grid item>
                                                     <Typography variant="body2" color="textSecondary">
                                                         {item.payment ?
@@ -271,21 +285,25 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                                             paymentType === 0 ? (
                                                                 item.transferType === 0 ? (
                                                                     <>
-                                                                        pay ₩{(item.payBalanceSnap + item.krwAmount).toLocaleString()} -&gt; transit {item.transitBalanceSnap.toLocaleString()}
+                                                                        pay
+                                                                        ₩{(item.payBalanceSnap + item.krwAmount).toLocaleString()} -&gt; transit {item.transitBalanceSnap.toLocaleString()}
                                                                     </>
                                                                 ) : (
                                                                     <>
-                                                                        transit ₩{(item.transitBalanceSnap - item.krwAmount).toLocaleString()} -&gt; pay {item.payBalanceSnap.toLocaleString()}
+                                                                        transit
+                                                                        ₩{(item.transitBalanceSnap - item.krwAmount).toLocaleString()} -&gt; pay {item.payBalanceSnap.toLocaleString()}
                                                                     </>
                                                                 )
                                                             ) : (
                                                                 item.transferType === 0 ? (
                                                                     <>
-                                                                        pay ₩{(item.payBalanceSnap + item.krwAmount).toLocaleString()} -&gt; transit {item.transitBalanceSnap.toLocaleString()}
+                                                                        pay
+                                                                        ₩{(item.payBalanceSnap + item.krwAmount).toLocaleString()} -&gt; transit {item.transitBalanceSnap.toLocaleString()}
                                                                     </>
                                                                 ) : (
                                                                     <>
-                                                                        transit ₩{(item.transitBalanceSnap - item.krwAmount).toLocaleString()} -&gt; pay {item.payBalanceSnap.toLocaleString()}
+                                                                        transit
+                                                                        ₩{(item.transitBalanceSnap - item.krwAmount).toLocaleString()} -&gt; pay {item.payBalanceSnap.toLocaleString()}
                                                                     </>
                                                                 )
                                                             )
@@ -352,15 +370,16 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                         <ListItemText primary="Pay Number" secondary={selectedItem.pno} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="Pay Price" secondary={'₩'+selectedItem.payPrice.toLocaleString()}
-                                                       />
+                                        <ListItemText primary="Pay Price"
+                                                      secondary={'₩' + selectedItem.payPrice.toLocaleString()}
+                                        />
                                     </ListItem>
                                     <ListItem>
                                         <ListItemText primary="Pay Date" secondary={selectedItem.datetime} />
                                     </ListItem>
                                     <ListItem>
                                         <ListItemText primary="Pay Balance Snap" secondary={
-                                            '₩'+ (paymentType === 0 ? selectedItem.payBalanceSnap : selectedItem.transitBalanceSnap)
+                                            '₩' + (paymentType === 0 ? selectedItem.payBalanceSnap : selectedItem.transitBalanceSnap)
                                         } />
                                     </ListItem>
                                     <ListItem>
@@ -391,7 +410,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                     )}
                                     <ListItem>
                                         <ListItemText primary="KRW Amount"
-                                                      secondary={'₩' +selectedItem.krwAmount.toLocaleString()} />
+                                                      secondary={'₩' + selectedItem.krwAmount.toLocaleString()} />
                                     </ListItem>
                                     {selectedItem.foreignAmount !== null && (
                                         <ListItem>
@@ -403,7 +422,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                     )}
                                     <ListItem>
                                         <ListItemText primary="Transaction Balance Snap" secondary={
-                                            paymentType === 0 ? '₩' + selectedItem.payBalanceSnap.toLocaleString() :  '₩' +selectedItem.transitBalanceSnap.toLocaleString()
+                                            paymentType === 0 ? '₩' + selectedItem.payBalanceSnap.toLocaleString() : '₩' + selectedItem.transitBalanceSnap.toLocaleString()
                                         } />
                                     </ListItem>
                                 </>

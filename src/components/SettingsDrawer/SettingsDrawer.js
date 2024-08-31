@@ -11,7 +11,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import useAlertDialog from '../../hooks/useAlertDialog/useAlertDialog';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { AllStateContext } from '../../App';
 
 const SettingsDrawer = ({ data, onCardDelete }) => {
@@ -22,6 +22,7 @@ const SettingsDrawer = ({ data, onCardDelete }) => {
     const [state, setState] = React.useState({
         bottom: false,
     });
+    const [checked, setChecked] = useState(data.starred);
 
     const navigate = useNavigate();
 
@@ -36,6 +37,28 @@ const SettingsDrawer = ({ data, onCardDelete }) => {
         }
 
         setState({ ...state, bottom: open });
+    };
+
+    const handleClick = () => {
+        const newState = !checked;
+        const uri = newState
+            ? `${protocol}usercard/modify/star`
+            : `${protocol}usercard/delete/star`;
+
+        axios.put(uri, { userCardId: data.userCardId }, {
+            headers: {
+                Authorization: token,
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                if (res.status === 200) {
+                    setChecked(newState);
+                }
+            })
+            .catch((err) => {
+                console.error('API 요청 중 오류 발생:', err);
+            });
     };
 
     const handleCardDelete = () => {
@@ -82,7 +105,11 @@ const SettingsDrawer = ({ data, onCardDelete }) => {
                     <List>
                         {/*{['주카드 설정', '충전', '환급', '잔액 전환'].map((text) => (*/}
                         <ListItem key={'주카드 설정'} disablePadding>
-                            <ListItemButton>
+                            <ListItemButton onClick={(e) => {
+                                e.stopPropagation();
+                                handleClick();
+                            }}>
+                                {/* Todo */}
                                 <ListItemText primary={'주카드 설정'} />
                             </ListItemButton>
                         </ListItem>
@@ -136,7 +163,6 @@ const SettingsDrawer = ({ data, onCardDelete }) => {
                                 <b>Card Number</b>
                             </ListItem>
                             <ListItem disablePadding>
-                                {/*// todo 수정*/}
                                 {data.userCardId}
                             </ListItem>
                             <ListItem disablePadding>

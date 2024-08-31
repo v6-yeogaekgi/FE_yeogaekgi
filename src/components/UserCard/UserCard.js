@@ -3,46 +3,11 @@ import StarCheckbox from '../StarCheckbox/StarCheckBox';
 import BasicButton from '../BasicButton/BasicButton';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import SettingsDrawer from '../SettingsDrawer/SettingsDrawer';
 import { useEffect, useState } from 'react';
-
-const commonPaperStyle = (isActive) => ({
-    width: '90%',
-    height: '330px',
-    border: '1px solid #ccc',
-    borderRadius: '10px',
-    padding: '20px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    cursor: isActive ? 'pointer' : 'default',
-    position: 'relative',  // 오버레이 위치 기준점
-});
-
-const CardImage = ({ imageUrl, isOverlayActive }) => (
-    <div style={{
-        width: '100%',
-        height: '150px',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: '10px',
-        marginTop: '30px',
-        overflow: 'hidden',
-    }}>
-        <img
-            src={imageUrl}
-            alt="Card"
-            style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                ...(isOverlayActive ? { filter: 'brightness(80%)' } : {}),
-            }}
-        />
-    </div>
-);
+import CardContent from '@mui/material/CardContent';
+import Card from '@mui/material/Card';
+import Box from '@mui/material/Box';
 
 const Overlay = () => (
     <div style={{
@@ -51,12 +16,10 @@ const Overlay = () => (
         left: -30,
         right: -30,
         bottom: -10,
-        backgroundColor: 'rgba(19, 19, 19, 0.5)',
-        display: 'flex',
+        backgroundColor: 'rgba(19, 19, 19, 0.3)',
         justifyContent: 'center',
-        // alignItems: 'center',
-        zIndex: 1,
         borderRadius: '10px',
+        pointerEvents: 'none',
     }}>
         <Typography variant="h5" style={{ color: 'white' }}></Typography>
     </div>
@@ -66,7 +29,7 @@ export default function UserCard({ data, onCardClick, onStarChange, onCardDelete
     const navigate = useNavigate();
     const { userCardId, status, cardName, payBalance, transitBalance, starred } = data;
     const isActive = status !== 0;
-    const imageUrl = status === 0 ? '../../img/exp_design.png' : data.design;
+    const design = data.design;
 
     const [starredState, setStarredState] = useState(starred === 1);
 
@@ -87,7 +50,7 @@ export default function UserCard({ data, onCardClick, onStarChange, onCardDelete
         if (!isActive) return;
 
         // SettingsDrawer나 버튼 영역을 클릭했는지 확인
-        if (e.target.closest('.MuiDrawer-root') || e.target.closest('button')) {
+        if (e.target.closest('.settings-drawer') || e.target.closest('.star-checkbox')) {
             return;
         }
 
@@ -101,82 +64,162 @@ export default function UserCard({ data, onCardClick, onStarChange, onCardDelete
 
     const handleTopUpClick = (e) => {
         e.stopPropagation(); // 이벤트 버블링 방지
-        navigate('/wallet/top-up', { state: { data } });
+        if(isActive){
+            navigate('/wallet/top-up', { state: { data } });
+        }
     };
 
     const handleBalanceConversionClick = (e) => {
         e.stopPropagation(); // 이벤트 버블링 방지
-        navigate('/wallet/conversion', { state: { data } });
+        if(isActive){
+            navigate('/wallet/conversion', { state: { data } });
+        }
     };
 
     const handleCardDelete = () => {
         onCardDelete();
     };
 
-    const CardButtons = ({ isActive }) => (
-        <div
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-            }}
-        >
-            <BasicButton
-                text={'Balance Conversion (P - T)'}
-                width={'80%'}
-                variant={'outlined'}
-                onClick={handleBalanceConversionClick}
-                style={{ marginBottom: '10px' }}
-                disabled={!isActive}
-            />
-            <BasicButton
-                text={'Top Up'}
-                width={'80%'}
-                variant={'outlined'}
-                onClick={handleTopUpClick}
-                disabled={!isActive}
-            />
-        </div>
+    const CardButtons = () => (
+        <Grid container spacing={1}>
+            <Grid item xs={12}>
+                <BasicButton
+                    text={'Top Up'}
+                    width={'100%'}
+                    variant={'outlined'}
+                    onClick={handleTopUpClick}
+                    isActive={isActive}
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <BasicButton
+                    text={'Balance Conversion (P - T)'}
+                    width={'100%'}
+                    variant={'outlined'}
+                    onClick={handleBalanceConversionClick}
+                    style={{ marginBottom: '10px' }}
+                    isActive={isActive}
+                />
+            </Grid>
+        </Grid>
     );
 
     return (
-        <Paper
-            style={commonPaperStyle(isActive)}
-            onClick={handleCardClick}
+        <Box
+            sx={{
+                position: 'relative',
+            }}
         >
-            {status === 0 && <Overlay />}
-            <Grid container spacing={2} style={{ zIndex: 2 }}>
-                <Grid item xs={8}>
-                    <Typography variant="h7">{cardName}</Typography>
-                    <Typography>Pay Balance </Typography>
-                    <Typography variant="h5">₩{payBalance.toLocaleString()}</Typography>
-                    <Typography>Transit Balance </Typography>
-                    <Typography variant="h5">₩{transitBalance.toLocaleString()}</Typography>
-                </Grid>
-                <Grid item xs={4} style={{ position: 'relative' }}>
-                    <div style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: '30%',
-                        display: 'flex',
-                        alignItems: 'center',
-                    }}>
-                        <div onClick={(e) => e.stopPropagation()}>
-                            <StarCheckbox
-                                initialChecked={starred}
-                                userCardId={userCardId}
-                                onStarChange={handleStarChange}
-                                isActive={isActive}
+            <Card
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: 'auto',
+                    width: 360,
+                    position: 'relative',
+                    boxShadow: 'none',
+                    borderRadius: 5,
+                }}
+                onClick={handleCardClick}
+            >
+                <CardContent
+                    sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+                >
+                    <Grid container spacing={3}>
+                        <Grid
+                            item
+                            xs={4}
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'stretch',
+                                height: '100%',
+                            }}
+                        >
+                            <img
+                                src={design}
+                                alt="Card Image"
+                                style={{
+                                    width: '80%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                }}
                             />
-                        </div>
-                        <div onClick={(e) => e.stopPropagation()}>
-                            <SettingsDrawer data={data} onCardDelete={handleCardDelete}/>
-                        </div>
-                    </div>
-                    <CardImage imageUrl={imageUrl} isOverlayActive={status === 0} />
-                </Grid>
-            </Grid>
-            <CardButtons isActive={isActive} />
-        </Paper>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={8}>
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            mt: 1,
+                                            fontFamily: 'Noto Sans, sans-serif',
+                                            fontWeight: 700,
+                                        }}
+                                    >
+                                        {cardName}
+                                    </Typography>
+                                </Grid>
+
+                                <Grid item xs={4} style={{ position: 'relative' }}>
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        right: '1%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}>
+                                        <div onClick={(e) => e.stopPropagation()} className='star-checkbox'>
+                                            <StarCheckbox
+                                                initialChecked={starred}
+                                                userCardId={userCardId}
+                                                onStarChange={handleStarChange}
+                                                isActive={isActive}
+                                            />
+                                        </div>
+                                        <div onClick={(e) => e.stopPropagation()} className='settings-drawer'>
+                                            <SettingsDrawer data={data} onCardDelete={handleCardDelete} />
+                                        </div>
+                                    </div>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={2} sx={{ mt: 0.5 }}>
+                                <Grid item xs={6}>
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            fontFamily: 'Noto Sans, sans-serif',
+                                            fontWeight: 700,
+                                        }}
+                                    >
+                                        Pay
+                                    </Typography>
+                                    <Typography variant="h6">
+                                        ₩{payBalance}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            fontFamily: 'Noto Sans, sans-serif',
+                                            fontWeight: 700,
+                                        }}
+                                    >
+                                        Transit
+                                    </Typography>
+                                    <Typography variant="h6">
+                                        ₩{transitBalance}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                    <CardButtons isActive={isActive} />
+                </CardContent>
+                {!isActive && <Overlay />}
+            </Card>
+        </Box>
     );
 }

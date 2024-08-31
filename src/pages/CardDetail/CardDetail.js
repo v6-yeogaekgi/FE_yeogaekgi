@@ -79,19 +79,12 @@ export default function CardDetail(props) {
                         gap: 2,
                         paddingTop: '20px',
                         flexGrow: 1,
-                        marginBottom: '150px',
+                        marginBottom: '30px',
                     }}
                 >
                     <UserCardOnDetail data={cardData} />
                 </Box>
-                <Box sx={{
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    flexGrow: 1,
-                }}>
-                    <PaymentHistory cardData={cardData} paymentType={paymentType} onSwitchChange={handleSwitchChange} />
-                </Box>
+                <PaymentHistory cardData={cardData} paymentType={paymentType} onSwitchChange={handleSwitchChange} />
             </Box>
         </>
     );
