@@ -16,7 +16,6 @@ import ImageDetail from './pages/Community/ImageDetail';
 import TopUp from './pages/TopUp/TopUp';
 import CardDetail from './pages/CardDetail/CardDetail';
 import Refund from './pages/Refund/Refund';
-
 import NewPost from './pages/Community/NewPost';
 import EditPost from './pages/Community/EditPost';
 import { AddBoxSharp } from '@mui/icons-material';
@@ -35,9 +34,9 @@ import CurrencyConverter from './pages/CurrencyConverter/CurrencyConverter';
 import useAlertDialog from './hooks/useAlertDialog/useAlertDialog';
 import useConfirmDialog from './hooks/useConfirmDialog/useConfirmDialog';
 import axios from 'axios';
-
 import MyLikes from './pages/MyLikes/MyLikes';
 import Faq from './pages/Faq/Faq';
+import Qna from './pages/Qna/Qna';
 
 const PageLayout = ({ children, menuName, areas }) => {
     return (
@@ -52,7 +51,7 @@ const PageLayout = ({ children, menuName, areas }) => {
                 '&::-webkit-scrollbar': {
                     display: 'none', // Hide scrollbar in Webkit browsers
                 },
-                backgroundColor: menuName === "Account" ? 'white' : '#f0f4f8',
+                backgroundColor: menuName === 'Account' ? 'white' : '#f0f4f8',
             }}
         >
             <Header menuName={menuName} areas={areas} />
@@ -228,7 +227,8 @@ function App() {
                         element={
                             <PageLayout menuName={''}>
                                 <ImageDetail />
-                            </PageLayout>}
+                            </PageLayout>
+                        }
                     />
                     <Route
                         path={'/mypage'}
@@ -320,6 +320,15 @@ function App() {
                         element={
                             <PageLayout menuName={'FAQ'}>
                                 <Faq />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/qna'}
+                        element={
+                            <PageLayout menuName={'Q&A'}>
+                                <Qna />
                             </PageLayout>
                         }
                     />
