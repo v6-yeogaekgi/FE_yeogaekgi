@@ -1,40 +1,45 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import axios from 'axios';
-import { useSelected } from '../provider/SelectedProvider';
+import { AllStateContext } from '../../../App';
 
-const UseServicesMarkerApi = (state) => {
-    const [data, setData] = useState(null);
+const useServicesMarkerApi = (state) => {
+    const [servicesData, setServicesData] = useState(null);
     const [apiLoading, setApiLoading] = useState(false);
+    const { protocol } = useContext(AllStateContext);
 
+    // Build the query string based on the state
     const buildQueryString = useCallback(() => {
         const params = [];
-        if (state.Tour) params.push('TouristAttraction=TouristAttraction');
-        if (state.ACTIVITY) params.push('ACTIVITY=ACTIVITY');
-        if (state.ETC) params.push('ETC=ETC');
+        if (state.Tour) params.push('type=TouristAttraction');
+        if (state.ACTIVITY) params.push('type=ACTIVITY');
+        if (state.ETC) params.push('type=ETC');
         return params.length > 0 ? `?${params.join('&')}` : '';
     }, [state]);
 
-    const serviceListAPI = useCallback(() => {
+    // Function to fetch service list data
+    const fetchServiceList = useCallback(() => {
         setApiLoading(true);
         const queryString = buildQueryString();
         axios
-            .get(`http://localhost:8090/services/servicesList${queryString}`)
+            .get(`${protocol}services/servicesList${queryString}`)
             .then((res) => {
-                setData(res.data);
+                setServicesData(res.data);
                 setApiLoading(false);
             })
             .catch((error) => {
                 setApiLoading(false);
                 console.error('Error fetching services data:', error);
             });
-    }, [buildQueryString]);
+    }, [buildQueryString, protocol]);
 
+    // Fetch data when the state changes
     useEffect(() => {
-        serviceListAPI();
-        console.log('리렌더링됨');
-    }, [serviceListAPI]);
+        console.log('새로운 상태로 데이터를 가져옵니다:', state); // 상태 변경 시 로깅
+        fetchServiceList();
+    }, [fetchServiceList, state]); // state가 추가되어야 함
 
-    return { data, apiLoading };
+
+    return { servicesData, apiLoading };
 };
 
-export default UseServicesMarkerApi;
+export default useServicesMarkerApi;

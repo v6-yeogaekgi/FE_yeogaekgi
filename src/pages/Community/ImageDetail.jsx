@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams , useLocation} from 'react-router-dom';
 import axios from 'axios';
 import { AllStateContext } from '../../App';
 import Header from '../../layout/Header/Header';
@@ -8,52 +8,15 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-const PageLayout = ({ children }) => {
-    return (
-        <>
-            <Header />
-            <Box
-                sx={{
-                    flexGrow: 1,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: 2,
-                    minHeight: 'calc(100vh - 56px)',
-                }}
-            >
-                {children}
-            </Box>
-        </>
-    );
-};
+
 
 const ImageDetail = () => {
-    const [images, setImages] = useState([]);
-    const { protocol, token } = useContext(AllStateContext);
-    const { postId } = useParams();
+    const location = useLocation();
+    const [images, setImages] = useState(location.state?.images || []);
 
-    const getApiUrl = protocol + 'community/';
-
-    const getApi = () => {
-        axios
-            .get(getApiUrl + postId)
-            .then((res) => {
-                const imagesArray = JSON.parse(res.data.images);
-                setImages(imagesArray || []);
-            })
-            .catch((error) => {
-                console.error('API 호출 중 오류 발생:', error);
-                setImages([]);
-            });
-    };
-
-    useEffect(() => {
-        getApi();
-    }, []);
 
     return (
-        <PageLayout>
+        <div>
             {images.length > 0 ? (
                 <Swiper
                     spaceBetween={50}
@@ -74,7 +37,7 @@ const ImageDetail = () => {
             ) : (
                 <p>Loading...</p>
             )}
-        </PageLayout>
+        </div>
     );
 };
 

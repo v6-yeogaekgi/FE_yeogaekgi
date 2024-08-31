@@ -16,7 +16,6 @@ import ImageDetail from './pages/Community/ImageDetail';
 import TopUp from './pages/TopUp/TopUp';
 import CardDetail from './pages/CardDetail/CardDetail';
 import Refund from './pages/Refund/Refund';
-
 import NewPost from './pages/Community/NewPost';
 import EditPost from './pages/Community/EditPost';
 import { AddBoxSharp } from '@mui/icons-material';
@@ -29,13 +28,17 @@ import ReviewRegister from './pages/Map/pages/ReviewRegister';
 import ReviewEdit from './pages/Map/pages/ReviewEdit';
 import { fetchAndStoreExchangeRate } from './components/ExchangeRateManager/ExchangeRateManager';
 import MyReviews from './pages/MyReviews/MyReviews';
+import { SelectedProvider } from './pages/Map/provider/SelectedProvider';
+import { MapProvider } from './pages/Map/provider/MapProvider';
 import CurrencyConverter from './pages/CurrencyConverter/CurrencyConverter';
-
 import useAlertDialog from './hooks/useAlertDialog/useAlertDialog';
 import useConfirmDialog from './hooks/useConfirmDialog/useConfirmDialog';
+import axios from 'axios';
 import MyLikes from './pages/MyLikes/MyLikes';
+import Faq from './pages/Faq/Faq';
+import Qna from './pages/Qna/Qna';
 
-const PageLayout = ({ children, menuName }) => {
+const PageLayout = ({ children, menuName, areas }) => {
     return (
         <Box
             sx={{
@@ -48,9 +51,10 @@ const PageLayout = ({ children, menuName }) => {
                 '&::-webkit-scrollbar': {
                     display: 'none', // Hide scrollbar in Webkit browsers
                 },
+                backgroundColor: menuName === 'Account' ? 'white' : '#f0f4f8',
             }}
         >
-            <Header menuName={menuName} />
+            <Header menuName={menuName} areas={areas} />
             <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>{children}</Box>
             <Footer />
         </Box>
@@ -75,6 +79,8 @@ export const AllStateContext = React.createContext();
 const protocol = process.env.REACT_APP_API_PROTOCOL;
 
 function App() {
+    const areaUrl = protocol + 'usercard/area';
+    const [area, setArea] = useState([]);
     const { openAlertDialog, AlertDialog } = useAlertDialog();
     const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
     const dialog = {
@@ -88,8 +94,27 @@ function App() {
         },
     };
 
+    const getArea = () => {
+        axios
+            .get(areaUrl)
+            .then((res) => {
+                if (res) {
+                    console.log(res.data);
+                    setArea(res.data);
+                    const defaultArea = res.data.includes('서울')
+                        ? '서울'
+                        : res.data[0];
+                    localStorage.setItem('selectArea', defaultArea);
+                }
+            })
+            .catch((err) => {
+                console.error('API 요청 실패:', err);
+            });
+    };
+
     useEffect(() => {
         fetchAndStoreExchangeRate();
+        getArea();
     }, []);
 
     return (
@@ -105,7 +130,14 @@ function App() {
                             </FirstPage>
                         }
                     />
-                    <Route path={'/home'} element={<HomePage />} />
+                    <Route
+                        path={'/home'}
+                        element={
+                            <PageLayout menuName={'Home'} areas={area}>
+                                <HomePage />
+                            </PageLayout>
+                        }
+                    />
                     <Route
                         path={'/wallet'}
                         element={
@@ -118,7 +150,9 @@ function App() {
                         path={'/map'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <Map />
+                                <MapProvider>
+                                    <Map />
+                                </MapProvider>
                             </PageLayout>
                         }
                     />
@@ -126,9 +160,11 @@ function App() {
                         path={'/map/register/:serviceId/:name'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <ReviewProvider>
-                                    <ReviewRegister />
-                                </ReviewProvider>
+                                <SelectedProvider>
+                                    <ReviewProvider>
+                                        <ReviewRegister />
+                                    </ReviewProvider>
+                                </SelectedProvider>
                             </PageLayout>
                         }
                     />
@@ -136,9 +172,11 @@ function App() {
                         path={'/map/edit/:name/:serviceId/:reviewId'}
                         element={
                             <PageLayout menuName={'map'}>
-                                <ReviewProvider>
-                                    <ReviewEdit />
-                                </ReviewProvider>
+                                <SelectedProvider>
+                                    <ReviewProvider>
+                                        <ReviewEdit />
+                                    </ReviewProvider>
+                                </SelectedProvider>
                             </PageLayout>
                         }
                     />
@@ -186,7 +224,11 @@ function App() {
                     />
                     <Route
                         path={'/community/imageDetail/:postId'}
-                        element={<ImageDetail />}
+                        element={
+                            <PageLayout menuName={''}>
+                                <ImageDetail />
+                            </PageLayout>
+                        }
                     />
                     <Route
                         path={'/mypage'}
@@ -269,6 +311,24 @@ function App() {
                         element={
                             <PageLayout menuName={'Currency Converter'}>
                                 <CurrencyConverter />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/faq'}
+                        element={
+                            <PageLayout menuName={'FAQ'}>
+                                <Faq />
+                            </PageLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/qna'}
+                        element={
+                            <PageLayout menuName={'Q&A'}>
+                                <Qna />
                             </PageLayout>
                         }
                     />

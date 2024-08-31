@@ -8,7 +8,6 @@ const CurrencyConverterForm = () => {
     const [member, setMember] = useState(
         JSON.parse(localStorage.getItem('member')),
     );
-    console.log(member);
     const [krwAmount, setKrwAmount] = useState();
     const [foreignAmount, setForeignAmount] = useState();
 
