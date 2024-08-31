@@ -48,7 +48,9 @@ const StarCheckbox = ({ initialChecked, userCardId, onStarChange, isActive }) =>
             .then((res) => {
                 if (res.status === 200) {
                     setChecked(newState);
-                    onStarChange(newState);
+                    if(onStarChange){
+                        onStarChange(newState);
+                    }
                 }
             })
             .catch((err) => {

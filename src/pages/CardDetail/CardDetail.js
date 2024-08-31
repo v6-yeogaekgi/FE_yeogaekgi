@@ -82,7 +82,8 @@ export default function CardDetail(props) {
                         marginBottom: '30px',
                     }}
                 >
-                    <UserCardOnDetail data={cardData} />
+                    <UserCardOnDetail
+                        initialData={cardData} />
                 </Box>
                 <PaymentHistory cardData={cardData} paymentType={paymentType} onSwitchChange={handleSwitchChange} />
             </Box>

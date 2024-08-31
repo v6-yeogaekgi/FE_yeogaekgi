@@ -11,10 +11,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import useAlertDialog from '../../hooks/useAlertDialog/useAlertDialog';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AllStateContext } from '../../App';
 
-const SettingsDrawer = ({ data, onCardDelete }) => {
+const SettingsDrawer = ({ data, onCardDelete, onCardUpdate }) => {
 
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
@@ -53,6 +53,7 @@ const SettingsDrawer = ({ data, onCardDelete }) => {
         })
             .then((res) => {
                 if (res.status === 200) {
+                    onCardUpdate({starred: newState});
                     setChecked(newState);
                 }
             })
@@ -109,7 +110,6 @@ const SettingsDrawer = ({ data, onCardDelete }) => {
                                 e.stopPropagation();
                                 handleClick();
                             }}>
-                                {/* Todo */}
                                 <ListItemText primary={'주카드 설정'} />
                             </ListItemButton>
                         </ListItem>

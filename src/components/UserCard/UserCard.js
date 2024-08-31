@@ -177,7 +177,7 @@ export default function UserCard({ data, onCardClick, onStarChange, onCardDelete
                                             />
                                         </div>
                                         <div onClick={(e) => e.stopPropagation()} className='settings-drawer'>
-                                            <SettingsDrawer data={data} onCardDelete={handleCardDelete} />
+                                            <SettingsDrawer data={data} onCardDelete={handleCardDelete} onCardUpdate={onStarChange}/>
                                         </div>
                                     </div>
                                 </Grid>
