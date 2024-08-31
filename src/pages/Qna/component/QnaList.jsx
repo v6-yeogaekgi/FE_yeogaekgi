@@ -1,6 +1,7 @@
 import QnaItem from '../component/QnaItem';
 import React from 'react';
 import List from '@mui/material/List';
+import { Box } from '@mui/material';
 
 const mockData = [
     {
@@ -29,7 +30,7 @@ const mockData = [
     },
 ];
 
-const QnaList = () => {
+const QnaList = ({ qnaItem }) => {
     return (
         <List
             sx={{
@@ -40,9 +41,11 @@ const QnaList = () => {
                 borderRadius: 5,
             }}
         >
-            {mockData.map((item) => (
-                <QnaItem key={item.id} {...item} />
-            ))}
+            {qnaItem.length > 0 ? (
+                qnaItem.map((item) => <QnaItem key={item.id} {...item} />)
+            ) : (
+                <Box>Qna가 없습니다</Box>
+            )}
         </List>
     );
 };

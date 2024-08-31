@@ -6,8 +6,10 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import { getFormattedDate } from '../../../util';
 
 const QnaItem = ({ title, qnaDate, status }) => {
+    const targetDate = new Date(qnaDate);
     return (
         <ListItem>
             <ListItemAvatar>
@@ -19,7 +21,7 @@ const QnaItem = ({ title, qnaDate, status }) => {
             </ListItemAvatar>
             <ListItemText
                 primary={title}
-                secondary={qnaDate}
+                secondary={getFormattedDate(targetDate)}
                 sx={{
                     '& .MuiListItemText-primary': {
                         fontWeight: 'bold',
