@@ -7,8 +7,13 @@ import SettingsDrawer from '../SettingsDrawer/SettingsDrawer';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
+import { useCallback, useEffect, useState } from 'react';
 
-export default function UserCardOnDetail({ data, onCardClick }) {
+export default function UserCardOnDetail({ initialData, onCardClick }) {
+    const [data, setData] = useState({
+        ...initialData,
+        starred: initialData.starred === 1,  // Transform starred to boolean
+    });
     const navigate = useNavigate();
     const { userCardId, status, cardName, payBalance, transitBalance, starred } = data;
     const isActive = status !== 0;
@@ -23,6 +28,14 @@ export default function UserCardOnDetail({ data, onCardClick }) {
         }
     };
 
+    const handleCardUpdate = useCallback((updatedData) => {
+        console.log(updatedData);
+        setData(prevData => ({
+            ...prevData,
+            ...updatedData,
+        }));
+    },[])
+
     const handleTopUpClick = (e) => {
         e.stopPropagation(); // 이벤트 버블링 방지
         navigate('/wallet/top-up', { state: { data } });
@@ -32,6 +45,9 @@ export default function UserCardOnDetail({ data, onCardClick }) {
         e.stopPropagation(); // 이벤트 버블링 방지
         navigate('/wallet/conversion', {state: {data}});
     };
+
+    useEffect(() => {
+    }, [data]);
 
     const CardButtons = ({ isActive }) => (
         <div
@@ -46,14 +62,14 @@ export default function UserCardOnDetail({ data, onCardClick }) {
             <BasicButton
                 text={'Balance Conversion'}
                 width={'45%'}
-                variant={'outlined'}
+                variant={'contained'}
                 onClick={handleTopUpClick}
                 disabled={!isActive}
             />
             <BasicButton
                 text={'Top Up'}
                 width={'45%'}
-                variant={'outlined'}
+                variant={'contained'}
                 onClick={handleBalanceConversionClick}
                 disabled={!isActive}
             />
@@ -81,7 +97,7 @@ export default function UserCardOnDetail({ data, onCardClick }) {
                 <CardContent
                     sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}
                 >
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} sx={{marginBottom: '20px'}}>
                         <Grid
                             item
                             xs={4}
@@ -126,7 +142,9 @@ export default function UserCardOnDetail({ data, onCardClick }) {
                                     }}>
                                         <div onClick={(e) => e.stopPropagation()} className='star-checkbox'>
                                             <StarCheckbox
-                                                initialChecked={isActive && starred === 1}
+                                                initialChecked={isActive && starred}
+                                                userCardId={userCardId}
+                                                isActive={isActive}
                                             />
                                         </div>
                                         <div onClick={(e) => e.stopPropagation()} className='settings-drawer'>
@@ -134,6 +152,7 @@ export default function UserCardOnDetail({ data, onCardClick }) {
                                                             onCardDelete={() => {
                                                                 navigate('/wallet', { state: { data } })
                                                             }}
+                                                            onCardUpdate={handleCardUpdate}
                                             />
                                         </div>
                                     </div>

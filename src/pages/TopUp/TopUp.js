@@ -49,7 +49,7 @@ export default function TopUp({ data }) {
                         marginBottom: '30px',
                     }}
                 >
-                    <UserCardOnDetail data={cardData} />
+                    <UserCardOnDetail initialData={cardData} />
                 </Box>
                 <Box
                     sx={{
