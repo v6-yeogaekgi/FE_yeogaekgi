@@ -46,14 +46,14 @@ export default function UserCardOnDetail({ data, onCardClick }) {
             <BasicButton
                 text={'Balance Conversion'}
                 width={'45%'}
-                variant={'outlined'}
+                variant={'contained'}
                 onClick={handleTopUpClick}
                 disabled={!isActive}
             />
             <BasicButton
                 text={'Top Up'}
                 width={'45%'}
-                variant={'outlined'}
+                variant={'contained'}
                 onClick={handleBalanceConversionClick}
                 disabled={!isActive}
             />
@@ -81,7 +81,7 @@ export default function UserCardOnDetail({ data, onCardClick }) {
                 <CardContent
                     sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}
                 >
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} sx={{marginBottom: '20px'}}>
                         <Grid
                             item
                             xs={4}
@@ -127,6 +127,9 @@ export default function UserCardOnDetail({ data, onCardClick }) {
                                         <div onClick={(e) => e.stopPropagation()} className='star-checkbox'>
                                             <StarCheckbox
                                                 initialChecked={isActive && starred === 1}
+                                                userCardId={userCardId}
+                                                onStarChange={handleCardClick}
+                                                isActive={isActive}
                                             />
                                         </div>
                                         <div onClick={(e) => e.stopPropagation()} className='settings-drawer'>

@@ -86,7 +86,7 @@ export default function UserCard({ data, onCardClick, onStarChange, onCardDelete
                 <BasicButton
                     text={'Top Up'}
                     width={'100%'}
-                    variant={'outlined'}
+                    variant={'contained'}
                     onClick={handleTopUpClick}
                     isActive={isActive}
                 />
@@ -95,7 +95,7 @@ export default function UserCard({ data, onCardClick, onStarChange, onCardDelete
                 <BasicButton
                     text={'Balance Conversion (P - T)'}
                     width={'100%'}
-                    variant={'outlined'}
+                    variant={'contained'}
                     onClick={handleBalanceConversionClick}
                     style={{ marginBottom: '10px' }}
                     isActive={isActive}
@@ -125,7 +125,7 @@ export default function UserCard({ data, onCardClick, onStarChange, onCardDelete
                 <CardContent
                     sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}
                 >
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} sx={{marginBottom: '20px'}}>
                         <Grid
                             item
                             xs={4}
