@@ -152,7 +152,7 @@ export default function Refund() {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        width: '90%',
+                        width: '95%',
                         margin: '0 auto',
                         gap: 2,
                         paddingTop: '20px',
@@ -164,10 +164,8 @@ export default function Refund() {
                     <div style={{
                         width: '100%',
                         backgroundColor: 'white',
-                        marginLeft: 'calc(-45vw + 50%)',
-                        paddingLeft: 'calc(60vw - 50%)',
-                        paddingRight: 'calc(60vw - 50%)',
-                        borderRadius: '80px',
+                        padding: '10px',
+                        borderRadius: '15px',
                     }}>
                         <Grid container spacing={2} sx={{ width: '100%', margin: 'auto', paddingTop: '20px' }}>
                             <Grid item xs={12}>
