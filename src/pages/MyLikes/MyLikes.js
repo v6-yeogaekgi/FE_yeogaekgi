@@ -45,6 +45,8 @@ export default function MyLikes(props) {
                         type: item.type,  // 0: 전체 | 1: 관광지 | 2: 액티비티 | 3: 기타
                     }));
                     setData(formattedData);
+                }else{
+                    setData([]);
                 }
             })
             .catch((err) => {
@@ -118,9 +120,18 @@ export default function MyLikes(props) {
                         </Card>
                     ))
                 ) : (
-                    <Typography>
-                        no data
-                    </Typography>
+                    <Card
+                        sx={{
+                            margin: '15px',
+                        }}
+                    >
+                        <CardContent>
+                            <Typography>
+                                no data
+                            </Typography>
+                        </CardContent>
+                    </Card>
+
                 )}
             </Paper>
         </Box>
