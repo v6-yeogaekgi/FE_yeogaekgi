@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import { AllStateContext } from '../../App';
 import axios from 'axios';
 
-import QnaList from './component/QnaList';
+import QnaList from './components/QnaList';
 
 const Qna = () => {
     const [qnaItem, setQnaItem] = useState([]);
