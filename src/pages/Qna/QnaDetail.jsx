@@ -17,7 +17,13 @@ const QnaDetail = () => {
     const navigate = useNavigate();
     const [qna , setQna] = useState({});
 
+    useEffect(() => {
+        getApi();
+    }, []);
+
+    // ===================== API =====================
     const getApiUrl = protocol + 'qna/'+qnaId;
+
     const getApi = () => {
         axios
             .get(getApiUrl, {
@@ -31,10 +37,28 @@ const QnaDetail = () => {
                 console.log(res.data);
             });
     };
-    useEffect(() => {
-        getApi();
-    }, []);
 
+    const deleteApi = () => {
+        return axios
+            .delete(protocol + 'qna/' + qnaId, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json', // 데이터 형식을 명시
+                },
+            })
+            .then((res) => {
+                dialog.alert.openAlertDialog(
+                    'Success!',
+                    'The post has been successfully deleted.',
+                    () => navigate('/qna'),
+                );
+            })
+            .catch((error) => {
+                console.error('API 호출 오류:', error);
+                // throw error;
+            });
+    };
+    // ===================== API =====================
     return (
         <div
             className="qna-detail"
@@ -50,7 +74,7 @@ const QnaDetail = () => {
                     mb: 2,
                 }}
             >
-                <div className="regDate" style={{ dispaly:"flex", textAlign:'right' }}>
+                <div className="regDate" style={{ dispaly: "flex", textAlign: 'right' }}>
                     <Typography
                         component="span"
                         variant="caption"
@@ -90,7 +114,8 @@ const QnaDetail = () => {
                             },
                         }}
                         fullWidth={true}
-                        onChange={()=>{}}
+                        onChange={() => {
+                        }}
                         value={qna.title}
                         defaultValue={'  '}
                         inputProps={{ maxLength: 20 }}
@@ -134,11 +159,12 @@ const QnaDetail = () => {
                         value={qna.content}
                         inputProps={{ maxLength: 500 }}
                         InputProps={{ readOnly: true }}
-                        onChange={()=>{}}
+                        onChange={() => {
+                        }}
                     ></BasicTextField>
-                    <div  style={{
-                        width:"100%",
-                        overflowX:'auto',
+                    <div style={{
+                        width: "100%",
+                        overflowX: 'auto',
                         overflowY: 'hidden', // Hide vertical scrolling
                         '&::-webkit-scrollbar': {
                             display: 'none', // Hide scrollbar in Webkit browsers
@@ -146,50 +172,56 @@ const QnaDetail = () => {
                         whiteSpace: 'nowrap',
                         marginTop: '10px'
                     }}>
-                    {qna?.images &&
-                        <div
-                            style={{ display: 'inline-block'}}
-                        >
-                            {qna?.images.map((image, index) => (
-                            <img
-                                key={index}
-                                src={image}
-                                alt={`img-${index}`}
-                                style={{ height: '120px', width: '120px', margin:"2px", display: 'inline-block'}}
-                                onClick={()=>{}}
-                            />
-                            ))}
-                        </div>
-                    }
+                        {qna?.images &&
+                            <div
+                                style={{ display: 'inline-block' }}
+                            >
+                                {qna?.images.map((image, index) => (
+                                    <img
+                                        key={index}
+                                        src={image}
+                                        alt={`img-${index}`}
+                                        style={{
+                                            height: '120px',
+                                            width: '120px',
+                                            margin: "2px",
+                                            display: 'inline-block'
+                                        }}
+                                        onClick={() => {
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        }
                     </div>
                 </Box>
             </Card>
 
-            {! qna?.status && (
-            <div
-                style={{
-                    width: '100%',
-                    textAlign: 'center',
-                    marginTop: '10px',
-                }}
-            >
-                <BasicButton
-                    variant={'contained'}
-                    size={'small'}
-                    width={'100%'}
-                    text={'Modify'}
-                    onClick={() => {
-                        navigate('/qna/modify/' + qnaId, {
-                            state: {
-                                title: qna.title,
-                                content: qna.content,
-                                images: qna.images,
-                                type: 'mod',
-                            },
-                        });
+            {!qna?.status && (
+                <div
+                    style={{
+                        width: '100%',
+                        textAlign: 'center',
+                        marginTop: '10px',
                     }}
-                ></BasicButton>
-            </div>
+                >
+                    <BasicButton
+                        variant={'contained'}
+                        size={'small'}
+                        width={'100%'}
+                        text={'Modify'}
+                        onClick={() => {
+                            navigate('/qna/modify/' + qnaId, {
+                                state: {
+                                    title: qna.title,
+                                    content: qna.content,
+                                    images: qna.images,
+                                    type: 'mod',
+                                },
+                            });
+                        }}
+                    ></BasicButton>
+                </div>
             )}
             <div
                 style={{
@@ -204,6 +236,11 @@ const QnaDetail = () => {
                     width={'100%'}
                     text={'delete'}
                     onClick={() => {
+                        dialog.confirm.openConfirmDialog(
+                            'Confirm Deletion',
+                            'Are you sure you want to delete this?',
+                            deleteApi,
+                        );
                     }}
                 ></BasicButton>
             </div>
@@ -252,7 +289,8 @@ const QnaDetail = () => {
                         multiline={true}
                         defaultValue={'  '}
                         value={qna.reply}
-                        onChange={()=>{}}
+                        onChange={() => {
+                        }}
                         inputProps={{ maxLength: 500 }}
                         InputProps={{ readOnly: true }}
                     ></BasicTextField>
@@ -260,6 +298,7 @@ const QnaDetail = () => {
                 </Card>
             )}
             <dialog.alert.AlertDialog></dialog.alert.AlertDialog>
+            <dialog.confirm.ConfirmDialog></dialog.confirm.ConfirmDialog>
         </div>
     );
 };
