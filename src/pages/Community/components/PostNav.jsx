@@ -8,43 +8,48 @@ import PersonIcon from '@mui/icons-material/Person';
 import InputAdornment from '@mui/material/InputAdornment';
 import Box from '@mui/material/Box';
 
-export default function PostNav({ handleSearch, search }) {
+export default function PostNav({ handleSearch, search, keyword }) {
     const navigate = useNavigate();
-
+    const [inputValue, setInputValue] = React.useState('');
     const onClickMy = () => {
         handleSearch({
-                content: '',
-                hashtag: '',
+                keyword: '',
+                type: '',
                 myPost: true,
                 page: 0
         });
         // navigate('/community', { state: { myPost: true } });
     };
     // 키보드 입력 처리
-    const handleChange = (event) => {
-        const keyword = event.target.value.trim();
+    const handleChange = () => {
+        const keyword = inputValue.trim();
         if (keyword.length > 1 && keyword[0] === '#') {
             handleSearch({
-                    content: '',
-                    hashtag: keyword.substr(1),
+                    type: 'hashtag',
+                    keyword: keyword.substr(1),
                     myPost: false,
                     page: 0
             });
             // navigate('/community', { state: { hashtag: keyword.substr(1) } });
         } else {
             handleSearch({
-                content: keyword,
-                hashtag: '',
+                type: 'content',
+                keyword: 'keyword',
                 myPost: false,
                 page: 0
             });
             // navigate('/community', { state: { content: keyword } });
         }
     };
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            handleChange();
+        }
+    };
 
 
     return (
-        <Box sx={{ padding: "10px", backgroundColor: "#F0F0F0" }}>
+        <Box sx={{ padding: "10px" }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <BasicTextField
                     sx={{
@@ -58,9 +63,10 @@ export default function PostNav({ handleSearch, search }) {
                             </InputAdornment>
                         ),
                     }}
-                    value={search.hashtag ? `#${search.hashtag}` : undefined}
+                    value={inputValue}
                     variant={"standard"}
-                    onChange={handleChange}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     // onKeyDown={searchKeyword}
                     placeholder={"Enter search keywords"}
                 />

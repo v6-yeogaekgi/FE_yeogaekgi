@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PostItem from './PostItem';
 import { Box } from '@mui/material';
+import { useEffect } from 'react';
 
 const PostList = ({ posts, likeList = [], alertDialog, confirmDialog }) => {
     return (

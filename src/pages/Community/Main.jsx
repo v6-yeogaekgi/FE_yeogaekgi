@@ -12,16 +12,16 @@ export default function Main(props) {
     const observeTarget = useRef(null);    // observe 타겟이 될 요소
     const callback = (entries) =>{ // target이 화면에 나타날때만 호출됨.
         if(isLoading || !hasNext){ return; }// 로딩중이면 무사
-        console.log("hasNext: ",hasNext)
         entries.forEach(entry => {
             if(entry.isIntersecting){
-                setSearch({
-                    ...search,
-                    ...{page:search.page+1}
-                })
+                setSearch(prevState => (
+                    {
+                        ...prevState,
+                        page:(prevState.page + 1)
+                    }
+                ))
             }
         })
-
     };
     const options = {
         threshold: 1.0,  // 타겟 요소가 얼마나 들어왔을때 백함수를 실행할 것인지 결정합니다. 1이면 타겟 요소 전체가 들어와야함.
@@ -132,7 +132,10 @@ export default function Main(props) {
 
 
     const handleSearch = ( newSearch )=> { // PostNav 컴포넌트에서 search 값 set하기 위함.
+        setPosts([]);
+        console.log("search", newSearch)
         setSearch(newSearch);
+
     }
 
 
