@@ -5,6 +5,8 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import Box from '@mui/material/Box';
+import MusicNoteIcon from '@mui/icons-material/MusicNote'; // 음악 재생 중 아이콘 추가
 
 const MusicPlayer = () => {
     const songs = [
@@ -45,7 +47,7 @@ const MusicPlayer = () => {
     };
 
     return (
-        <div>
+        <Box sx={{ position: 'relative' }}>
             <ReactHowler
                 src={songs[currentSongIndex]}
                 playing={playing}
@@ -55,19 +57,51 @@ const MusicPlayer = () => {
                     setPlaying(true);
                 }}
             />
-            <div>
-                <IconButton onClick={handlePrevious}>
-                    <SkipPreviousIcon />
-                </IconButton>
-                <IconButton onClick={togglePlay}>
-                    {playing ? <PauseIcon /> : <PlayArrowIcon />}
-                </IconButton>
-                <IconButton onClick={handleNext}>
-                    <SkipNextIcon />
-                </IconButton>
-            </div>
-        </div>
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                }}
+            >
+                {!playing ? (
+                    <IconButton onClick={togglePlay}>
+                        <PlayArrowIcon />
+                    </IconButton>
+                ) : (
+                    <>
+                        <IconButton onClick={handlePrevious}>
+                            <SkipPreviousIcon />
+                        </IconButton>
+                        <IconButton onClick={togglePlay}>
+                            <PauseIcon />
+                        </IconButton>
+                        <IconButton onClick={handleNext}>
+                            <SkipNextIcon />
+                        </IconButton>
+                    </>
+                )}
+                {playing && (
+                    <IconButton
+                        sx={{
+                            position: 'fixed',
+                            bottom: 16,
+                            right: 16,
+                            backgroundColor: 'white',
+                            borderRadius: '50%',
+                            padding: '8px',
+                            boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                            zIndex: 1000,
+                        }}
+                        onClick={() => setPlaying(false)} // 클릭 시 음악 정지
+                    >
+                        <MusicNoteIcon />
+                    </IconButton>
+                )}
+            </Box>
+        </Box>
     );
 };
-//giterror
+
 export default MusicPlayer;
