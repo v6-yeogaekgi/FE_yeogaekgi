@@ -69,8 +69,7 @@ export default function Wallet(props) {
 
     const getApi = () => {
         axios
-            .post(uri,
-                {},
+            .get(uri,
                 {
                     headers: {
                         Authorization: token,

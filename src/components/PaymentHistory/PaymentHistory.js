@@ -50,9 +50,9 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
     const uri = protocol + 'payTrack/list';
 
     const getApi = (userCardNo, year, month) => {
+
         axios
-            .post(uri,
-                { userCardNo, year, month },
+            .get(uri+'?'+'userCardNo='+userCardNo+'&year='+year+'&month='+month,
                 {
                     headers: {
                         Authorization: token,
