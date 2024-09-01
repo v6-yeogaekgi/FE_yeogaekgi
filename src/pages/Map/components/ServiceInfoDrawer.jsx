@@ -1,3 +1,4 @@
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { styled } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import Box from '@mui/material/Box';
@@ -5,19 +6,17 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { Global } from '@emotion/react';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import React, { useContext, useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
 import { Rating } from '@mui/material';
 import ReviewList from './ReviewList';
 import ReviewImgList from './ReviewImgList';
-import { useNavigate } from 'react-router-dom';
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
-
+import { useNavigate } from 'react-router-dom';
 import { useSelected } from '../provider/SelectedProvider';
 import { useReview } from '../provider/ReviewProvider';
+import BasicButton from '../../../components/BasicButton/BasicButton';
 
 const drawerBleeding = 56;
 
@@ -45,7 +44,7 @@ const ServiceInfoDrawer = () => {
         setViewLikeCnt,
         viewLikeCount,
     } = useSelected();
-    const { list } = useReview();
+    const { totalScore, img } = useReview();
 
     useEffect(() => {
         if (selectedServiceInfo && selectedServiceInfo.likeCnt !== undefined) {
@@ -54,21 +53,21 @@ const ServiceInfoDrawer = () => {
         }
     }, [selectedServiceInfo]);
 
+    useEffect(() => {
+        if (img.length > 0) {
+            const numberOfReviews = img.length;
+            const avgScore =
+                Math.round((totalScore / numberOfReviews) * 10) / 10;
+            setScore(avgScore);
+        } else {
+            setScore(0);
+        }
+    }, [img, totalScore]);
+
     const handleNavigateToRegister = () => {
         const name = selectedServiceInfo.name;
         navigate(`/map/register/${selectedService}/${name}`);
     };
-
-    useEffect(() => {
-        if (list != null) {
-            const totalScore = list.content.reduce(
-                (acc, scores) => acc + scores.score,
-                0,
-            );
-            let avgScore = Math.round((totalScore / list.size) * 10) / 10;
-            setScore(avgScore);
-        }
-    }, [list]);
 
     return (
         <>
@@ -127,25 +126,14 @@ const ServiceInfoDrawer = () => {
                             sx={{
                                 color: 'text.primary',
                                 fontWeight: 'bold',
-                                display: 'flex', // flexbox를 사용해 수직 중앙 정렬
-                                alignItems: 'center', // 텍스트를 수직 중앙에 배치
-                                height: 40, // 고정 높이 설정
+                                display: 'flex',
+                                alignItems: 'center',
+                                height: 40,
                             }}
                             variant="h6"
                         >
                             {selectedServiceInfo?.name}
                         </Typography>
-                        <Typography
-                            sx={{
-                                color: 'text.secondary',
-                                fontSize: '0.875rem',
-                                ml: 1,
-                                display: 'flex', // flexbox를 사용해 수직 중앙 정렬
-                                pt: 0.5,
-                                alignItems: 'center', // 텍스트를 수직 중앙에 배치
-                                height: 40, // 고정 높이 설정
-                            }}
-                        ></Typography>
                     </Box>
                     <Box
                         sx={{
@@ -184,7 +172,6 @@ const ServiceInfoDrawer = () => {
                 >
                     {selectedServiceInfo?.content}
                 </Typography>
-
                 <Box
                     sx={{
                         display: 'flex',
@@ -222,21 +209,23 @@ const ServiceInfoDrawer = () => {
                         px: 2,
                         pb: 2,
                         height: '100%',
-                        overflow: 'auto',
+                        overflowY: 'auto',
                     }}
                 >
                     <ReviewImgList />
                     <ReviewList />
                 </Box>
                 <Box sx={{ px: 2, pb: 2 }}>
-                    <Button
+                    <BasicButton
+                        text="Register"
                         variant="contained"
-                        color="primary"
-                        fullWidth
+                        btnColor="#4653f9"
+                        width="100%"
                         onClick={handleNavigateToRegister}
-                    >
-                        Register
-                    </Button>
+                        textColor="white"
+                        height="50px"
+                        isActive={true}
+                    />
                 </Box>
             </SwipeableDrawer>
         </>

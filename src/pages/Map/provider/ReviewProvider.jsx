@@ -2,16 +2,21 @@ import React, { createContext, useContext, useState } from 'react';
 import axios from 'axios';
 import { useSelected } from './SelectedProvider';
 import { AllStateContext } from '../../../App';
+import { useNavigate } from 'react-router-dom';
 
 const ReviewContext = createContext();
 
 export const ReviewProvider = ({ children }) => {
     const [selectedReview, setSelectedReview] = useState(null);
-    const [list, setList] = useState(null);
+    const [list, setList] = useState([]);
     const [img, setImg] = useState([]);
     const [apiLoading, setApiLoading] = useState(false);
     const { protocol } = useContext(AllStateContext);
     const { selectedService } = useSelected();
+    const [totalScore, setTotalScore] = useState(0);
+    const [page, setPage] = useState(0);
+    const [hasMore, setHasMore] = useState(true);
+
     const token = localStorage.getItem('token');
     const api = axios.create({
         baseURL: protocol,
@@ -21,14 +26,22 @@ export const ReviewProvider = ({ children }) => {
         },
     });
 
-    const reviewList = async () => {
-        if (!selectedService) return;
+    const reviewList = async (reset = false, size = 3) => {
+        if (!selectedService || apiLoading) return;
         setApiLoading(true);
         try {
+            const currentPage = reset ? 0 : page;
             const response = await api.get(
-                `review/${selectedService}/reviewList?page=0&size=3&sort=modDate,DESC`,
+                `review/${selectedService}/reviewList?page=${currentPage}&size=${size}&sort=modDate,DESC`,
             );
-            setList(response.data);
+            const newList = response.data.content;
+            setList((prevList) => {
+                if (reset || currentPage === 0) return newList;
+                return [...prevList, ...newList];
+            });
+            setHasMore(response.data.hasNext);
+            setPage(response.data.page + 1);
+            console.log(list);
         } catch (error) {
             console.error('Error fetching review list:', error);
         } finally {
@@ -46,8 +59,16 @@ export const ReviewProvider = ({ children }) => {
                     imageUrl: image,
                     nickname: item.nickname,
                     countryCode: item.country.code,
+                    score: item.score,
                 })),
             );
+
+            const totalScore = parsedData.reduce(
+                (acc, curr) => acc + curr.score,
+                0,
+            );
+            setTotalScore(totalScore);
+
             setImg(parsedData);
         } catch (error) {
             console.error('Error fetching image list:', error);
@@ -62,7 +83,6 @@ export const ReviewProvider = ({ children }) => {
                 `review/${serviceId}/register`,
                 reviewData,
             );
-            console.log('Review registered with ID:', response.data);
             return response.data;
         } catch (error) {
             console.error('Error registering review:', error);
@@ -76,7 +96,6 @@ export const ReviewProvider = ({ children }) => {
                 `review/${serviceId}/${reviewId}`,
                 updateData,
             );
-            console.log('Review updated:', response.data);
             return response.data;
         } catch (error) {
             console.error('Error updating review:', error);
@@ -86,12 +105,10 @@ export const ReviewProvider = ({ children }) => {
 
     const deleteReview = async (reviewId) => {
         try {
-            console.log({ selectedService });
-            console.log(reviewId);
             const response = await api.delete(
                 `review/${selectedService}/${reviewId}`,
             );
-            console.log('Review deleted:', response.data);
+            console.log(response.data);
             return response.data;
         } catch (error) {
             console.error('Error deleting review:', error);
@@ -104,7 +121,6 @@ export const ReviewProvider = ({ children }) => {
             text: [text],
             target_lang: target_lang,
         };
-        console.log('dkssud');
         return axios
             .post(protocol + 'api/translate', data, {
                 headers: {
@@ -113,7 +129,6 @@ export const ReviewProvider = ({ children }) => {
                 },
             })
             .then((res) => {
-                console.log(res.data.translations[0].text);
                 return res.data.translations[0].text;
             })
             .catch((error) => {
@@ -121,6 +136,7 @@ export const ReviewProvider = ({ children }) => {
                 throw error;
             });
     };
+
     return (
         <ReviewContext.Provider
             value={{
@@ -128,6 +144,7 @@ export const ReviewProvider = ({ children }) => {
                 setSelectedReview,
                 list,
                 setList,
+                totalScore,
                 img,
                 setImg,
                 apiLoading,
@@ -137,12 +154,17 @@ export const ReviewProvider = ({ children }) => {
                 updateReview,
                 deleteReview,
                 deepLApi,
+                page,
+                setPage,
+                hasMore,
+                setHasMore,
             }}
         >
             {children}
         </ReviewContext.Provider>
     );
 };
+
 export const useReview = () => {
     const context = useContext(ReviewContext);
     return context;

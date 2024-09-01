@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useCallback, useContext } from 'react';
+import { useReview } from '../provider/ReviewProvider';
+import { useSelected } from '../provider/SelectedProvider';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import TranslateIcon from '@mui/icons-material/Translate';
+import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
+import { getCountryCodeForTranslate, getCountryImgById } from '../../../util';
 import { useNavigate } from 'react-router-dom';
 import {
-    IconButton,
     Card,
     CardHeader,
     CardContent,
@@ -9,14 +14,12 @@ import {
     Avatar,
     Menu,
     MenuItem,
+    IconButton,
+    Button,
+    Box,
 } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { red } from '@mui/material/colors';
-import { useReview } from '../provider/ReviewProvider';
-import { useSelected } from '../provider/SelectedProvider';
-import { getCountryCodeForTranslate, getCountryImgById } from '../../../util';
-import TranslateIcon from '@mui/icons-material/Translate';
-import Button from '@mui/material/Button';
+import { AllStateContext } from '../../../App';
+import useConfirmDialog from '../../../hooks/useConfirmDialog/useConfirmDialog';
 
 const ReviewList = () => {
     const {
@@ -27,17 +30,55 @@ const ReviewList = () => {
         ReviewImgList,
         reviewList,
         deepLApi,
+        hasMore,
+        apiLoading,
     } = useReview();
-    const { selectedServiceInfo, selectedService, toggleDrawer } =
-        useSelected();
+    const { selectedService, selectedServiceInfo } = useSelected();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [translationStates, setTranslationStates] = React.useState({});
+    const userString = localStorage.getItem('member');
+    const { dialog } = useContext(AllStateContext);
+    const user = JSON.parse(userString);
+    const target = useRef(null);
     const navigate = useNavigate();
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [isTranslated, setIsTranslated] = useState(false);
-    const [translatedContent, setTranslatedContent] = useState(null);
+    const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
+    const loadMoreReviews = useCallback(() => {
+        if (hasMore && !apiLoading) {
+            reviewList();
+        }
+    }, [hasMore, apiLoading, reviewList]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) {
+                    loadMoreReviews(); // Load more reviews when the last element is in view
+                }
+            },
+            {
+                threshold: 1.0, // Trigger when the element is fully in view
+            },
+        );
+
+        if (target.current) {
+            observer.observe(target.current);
+        }
+
+        return () => {
+            if (observer && target.current) {
+                observer.unobserve(target.current);
+            }
+        };
+    }, [loadMoreReviews]);
+
+    useEffect(() => {
+        if (selectedService) {
+            reviewList(true); // Reload review list on service change
+        }
+    }, [selectedService]);
 
     useEffect(() => {
         ReviewImgList();
-        reviewList();
     }, [selectedService]);
 
     const handleMenuClick = (event, reviewId) => {
@@ -56,49 +97,54 @@ const ReviewList = () => {
         handleMenuClose();
     };
 
-    const handleReport = () => {
-        console.log(`Report review ${selectedReview}`);
-        handleMenuClose();
-    };
-
     const handleDelete = async () => {
-        try {
-            await deleteReview(selectedReview);
-            reviewList();
-            ReviewImgList();
-            handleMenuClose();
-        } catch (error) {
-            console.error('Failed to delete review:', error);
-        }
+        await deleteReview(selectedReview);
+        await reviewList(true);
+        await ReviewImgList();
+        handleMenuClose(); // Close the menu
     };
 
-    const handleTranslate = async (content, lang) => {
+    const handleTranslate = async (reviewId, content, lang) => {
+        const isTranslated = translationStates[reviewId]?.isTranslated;
+
         if (isTranslated) {
-            // Cancel translation (restore original content)
-            setIsTranslated(false);
-            setTranslatedContent(null);
+            setTranslationStates((prev) => ({
+                ...prev,
+                [reviewId]: { isTranslated: false, translatedContent: null },
+            }));
         } else {
             try {
                 const translatedContentText = await deepLApi(
                     content,
                     getCountryCodeForTranslate(lang),
                 );
-                setTranslatedContent(translatedContentText);
-                setIsTranslated(true);
+                setTranslationStates((prev) => ({
+                    ...prev,
+                    [reviewId]: {
+                        isTranslated: true,
+                        translatedContent: translatedContentText,
+                    },
+                }));
             } catch (error) {
-                console.error('Translation failed:', error);
+                dialog.alert.openAlertDialog(
+                    'Translation Failed',
+                    'There was an error while translating the review content.',
+                );
             }
         }
     };
 
-    if (!list || !list.content || !Array.isArray(list.content)) {
-        return <div>리뷰가 없습니다.</div>;
+    if (!list || !Array.isArray(list)) {
+        return <div>No reviews available.</div>;
     }
 
     return (
         <>
-            {list.content.map((review) => (
-                <Card sx={{ width: '100%' }} key={review.reviewId}>
+            {list.map((review, index) => (
+                <Card
+                    sx={{ width: '100%', mb: 2 }}
+                    key={`${review.reviewId}-${index}`}
+                >
                     <CardHeader
                         avatar={
                             <Avatar
@@ -109,15 +155,26 @@ const ReviewList = () => {
                             />
                         }
                         action={
-                            <IconButton
-                                onClick={(e) =>
-                                    handleMenuClick(e, review.reviewId)
-                                }
-                            >
-                                <MoreVertIcon />
-                            </IconButton>
+                            user.nickname === review.nickname && (
+                                <IconButton
+                                    onClick={(e) =>
+                                        handleMenuClick(e, review.reviewId)
+                                    }
+                                >
+                                    <MoreVertIcon />
+                                </IconButton>
+                            )
                         }
-                        title={review.nickname}
+                        title={
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                {review.nickname}
+                                {review.paymentId && (
+                                    <VerifiedRoundedIcon
+                                        sx={{ color: 'primary.main', ml: 1 }}
+                                    />
+                                )}
+                            </Box>
+                        }
                         subheader={`Score: ${review.score} ${review.modDate.substring(0, 10)}`}
                     />
                     <CardContent
@@ -128,7 +185,10 @@ const ReviewList = () => {
                         }}
                     >
                         <Typography variant="body2" color="text.secondary">
-                            {isTranslated ? translatedContent : review.content}
+                            {translationStates[review.reviewId]?.isTranslated
+                                ? translationStates[review.reviewId]
+                                      .translatedContent
+                                : review.content}
                         </Typography>
                         <Button
                             id="translate-button"
@@ -151,6 +211,7 @@ const ReviewList = () => {
                             }}
                             onClick={() =>
                                 handleTranslate(
+                                    review.reviewId,
                                     review.content,
                                     review.country.code,
                                 )
@@ -159,13 +220,18 @@ const ReviewList = () => {
                     </CardContent>
                 </Card>
             ))}
+            <div ref={target} style={{ height: '20px' }} />
+            {apiLoading && (
+                <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
+                    <Typography>Loading more reviews...</Typography>
+                </Box>
+            )}
             <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
             >
                 <MenuItem onClick={handleEdit}>EDIT</MenuItem>
-                <MenuItem onClick={handleReport}>REPORT</MenuItem>
                 <MenuItem onClick={handleDelete}>DELETE</MenuItem>
             </Menu>
         </>

@@ -28,7 +28,7 @@ export default function MapMarkerCheck() {
             <FormGroup row>
                 <Box
                     sx={{
-                        backgroundColor: 'skyblue',
+                        backgroundColor: '#5356FF',
                         display: 'flex',
                         alignItems: 'center',
                         mr: 1,
@@ -44,9 +44,21 @@ export default function MapMarkerCheck() {
                                 checked={Tour}
                                 onChange={handleFilterChange}
                                 name="Tour"
-                                icon={<LocationOnIcon fontSize="small" />}
+                                icon={
+                                    <LocationOnIcon
+                                        fontSize="small"
+                                        sx={{
+                                            color: '#DFF5FF',
+                                        }}
+                                    />
+                                }
                                 checkedIcon={
-                                    <LocationOnIcon fontSize="small" />
+                                    <LocationOnIcon
+                                        fontSize="small"
+                                        sx={{
+                                            color: '#CCCCCC',
+                                        }}
+                                    />
                                 }
                             />
                         }
@@ -62,7 +74,7 @@ export default function MapMarkerCheck() {
                 </Box>
                 <Box
                     sx={{
-                        backgroundColor: 'skyblue',
+                        backgroundColor: '#378CE7',
                         display: 'flex',
                         alignItems: 'center',
                         mr: 1,
@@ -78,9 +90,21 @@ export default function MapMarkerCheck() {
                                 checked={ACTIVITY}
                                 onChange={handleFilterChange}
                                 name="ACTIVITY"
-                                icon={<LocationOnIcon fontSize="small" />}
+                                icon={
+                                    <LocationOnIcon
+                                        fontSize="small"
+                                        sx={{
+                                            color: '#DFF5FF',
+                                        }}
+                                    />
+                                }
                                 checkedIcon={
-                                    <LocationOnIcon fontSize="small" />
+                                    <LocationOnIcon
+                                        fontSize="small"
+                                        sx={{
+                                            color: '#CCCCCC',
+                                        }}
+                                    />
                                 }
                             />
                         }
@@ -96,7 +120,7 @@ export default function MapMarkerCheck() {
                 </Box>
                 <Box
                     sx={{
-                        backgroundColor: 'skyblue',
+                        backgroundColor: '#67C6E3',
                         display: 'flex',
                         alignItems: 'center',
                         mr: 1,
@@ -112,9 +136,21 @@ export default function MapMarkerCheck() {
                                 checked={ETC}
                                 onChange={handleFilterChange}
                                 name="ETC"
-                                icon={<LocationOnIcon fontSize="small" />}
+                                icon={
+                                    <LocationOnIcon
+                                        fontSize="small"
+                                        sx={{
+                                            color: '#DFF5FF',
+                                        }}
+                                    />
+                                }
                                 checkedIcon={
-                                    <LocationOnIcon fontSize="small" />
+                                    <LocationOnIcon
+                                        fontSize="small"
+                                        sx={{
+                                            color: '#CCCCCC',
+                                        }}
+                                    />
                                 }
                             />
                         }
