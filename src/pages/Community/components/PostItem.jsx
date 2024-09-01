@@ -128,6 +128,7 @@ const PostItem = ({
             // 번역 시작
             if (!translatedContent && !translatedHashtag) {
                 try {
+                    console.log(currentMemberCode);
                     const translatedContentText = await deepLApi(
                         content,
                         getCountryCodeForTranslate(currentMemberCode),
