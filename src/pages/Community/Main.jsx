@@ -47,45 +47,47 @@ export default function Main(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNext, setHasNext] = useState(true);
     const [search, setSearch] = useState({
-        type: 'content',
-        keyword: '',
+        type: location?.state?.hashtag ? 'hashtag' : 'content',
+        keyword: location?.state?.hashtag || '' ,
         myPost: false,
         page: 0,
     });
+    const [inputValue, setInputValue] = useState(search.type === 'hashtag' ? `#${search.keyword}` : search.keyword);
 
     // 처음 렌더링 될 때만 실행
     useEffect(() => {
         observer.observe(observeTarget.current); // observe 타겟 요소 관측 시작
         getLikeListApi();
         if (location.state && location.state.hashtag) {
-            // hashtag 클릭 시
-            setPosts([]);
-            setIsLoading(false);
-            console.log(location.state.hashtag);
-            setSearch((prevSearch) => ({
-                ...prevSearch,
+            setInputValue(`#${location.state.hashtag}`)
+            handleSearch({
                 type: 'hashtag',
                 keyword: location.state.hashtag,
-            }));
-
-            navigate('/community', { replace: true }); // 데이터 사용 후 상태를 클리어
+                myPost:false,
+                page:0,
+            })
+            console.log(search);
+            navigate('/community', { replace: true });
         }
-        return () => {
-            // 컴포넌트가 언마운트될 때 실행될 작업
-        };
     }, [location.state]);
+    // useEffect(() => {
+    // }, [location.state]);
 
     // 처음 렌더링 && search 조건 바뀔때 실행
     useEffect(() => {
+        console.log("search")
         if (!isLoading) {
+            console.log("search:", search);
             // Api 호출 중이 아닐 때
             getListApi();
         }
         console.log('hasNext: ', hasNext);
+
     }, [search]);
 
     // observe 타겟 요소 관측 시작 및 종료
     useEffect(() => {
+        console.log("isLoading")
         const target = observeTarget.current;
         if (target) {
             if (!isLoading) {
@@ -143,9 +145,13 @@ export default function Main(props) {
 
     const handleSearch = (newSearch) => {
         // PostNav 컴포넌트에서 search 값 set하기 위함.
-        setSearch(newSearch);
+        if (JSON.stringify(search) !== JSON.stringify(newSearch)){
+            setPosts([])
+            setHasNext(true)
+            setIsLoading(false)
+            setSearch(newSearch);
+        }
     };
-
     // ================ [start] DeepL api 호출 부분 ================
 
     const deepLApi = (text, target_lang) => {
@@ -174,7 +180,7 @@ export default function Main(props) {
     return (
         <div>
             <Box className="PostList" sx={{ mr: 2, ml: 2, mt: 1 }}>
-                <PostNav handleSearch={handleSearch} search={search}></PostNav>
+                <PostNav handleSearch={handleSearch} inputValue={inputValue} setInputValue={setInputValue} ></PostNav>
             </Box>
 
             <PostList
@@ -188,7 +194,6 @@ export default function Main(props) {
                 ref={observeTarget}
                 style={{
                     display: 'flex',
-                    backgroundColor: 'red',
                     height: '30px',
                 }}
             >

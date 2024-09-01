@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
@@ -8,7 +9,8 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import { getFormattedDate } from '../../../util';
 
-const QnaItem = ({ title, qnaDate, status }) => {
+const QnaItem = ({qnaId ,title, qnaDate, status }) => {
+    const navigate = useNavigate();
     const targetDate = new Date(qnaDate);
     return (
         <ListItem>
@@ -32,7 +34,11 @@ const QnaItem = ({ title, qnaDate, status }) => {
                     },
                 }}
             />
-            <ListItemSecondaryAction>
+            <ListItemSecondaryAction
+                onClick={() => {
+                    navigate('/qna/'+qnaId); // 네비게이션할 경로
+                }}
+            >
                 <ChevronRightIcon sx={{ color: '#6E7072' }} />
             </ListItemSecondaryAction>
         </ListItem>

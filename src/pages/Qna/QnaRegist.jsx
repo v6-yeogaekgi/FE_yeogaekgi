@@ -1,7 +1,7 @@
 import QnaEditor from './components/QnaEditor';
 
 
-export default function QnaEdit(props) {
+export default function QnaRegist(props) {
     return(
         <div>
             <QnaEditor

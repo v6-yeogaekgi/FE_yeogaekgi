@@ -37,6 +37,9 @@ import axios from 'axios';
 import MyLikes from './pages/MyLikes/MyLikes';
 import Faq from './pages/Faq/Faq';
 import Qna from './pages/Qna/Qna';
+import QnaDetail from './pages/Qna/QnaDetail';
+import QnaRegist from './pages/Qna/QnaRegist';
+import QnaEdit from './pages/Qna/QnaEdit';
 import { ThemeProvider } from '@mui/material';
 import theme from './theme';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -334,6 +337,30 @@ function App() {
                             element={
                                 <PageLayout menuName={'Q&A'}>
                                     <Qna />
+                                </PageLayout>
+                            }
+                        />
+                        <Route
+                            path={'/qna/:qnaId'}
+                            element={
+                                <PageLayout menuName={'Q&A'}>
+                                    <QnaDetail />
+                                </PageLayout>
+                            }
+                        />
+                        <Route
+                            path={'/qna/regist/'}
+                            element={
+                                <PageLayout menuName={'Q&A'}>
+                                    <QnaRegist />
+                                </PageLayout>
+                            }
+                        />
+                        <Route
+                            path={'/qna/modify/:qnaId'}
+                            element={
+                                <PageLayout menuName={'Q&A'}>
+                                    <QnaEdit />
                                 </PageLayout>
                             }
                         />

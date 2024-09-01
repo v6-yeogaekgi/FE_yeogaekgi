@@ -1,4 +1,4 @@
-import QnaItem from '../component/QnaItem';
+import QnaItem from './/QnaItem';
 import React from 'react';
 import List from '@mui/material/List';
 import { Box } from '@mui/material';
@@ -41,7 +41,7 @@ const QnaList = ({ qnaItem }) => {
                 borderRadius: 5,
             }}
         >
-            {qnaItem.length > 0 ? (
+            {qnaItem?.length > 0 ? (
                 qnaItem.map((item) => <QnaItem key={item.id} {...item} />)
             ) : (
                 <Box>Qna가 없습니다</Box>

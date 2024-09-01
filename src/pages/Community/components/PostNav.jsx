@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import BasicTextField from '../../../components/BasicTextField/BasicTextField';
 import BasicButton from '../../../components/BasicButton/BasicButton';
@@ -9,37 +10,39 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 
-export default function PostNav({ handleSearch, search }) {
+export default function PostNav({ handleSearch, inputValue, setInputValue}) {
     const navigate = useNavigate();
-
     const onClickMy = () => {
         handleSearch({
-            content: '',
-            hashtag: '',
+            keyword: '',
+            type: '',
             myPost: true,
             page: 0,
         });
         // navigate('/community', { state: { myPost: true } });
     };
     // 키보드 입력 처리
-    const handleChange = (event) => {
-        const keyword = event.target.value.trim();
-        if (keyword.length > 1 && keyword[0] === '#') {
-            handleSearch({
-                content: '',
-                hashtag: keyword.substr(1),
-                myPost: false,
-                page: 0,
-            });
-            // navigate('/community', { state: { hashtag: keyword.substr(1) } });
-        } else {
-            handleSearch({
-                content: keyword,
-                hashtag: '',
-                myPost: false,
-                page: 0,
-            });
-            // navigate('/community', { state: { content: keyword } });
+    const searchKeyword = (event) => {
+        if (event.key === 'Enter') {
+            const keyword = event.target.value.trim();
+            if (keyword.length > 1 && keyword[0] === '#') {
+
+                handleSearch({
+                    type: 'hashtag',
+                    keyword: keyword.substr(1),
+                    myPost: false,
+                    page: 0,
+                });
+                // navigate('/community', { state: { hashtag: keyword.substr(1) } });
+            } else {
+                handleSearch({
+                    type: 'content',
+                    keyword: keyword,
+                    myPost: false,
+                    page: 0,
+                });
+                // navigate('/community', { state: { content: keyword } });
+            }
         }
     };
 
@@ -66,10 +69,13 @@ export default function PostNav({ handleSearch, search }) {
                             </InputAdornment>
                         ),
                     }}
-                    value={search.hashtag ? `#${search.hashtag}` : undefined}
+
+                    value={inputValue}
                     variant={'standard'}
-                    onChange={handleChange}
-                    // onKeyDown={searchKeyword}
+                    onChange={(event) => {
+                        setInputValue(event.target.value.trim()); // 상태 업데이트
+                    }}
+                    onKeyDown={searchKeyword}
                     placeholder={'Enter search keywords'}
                 />
             </div>

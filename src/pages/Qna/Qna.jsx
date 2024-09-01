@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect, useMemo, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { AllStateContext } from '../../App';
 import axios from 'axios';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 
-import QnaList from './component/QnaList';
+import QnaList from './components/QnaList';
 
 const Qna = () => {
+    const navigate = useNavigate();
     const [qnaItem, setQnaItem] = useState([]);
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
@@ -67,6 +69,9 @@ const Qna = () => {
                         '&:hover': {
                             backgroundColor: '#3440d1',
                         },
+                    }}
+                    onClick={() => {
+                        navigate('/qna/regist'); // 네비게이션할 경로
                     }}
                 >
                     <AddIcon />
