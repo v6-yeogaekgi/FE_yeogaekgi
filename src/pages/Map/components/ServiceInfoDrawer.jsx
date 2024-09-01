@@ -33,8 +33,10 @@ const Puller = styled('div')(({ theme }) => ({
 const ServiceInfoDrawer = () => {
     const navigate = useNavigate();
     const [score, setScore] = useState(0);
+    const [isInfoExpanded, setIsInfoExpanded] = useState(false); // 정보 섹션의 열림 상태 관리
     const {
         open,
+        handleServiceSelect,
         selectedServiceInfo,
         selectedService,
         like,
@@ -48,6 +50,7 @@ const ServiceInfoDrawer = () => {
 
     useEffect(() => {
         if (selectedServiceInfo && selectedServiceInfo.likeCnt !== undefined) {
+            console.log('좋아요수는 : ' + selectedServiceInfo.likeCnt);
             setViewLikeCnt(selectedServiceInfo.likeCnt);
             likeCheck();
         }
@@ -67,6 +70,10 @@ const ServiceInfoDrawer = () => {
     const handleNavigateToRegister = () => {
         const name = selectedServiceInfo.name;
         navigate(`/map/register/${selectedService}/${name}`);
+    };
+
+    const toggleInfoExpansion = () => {
+        setIsInfoExpanded(!isInfoExpanded);
     };
 
     return (
@@ -162,7 +169,6 @@ const ServiceInfoDrawer = () => {
                         {viewLikeCount}
                     </Box>
                 </Box>
-
                 <Typography
                     sx={{
                         pl: 2,
@@ -170,8 +176,32 @@ const ServiceInfoDrawer = () => {
                         color: 'text.secondary',
                     }}
                 >
-                    {selectedServiceInfo?.content}
+                    {selectedServiceInfo?.address}
                 </Typography>
+
+                <Box sx={{ pl: 2, pr: 3 }}>
+                    <Typography
+                        onClick={toggleInfoExpansion}
+                        sx={{
+                            color: 'text.secondary',
+                            cursor: 'pointer',
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        Information {isInfoExpanded ? '🔼' : '🔽'}
+                    </Typography>
+                    {isInfoExpanded && (
+                        <Typography
+                            sx={{
+                                mt: 1,
+                                color: 'text.secondary',
+                            }}
+                        >
+                            {selectedServiceInfo?.content}
+                        </Typography>
+                    )}
+                </Box>
+
                 <Box
                     sx={{
                         display: 'flex',
