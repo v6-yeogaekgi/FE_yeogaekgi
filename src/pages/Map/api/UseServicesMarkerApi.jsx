@@ -6,6 +6,7 @@ const useServicesMarkerApi = (state) => {
     const [servicesData, setServicesData] = useState(null);
     const [apiLoading, setApiLoading] = useState(false);
     const { protocol } = useContext(AllStateContext);
+    const selectArea = localStorage.getItem('selectArea');
 
     // Build the query string based on the state
     const buildQueryString = useCallback(() => {
@@ -18,12 +19,14 @@ const useServicesMarkerApi = (state) => {
 
     // Function to fetch service list data
     const fetchServiceList = useCallback(() => {
+        const area = selectArea === '서울' ? 'SEOUL' : 'BUSAN';
         setApiLoading(true);
         const queryString = buildQueryString();
         axios
-            .get(`${protocol}services/servicesList${queryString}`)
+            .get(`${protocol}services/servicesList/${area}${queryString}`)
             .then((res) => {
                 setServicesData(res.data);
+                console.log(res.data);
                 setApiLoading(false);
             })
             .catch((error) => {
@@ -37,7 +40,6 @@ const useServicesMarkerApi = (state) => {
         console.log('새로운 상태로 데이터를 가져옵니다:', state); // 상태 변경 시 로깅
         fetchServiceList();
     }, [fetchServiceList, state]); // state가 추가되어야 함
-
 
     return { servicesData, apiLoading };
 };

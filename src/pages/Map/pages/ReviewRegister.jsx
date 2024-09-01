@@ -1,18 +1,23 @@
-import React, { useRef, useState } from 'react';
-import { Box, Button, IconButton, Rating, Typography } from '@mui/material';
+import React, { useRef, useState, useContext } from 'react';
+import { Box, IconButton, Rating, Typography } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import { useReview } from '../provider/ReviewProvider';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import BasicButton from '../../../components/BasicButton/BasicButton';
+import useAlertDialog from '../../../hooks/useAlertDialog/useAlertDialog'; // useAlertDialog import
 
 const ReviewRegister = () => {
     const [content, setContent] = useState('');
-    const [images, setImages] = useState([]); // 이미지들을 배열로 관리
+    const [images, setImages] = useState([]);
     const { serviceId, name } = useParams();
     const { createReview } = useReview();
-    const [score, setScore] = useState(0); // 초기값을 0으로 설정하여 숫자로 유지
-
+    const [score, setScore] = useState(0);
     const inputRef = useRef();
+    const navigate = useNavigate();
+
+    // useAlertDialog 훅 사용
+    const { openAlertDialog, AlertDialog } = useAlertDialog();
 
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
@@ -42,17 +47,27 @@ const ReviewRegister = () => {
 
         const reviewData = new FormData();
         reviewData.append('content', content);
-        reviewData.append('score', score); // score는 숫자형이어야 함
+        reviewData.append('score', score);
 
-        // 각 파일을 FormData에 개별적으로 추가
-        images.forEach((image, index) => {
+        images.forEach((image) => {
             reviewData.append('files', image);
         });
 
-        createReview(serviceId, reviewData); // formData 객체를 제출
-        setContent(''); // 제출 후 입력창 초기화
-        setScore(0); // Rating 값 초기화
-        setImages([]); // 이미지 초기화
+        createReview(serviceId, reviewData)
+            .then(() => {
+                openAlertDialog(
+                    'Success!',
+                    'Your review has been successfully submitted',
+                    () => navigate(-1),
+                );
+            })
+            .catch((error) => {
+                openAlertDialog('Error', 'Failed to register review');
+            });
+
+        setContent('');
+        setScore(0);
+        setImages([]);
     };
 
     const onKeyDown = (e) => {
@@ -67,31 +82,41 @@ const ReviewRegister = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                padding: '16px',
+                padding: '20px',
+                backgroundColor: '#F8F8F8',
+                borderRadius: '24px',
+                boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.1)',
+                maxWidth: '500px',
+                margin: 'auto',
+                height: '720px',
             }}
         >
-            {/* Title */}
-            <Typography variant="h6" gutterBottom>
+            <Typography
+                variant="h6"
+                gutterBottom
+                sx={{
+                    fontWeight: '500',
+                    color: '#333',
+                }}
+            >
                 {name}
             </Typography>
 
-            {/* Rating */}
             <Rating
                 name="simple-controlled"
                 value={score}
                 onChange={(event, newScore) => {
-                    setScore(newScore); // newScore는 숫자형 값이므로 그대로 사용
+                    setScore(newScore);
                 }}
-                sx={{ marginBottom: '16px' }}
+                sx={{ marginBottom: '20px', fontSize: '36px' }}
             />
 
-            {/* Image Upload and Preview */}
             <Box
                 sx={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'flex-start',
-                    marginBottom: '16px',
+                    marginBottom: '20px',
                     width: '100%',
                 }}
             >
@@ -100,25 +125,26 @@ const ReviewRegister = () => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        border: '1px dashed #1976d2',
-                        borderRadius: '8px',
+                        border: '2px dashed #007AFF',
+                        borderRadius: '16px',
                         width: '100px',
                         height: '100px',
-                        marginRight: '8px',
                         position: 'relative',
                         cursor: 'pointer',
+                        backgroundColor: '#FFF',
                     }}
                     onClick={() =>
                         document.getElementById('image-upload').click()
                     }
                 >
-                    <CameraAltIcon sx={{ fontSize: 40, color: '#1976d2' }} />
+                    <CameraAltIcon sx={{ fontSize: 40, color: '#007AFF' }} />
                     <Typography
                         sx={{
                             position: 'absolute',
                             bottom: 0,
                             fontSize: '12px',
-                            color: '#1976d2',
+                            color: '#007AFF',
+                            fontWeight: '500',
                         }}
                     >
                         Add Image
@@ -127,21 +153,20 @@ const ReviewRegister = () => {
                 <input
                     type="file"
                     id="image-upload"
-                    style={{ display: 'none' }} // input 숨김
+                    style={{ display: 'none' }}
                     onChange={handleImageUpload}
                     accept="image/*"
                     multiple
                 />
             </Box>
 
-            {/* Uploaded Images Preview */}
             <Box
                 sx={{
                     display: 'flex',
                     flexDirection: 'row',
                     flexWrap: 'wrap',
-                    gap: '8px',
-                    marginBottom: '16px',
+                    gap: '12px',
+                    marginBottom: '20px',
                     width: '100%',
                 }}
             >
@@ -152,8 +177,9 @@ const ReviewRegister = () => {
                             position: 'relative',
                             width: '100px',
                             height: '100px',
-                            borderRadius: '8px',
+                            borderRadius: '16px',
                             overflow: 'hidden',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
                         }}
                     >
                         <img
@@ -163,6 +189,7 @@ const ReviewRegister = () => {
                                 width: '100%',
                                 height: '100%',
                                 objectFit: 'cover',
+                                borderRadius: '16px',
                             }}
                         />
                         <IconButton
@@ -171,7 +198,7 @@ const ReviewRegister = () => {
                                 position: 'absolute',
                                 top: '4px',
                                 right: '4px',
-                                backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                                backgroundColor: 'rgba(255, 255, 255, 0.8)',
                             }}
                             onClick={() => handleImageRemove(index)}
                         >
@@ -181,30 +208,40 @@ const ReviewRegister = () => {
                 ))}
             </Box>
 
-            {/* Placeholder Box */}
             <textarea
                 ref={inputRef}
                 style={{
                     width: '100%',
                     height: '150px',
-                    backgroundColor: '#e0e0e0',
-                    borderRadius: '8px',
-                    marginBottom: '16px',
+                    backgroundColor: '#F1F1F1',
+                    borderRadius: '16px',
+                    marginBottom: '20px',
+                    border: 'none',
+                    padding: '12px',
+                    fontSize: '16px',
+                    fontFamily: 'Arial, sans-serif',
+                    outline: 'none',
+                    resize: 'none',
                 }}
+                placeholder="Write your review..."
                 onChange={onChangeContent}
                 value={content}
                 onKeyDown={onKeyDown}
             ></textarea>
 
-            {/* OK Button */}
-            <Button
+            <BasicButton
+                text="Submit Review"
                 variant="contained"
-                color="primary"
-                sx={{ width: '100%', borderRadius: '8px' }}
+                btnColor="#4653f9"
+                width="100%"
                 onClick={onSubmit}
-            >
-                OK
-            </Button>
+                textColor="white"
+                height="50px"
+                isActive={true}
+            />
+
+            {/* AlertDialog 컴포넌트를 렌더링 */}
+            <AlertDialog />
         </Box>
     );
 };

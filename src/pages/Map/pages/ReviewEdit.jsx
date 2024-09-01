@@ -1,11 +1,13 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
-import { Box, Button, IconButton, Rating, Typography } from '@mui/material';
+import { Box, IconButton, Rating, Typography } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import { useReview } from '../provider/ReviewProvider';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AllStateContext } from '../../../App';
+import BasicButton from '../../../components/BasicButton/BasicButton';
+import useAlertDialog from '../../../hooks/useAlertDialog/useAlertDialog'; // useAlertDialog import
 
 const ReviewEdit = () => {
     const [content, setContent] = useState('');
@@ -14,10 +16,11 @@ const ReviewEdit = () => {
     const { name, serviceId, reviewId } = useParams();
     const [score, setScore] = useState(0);
     const inputRef = useRef();
-
+    const { openAlertDialog, AlertDialog } = useAlertDialog(); // useAlertDialog 훅 사용
     const { updateReview } = useReview();
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios
@@ -35,7 +38,7 @@ const ReviewEdit = () => {
             .catch((error) => {
                 console.error('Error fetching review data:', error);
             });
-    }, [serviceId, reviewId]);
+    }, [serviceId, reviewId, protocol, token]);
 
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
@@ -80,8 +83,17 @@ const ReviewEdit = () => {
         });
 
         try {
-            await updateReview(serviceId, reviewId, formData);
-            // 성공 처리 (예: 리뷰 목록 페이지로 리다이렉트)
+            await updateReview(serviceId, reviewId, formData)
+                .then(() => {
+                    openAlertDialog(
+                        'Success!',
+                        'Your review has been successfully updated',
+                        () => navigate(-1),
+                    );
+                })
+                .catch((error) => {
+                    openAlertDialog('Error', 'Failed to update review');
+                });
         } catch (error) {
             console.error('Error updating review:', error);
         }
@@ -93,10 +105,23 @@ const ReviewEdit = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                padding: '16px',
+                padding: '20px',
+                backgroundColor: '#F8F8F8',
+                borderRadius: '24px',
+                boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.1)',
+                maxWidth: '500px',
+                margin: 'auto',
+                height: '720px',
             }}
         >
-            <Typography variant="h6" gutterBottom>
+            <Typography
+                variant="h6"
+                gutterBottom
+                sx={{
+                    fontWeight: '500',
+                    color: '#333',
+                }}
+            >
                 {name}
             </Typography>
 
@@ -104,7 +129,7 @@ const ReviewEdit = () => {
                 name="simple-controlled"
                 value={score}
                 onChange={(event, newScore) => setScore(newScore)}
-                sx={{ marginBottom: '16px' }}
+                sx={{ marginBottom: '20px', fontSize: '36px' }}
             />
 
             <Box
@@ -112,7 +137,7 @@ const ReviewEdit = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'flex-start',
-                    marginBottom: '16px',
+                    marginBottom: '20px',
                     width: '100%',
                 }}
             >
@@ -121,25 +146,26 @@ const ReviewEdit = () => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        border: '1px dashed #1976d2',
-                        borderRadius: '8px',
+                        border: '2px dashed #007AFF',
+                        borderRadius: '16px',
                         width: '100px',
                         height: '100px',
-                        marginRight: '8px',
                         position: 'relative',
                         cursor: 'pointer',
+                        backgroundColor: '#FFF',
                     }}
                     onClick={() =>
                         document.getElementById('image-upload').click()
                     }
                 >
-                    <CameraAltIcon sx={{ fontSize: 40, color: '#1976d2' }} />
+                    <CameraAltIcon sx={{ fontSize: 40, color: '#007AFF' }} />
                     <Typography
                         sx={{
                             position: 'absolute',
                             bottom: 0,
                             fontSize: '12px',
-                            color: '#1976d2',
+                            color: '#007AFF',
+                            fontWeight: '500',
                         }}
                     >
                         Add Image
@@ -160,8 +186,8 @@ const ReviewEdit = () => {
                     display: 'flex',
                     flexDirection: 'row',
                     flexWrap: 'wrap',
-                    gap: '8px',
-                    marginBottom: '16px',
+                    gap: '12px',
+                    marginBottom: '20px',
                     width: '100%',
                 }}
             >
@@ -172,8 +198,9 @@ const ReviewEdit = () => {
                             position: 'relative',
                             width: '100px',
                             height: '100px',
-                            borderRadius: '8px',
+                            borderRadius: '16px',
                             overflow: 'hidden',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
                         }}
                     >
                         <img
@@ -183,6 +210,7 @@ const ReviewEdit = () => {
                                 width: '100%',
                                 height: '100%',
                                 objectFit: 'cover',
+                                borderRadius: '16px',
                             }}
                         />
                         <IconButton
@@ -191,7 +219,7 @@ const ReviewEdit = () => {
                                 position: 'absolute',
                                 top: '4px',
                                 right: '4px',
-                                backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                                backgroundColor: 'rgba(255, 255, 255, 0.8)',
                             }}
                             onClick={() =>
                                 handleImageRemove(image.index || index)
@@ -208,22 +236,34 @@ const ReviewEdit = () => {
                 style={{
                     width: '100%',
                     height: '150px',
-                    backgroundColor: '#e0e0e0',
-                    borderRadius: '8px',
-                    marginBottom: '16px',
+                    backgroundColor: '#F1F1F1',
+                    borderRadius: '16px',
+                    marginBottom: '20px',
+                    border: 'none',
+                    padding: '12px',
+                    fontSize: '16px',
+                    fontFamily: 'Arial, sans-serif',
+                    outline: 'none',
+                    resize: 'none',
                 }}
+                placeholder="Edit your review..."
                 onChange={onChangeContent}
                 value={content}
             ></textarea>
 
-            <Button
+            <BasicButton
+                text="Update Review"
                 variant="contained"
-                color="primary"
-                sx={{ width: '100%', borderRadius: '8px' }}
+                btnColor="#4653f9"
+                width="100%"
                 onClick={onSubmit}
-            >
-                Edit
-            </Button>
+                textColor="white"
+                height="50px"
+                isActive={true}
+            />
+
+            {/* AlertDialog 컴포넌트를 렌더링 */}
+            <AlertDialog />
         </Box>
     );
 };
