@@ -3,7 +3,13 @@ import PostItem from './PostItem';
 import { Box } from '@mui/material';
 import { useEffect } from 'react';
 
-const PostList = ({ posts, likeList = [], alertDialog, confirmDialog }) => {
+const PostList = ({
+    posts,
+    likeList = [],
+    alertDialog,
+    confirmDialog,
+    deepLApi,
+}) => {
     return (
         <Box className="PostList" sx={{ mr: 2, ml: 2 }}>
             {posts.map((post) => (
@@ -25,6 +31,8 @@ const PostList = ({ posts, likeList = [], alertDialog, confirmDialog }) => {
                     likeState={likeList.includes(post.postId)}
                     parentPage={'list'}
                     currentMemberId={post.currentMemberId}
+                    currentMemberCode={post.currentMemberCode}
+                    deepLApi={deepLApi}
                 />
             ))}
         </Box>

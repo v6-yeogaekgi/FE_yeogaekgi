@@ -7,54 +7,57 @@ import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import PersonIcon from '@mui/icons-material/Person';
 import InputAdornment from '@mui/material/InputAdornment';
 import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
 
-export default function PostNav({ handleSearch, search, keyword }) {
+export default function PostNav({ handleSearch, search }) {
     const navigate = useNavigate();
-    const [inputValue, setInputValue] = React.useState('');
+
     const onClickMy = () => {
         handleSearch({
-                keyword: '',
-                type: '',
-                myPost: true,
-                page: 0
+            content: '',
+            hashtag: '',
+            myPost: true,
+            page: 0,
         });
         // navigate('/community', { state: { myPost: true } });
     };
     // 키보드 입력 처리
-    const handleChange = () => {
-        const keyword = inputValue.trim();
+    const handleChange = (event) => {
+        const keyword = event.target.value.trim();
         if (keyword.length > 1 && keyword[0] === '#') {
             handleSearch({
-                    type: 'hashtag',
-                    keyword: keyword.substr(1),
-                    myPost: false,
-                    page: 0
+                content: '',
+                hashtag: keyword.substr(1),
+                myPost: false,
+                page: 0,
             });
             // navigate('/community', { state: { hashtag: keyword.substr(1) } });
         } else {
             handleSearch({
-                type: 'content',
-                keyword: 'keyword',
+                content: keyword,
+                hashtag: '',
                 myPost: false,
-                page: 0
+                page: 0,
             });
             // navigate('/community', { state: { content: keyword } });
         }
     };
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            handleChange();
-        }
-    };
-
 
     return (
-        <Box sx={{ padding: "10px" }}>
+        <Card
+            sx={{
+                padding: '10px',
+                boxShadow: 'none',
+                borderRadius: 5,
+                backgroundColor: '#ffffff',
+                mb: 2,
+            }}
+        >
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <BasicTextField
                     sx={{
-                        width: "100%",
-                        padding: "10px",
+                        width: '100%',
+                        padding: '10px',
                     }}
                     InputProps={{
                         endAdornment: (
@@ -63,38 +66,43 @@ export default function PostNav({ handleSearch, search, keyword }) {
                             </InputAdornment>
                         ),
                     }}
-                    value={inputValue}
-                    variant={"standard"}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={handleKeyDown}
+                    value={search.hashtag ? `#${search.hashtag}` : undefined}
+                    variant={'standard'}
+                    onChange={handleChange}
                     // onKeyDown={searchKeyword}
-                    placeholder={"Enter search keywords"}
+                    placeholder={'Enter search keywords'}
                 />
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: "space-around" }}>
+            <div
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-around',
+                }}
+            >
                 <BasicButton
-                    className={"new-btn"}
-                    variant={"contained"}
+                    className={'new-btn'}
+                    variant={'contained'}
                     startIcon={<NoteAddIcon />}
-                    size={"small"}
-                    text={"New Post"}
-                    width={"45%"}
+                    size={'small'}
+                    text={'New Post'}
+                    width={'45%'}
                     onClick={() => {
                         navigate('/community/regist'); // 네비게이션할 경로
                     }}
                     btnColor={'#4653f9'}
                 />
                 <BasicButton
-                    className={"my-btn"}
-                    variant={"contained"}
+                    className={'my-btn'}
+                    variant={'contained'}
                     onClick={onClickMy}
                     startIcon={<PersonIcon />}
-                    size={"small"}
-                    text={"My Post"}
-                    width={"45%"}
+                    size={'small'}
+                    text={'My Post'}
+                    width={'45%'}
                     btnColor={'#4653f9'}
                 />
             </div>
-        </Box>
+        </Card>
     );
 }

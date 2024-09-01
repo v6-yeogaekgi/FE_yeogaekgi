@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect, useMemo, useContext } from 'react';
 import { Box } from '@mui/material';
 import { AllStateContext } from '../../App';
 import axios from 'axios';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 
 import QnaList from './components/QnaList';
 
@@ -22,7 +24,6 @@ const Qna = () => {
             })
             .then((res) => {
                 setQnaItem(res.data.content);
-                console.log(res.data.content);
             });
     };
 
@@ -44,6 +45,33 @@ const Qna = () => {
             }}
         >
             <QnaList qnaItem={qnaItem} />
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    position: 'fixed',
+                    bottom: 16,
+                    right: 16,
+                    paddingBottom: '70px',
+
+                    '& > :not(style)': {
+                        m: 1,
+                    },
+                }}
+            >
+                <Fab
+                    color="primary"
+                    aria-label="add"
+                    sx={{
+                        backgroundColor: '#4653f9',
+                        '&:hover': {
+                            backgroundColor: '#3440d1',
+                        },
+                    }}
+                >
+                    <AddIcon />
+                </Fab>
+            </Box>
         </Box>
     );
 };
