@@ -31,7 +31,6 @@ const STYLES = {
         padding: 2,
     },
     cardContainer: {
-        mt: 2,
         height: 300,
         width: 360,
     },

@@ -11,21 +11,24 @@ import MenuIcon from '@mui/icons-material/Menu';
 import useAlertDialog from '../../hooks/useAlertDialog/useAlertDialog';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AllStateContext } from '../../App';
+import useConfirmDialog from '../../hooks/useConfirmDialog/useConfirmDialog';
 
-const SettingsDrawer = ({ data, onCardDelete }) => {
+const SettingsDrawer = ({ data, onCardDelete, onCardUpdate }) => {
 
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
-
     const [state, setState] = React.useState({
         bottom: false,
     });
 
+    const [checked, setChecked] = useState(data.starred);
     const navigate = useNavigate();
 
     const { openAlertDialog, AlertDialog } = useAlertDialog();
+
+    const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
 
     const toggleDrawer = (open) => (event) => {
         if (
@@ -36,6 +39,29 @@ const SettingsDrawer = ({ data, onCardDelete }) => {
         }
 
         setState({ ...state, bottom: open });
+    };
+
+    const handleClick = () => {
+        const newState = !checked;
+        const uri = newState
+            ? `${protocol}usercard/modify/star`
+            : `${protocol}usercard/delete/star`;
+
+        axios.put(uri, { userCardId: data.userCardId }, {
+            headers: {
+                Authorization: token,
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                if (res.status === 200) {
+                    onCardUpdate({starred: newState});
+                    setChecked(newState);
+                }
+            })
+            .catch((err) => {
+                console.error('API 요청 중 오류 발생:', err);
+            });
     };
 
     const handleCardDelete = () => {
@@ -75,32 +101,32 @@ const SettingsDrawer = ({ data, onCardDelete }) => {
                     boxShadow: 'rgba(100, 100, 100, 0.2) 0px 7px 29px 0px',
                 }}
                 role="presentation"
-                // onClick={toggleDrawer(false)}
-                // onKeyDown={toggleDrawer(false)}
             >
                 {data.status === 1 ? (
                     <List>
-                        {/*{['주카드 설정', '충전', '환급', '잔액 전환'].map((text) => (*/}
                         <ListItem key={'주카드 설정'} disablePadding>
-                            <ListItemButton>
-                                <ListItemText primary={'주카드 설정'} />
+                            <ListItemButton onClick={(e) => {
+                                e.stopPropagation();
+                                handleClick();
+                            }}>
+                                <ListItemText primary={'Set as Default Card'} />
                             </ListItemButton>
                         </ListItem>
                         <ListItem key={'충전'} disablePadding
                                   onClick={() => navigate('/wallet/top-up', { state: { data } })}>
                             <ListItemButton>
-                                <ListItemText primary={'충전'} />
+                                <ListItemText primary={'Top Up'} />
                             </ListItemButton>
                         </ListItem>
                         <ListItem key={'환급'} disablePadding
                                   onClick={() => navigate('/wallet/detail/refund', { state: { data } })}>
                             <ListItemButton>
-                                <ListItemText primary={'환급'} />
+                                <ListItemText primary={'Refund'} />
                             </ListItemButton>
                         </ListItem>
                         <ListItem key={'잔액 전환'} disablePadding>
                             <ListItemButton>
-                                <ListItemText primary={'잔액 전환'}
+                                <ListItemText primary={'Balance Conversion (P-T)'}
                                               onClick={() => navigate('/wallet/conversion', { state: { data } })} />
                             </ListItemButton>
                         </ListItem>
@@ -115,15 +141,19 @@ const SettingsDrawer = ({ data, onCardDelete }) => {
                             e.stopPropagation();
                             openAlertDialog();
                         }}>
-                            <ListItemText primary={'카드 상세'} />
+                            <ListItemText primary={'View Card Details'} />
                         </ListItemButton>
                     </ListItem>
                     <ListItem key={'카드 삭제'} disablePadding>
                         <ListItemButton onClick={(e) => {
                             e.stopPropagation();
-                            handleCardDelete();
+                            openConfirmDialog();
                         }}>
-                            <ListItemText primary={'카드 삭제'} />
+                        {/*<ListItemButton onClick={(e) => {*/}
+                        {/*    e.stopPropagation();*/}
+                        {/*    handleCardDelete();*/}
+                        {/*}}>*/}
+                            <ListItemText primary={'Delete Card'} />
                         </ListItemButton>
                     </ListItem>
                 </List>
@@ -136,7 +166,6 @@ const SettingsDrawer = ({ data, onCardDelete }) => {
                                 <b>Card Number</b>
                             </ListItem>
                             <ListItem disablePadding>
-                                {/*// todo 수정*/}
                                 {data.userCardId}
                             </ListItem>
                             <ListItem disablePadding>
@@ -148,6 +177,13 @@ const SettingsDrawer = ({ data, onCardDelete }) => {
                         </List>
                     </>
                 }
+            />
+            <ConfirmDialog
+                title={"Delete Card"}
+                content={"Are you sure you want to delete the card?"}
+                onAgree={() => {
+                    handleCardDelete();
+                }}
             />
         </>
     );

@@ -92,14 +92,14 @@ export default function Refund() {
 
     const handleRefundClick = () => {
         if (!isAgreed) {
-            setAlertContent('약관 동의 체크    문구');
+            setAlertContent('Please review and agree to the terms and conditions to proceed.');
             openAlertDialog();
             return;
         }
 
 
         if (data.payBalance < 3000) {
-            setAlertContent('보유 잔액이 수수료보다 적을 시 알리는 문구');
+            setAlertContent('The remaining card balance is less than the processing fee. Please check your balance and try again.');
             openAlertDialog();
             return;
         }
@@ -145,7 +145,6 @@ export default function Refund() {
                     alignItems: 'center', // 이 줄을 추가
                     position: 'relative', //
                     overflow: 'hidden', //
-                    // paddingBottom: '70px',
                 }}
             >
                 <Box
@@ -153,7 +152,7 @@ export default function Refund() {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        width: '90%',
+                        width: '95%',
                         margin: '0 auto',
                         gap: 2,
                         paddingTop: '20px',
@@ -162,8 +161,13 @@ export default function Refund() {
                     }}
                 >
                     <UserCardOnRefund data={data} />
-                    <div style={{ width: '100%' }}>
-                        <Grid container spacing={2} sx={{ maxWidth: '100%', margin: 'auto', paddingTop: '20px' }}>
+                    <div style={{
+                        width: '100%',
+                        backgroundColor: 'white',
+                        padding: '10px',
+                        borderRadius: '15px',
+                    }}>
+                        <Grid container spacing={2} sx={{ width: '100%', margin: 'auto', paddingTop: '20px' }}>
                             <Grid item xs={12}>
                                 <Typography component="h1"
                                             variant="h5">Balance <b>₩{data.payBalance > fee ? fee.toLocaleString() : 0} </b></Typography>
@@ -288,17 +292,63 @@ export default function Refund() {
                                             <Typography> I agree to the above terms </Typography>
                                         </Box>
                                     </AccordionSummary>
-                                    <AccordionDetails sx={{ padding: '15px' }}>
-                                        <Typography>
-                                            terms of service <br></br>
-                                            terms of service <br></br>
-                                            terms of service <br></br>
-                                            terms of service <br></br>
-                                            terms of service <br></br>
-                                            terms of service <br></br>
-                                            terms of service <br></br>
-                                            terms of service <br></br>
+                                    <AccordionDetails sx={{ padding: '15px'}}>
+                                        <Typography sx={{fontSize:'12px'}}>
+                                            At Yeogaekgi, we are committed to ensuring a transparent and straightforward refund process for our prepaid card services. Please read our refund policy carefully to understand your rights and obligations regarding the refund of unused card balances.
                                         </Typography>
+                                        <Typography sx={{ marginTop: '10px', fontSize:'15px'}}>
+                                            1. Eligibility for Refunds
+                                        </Typography>
+                                        <Typography sx={{fontSize:'12px'}}>
+                                            Refunds are available for the unused balance on your prepaid card under the following conditions:
+                                        </Typography>
+                                        <Typography sx={{fontSize:'12px'}}>
+                                            • The remaining balance on the card is above the minimum refundable amount of 3,000 KRW.
+                                        </Typography>
+                                        <Typography sx={{fontSize:'12px'}}>
+                                            • The prepaid card is active and has not expired.
+                                        </Typography>
+                                        <Typography sx={{fontSize:'12px'}}>
+                                            • The refund request is made by the registered cardholder.
+                                        </Typography>
+                                        <Typography sx={{fontSize:'12px'}}>
+                                            Please note that if the remaining balance is below the minimum refundable amount, a refund may not be processed.
+                                        </Typography>
+                                        <Typography sx={{ marginTop: '10px', fontSize:'15px'}}>
+                                            2. Refund Request Process
+                                        </Typography>
+                                        <Typography sx={{fontSize:'12px'}}>
+                                            To request a refund of the remaining balance on your prepaid card:
+                                        </Typography>
+                                        <Typography sx={{fontSize:'12px'}}>
+                                            1. Contact our customer service team via our official website or customer service email.
+                                        </Typography>
+                                        <Typography sx={{fontSize:'12px'}}>
+                                            2. Provide the necessary information, including your full name, contact information, prepaid card number, and the reason for the refund request.
+                                        </Typography>
+                                        <Typography sx={{fontSize:'12px'}}>
+                                            3. Submit a valid identification document to verify your identity as the registered cardholder.
+                                        </Typography>
+                                        <Typography sx={{ marginTop: '10px', fontSize:'15px'}}>
+                                            3. Processing Time
+                                        </Typography>
+                                        <Typography sx={{fontSize:'12px'}}>
+                                            Once we receive your refund request and all required information, we will review the request and provide a response within 3 business days. If the refund is approved, the remaining balance will be processed for a refund.
+                                        </Typography>
+                                        <Typography sx={{ marginTop: '10px', fontSize:'15px'}}>
+                                            4. Refund Fees
+                                        </Typography>
+                                        <Typography sx={{fontSize:'12px'}}>
+                                            A non-refundable processing fee of 3,000 KRW will be deducted from the refundable balance. This fee is applied to cover the administrative costs associated with processing your refund.
+                                        </Typography>
+                                        <Typography sx={{ marginTop: '10px', fontSize:'15px'}}>
+                                            5. Policy Updates
+                                        </Typography>
+                                        <Typography sx={{fontSize:'12px'}}>
+                                            yeogaekgi reserves the right to update or modify this refund policy at any time. Any changes will be posted on our website, and it is the customer's responsibility to review the policy periodically.
+                                        </Typography>
+
+
                                     </AccordionDetails>
                                 </Accordion>
                             </Grid>
@@ -319,7 +369,7 @@ export default function Refund() {
                         ></BasicButton>
 
                         <AlertDialog
-                            title={'open alert test'}
+                            title={'Can\'t Refund'}
                             content={alertContent}
                         />
                     </div>
