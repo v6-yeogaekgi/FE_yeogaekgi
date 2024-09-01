@@ -41,7 +41,6 @@ const ReviewList = () => {
     const user = JSON.parse(userString);
     const target = useRef(null);
     const navigate = useNavigate();
-    const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
     const loadMoreReviews = useCallback(() => {
         if (hasMore && !apiLoading) {
             reviewList();
@@ -52,7 +51,7 @@ const ReviewList = () => {
         const observer = new IntersectionObserver(
             (entries) => {
                 if (entries[0].isIntersecting) {
-                    loadMoreReviews(); // Load more reviews when the last element is in view
+                    loadMoreReviews();
                 }
             },
             {
@@ -74,11 +73,8 @@ const ReviewList = () => {
     useEffect(() => {
         if (selectedService) {
             reviewList(true); // Reload review list on service change
+            ReviewImgList();
         }
-    }, [selectedService]);
-
-    useEffect(() => {
-        ReviewImgList();
     }, [selectedService]);
 
     const handleMenuClick = (event, reviewId) => {
@@ -98,10 +94,15 @@ const ReviewList = () => {
     };
 
     const handleDelete = async () => {
-        await deleteReview(selectedReview);
-        await reviewList(true);
-        await ReviewImgList();
-        handleMenuClose(); // Close the menu
+        try {
+            await deleteReview(selectedReview);
+            await reviewList(true);
+            await ReviewImgList();
+        } catch (error) {
+            console.error('Error during deletion process:', error);
+        } finally {
+            handleMenuClose(); // Close the menu regardless of success or failure
+        }
     };
 
     const handleTranslate = async (reviewId, content, lang) => {

@@ -27,6 +27,7 @@ export const SelectedProvider = ({ children }) => {
 
     const handleServiceSelect = (
         service,
+        address,
         name,
         content,
         serviceType,
@@ -35,6 +36,7 @@ export const SelectedProvider = ({ children }) => {
         setSelectedService(service);
         setSelectedServiceInfo({
             name: name,
+            address: address,
             content: content,
             serviceType: serviceType,
             likeCnt: likeCnt,
