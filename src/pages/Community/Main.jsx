@@ -10,6 +10,7 @@ import React, {
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AllStateContext } from '../../App';
 import axios from 'axios';
+import Box from '@mui/material/Box';
 
 export default function Main(props) {
     // ======================== 무한스크롤 구현 ========================
@@ -172,7 +173,10 @@ export default function Main(props) {
 
     return (
         <div>
-            <PostNav handleSearch={handleSearch} search={search}></PostNav>
+            <Box className="PostList" sx={{ mr: 2, ml: 2, mt: 1 }}>
+                <PostNav handleSearch={handleSearch} search={search}></PostNav>
+            </Box>
+
             <PostList
                 posts={posts}
                 likeList={likeList}
