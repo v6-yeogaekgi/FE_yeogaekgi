@@ -34,7 +34,7 @@ export default function Conversion({ data }) {
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
     const conversionUrl = protocol + 'transaction/conversion';
-    const [transferAmount, setTransferAmount] = useState(null);
+    const [transferAmount, setTransferAmount] = useState(0);
     const [transferType, setTransferType] = useState(0);
     // console.log(transferType);
 
@@ -55,15 +55,16 @@ export default function Conversion({ data }) {
 
     const handleTransferAmountChange = (e) => {
         const value = e.target.value;
-        // 숫자만 허용하는 정규 표현식
-        const numericValue = value.replace(/[^0-9]/g, '');
-
-        if (numericValue === '') {
-            setTransferAmount(null);
+        if (value === '') {
+            setTransferAmount(0);
         } else {
-            const parsedValue = parseInt(numericValue, 10);
-            if (!isNaN(parsedValue)) {
-                setTransferAmount(parsedValue);
+            let cleanVal = parseFloat(
+                value.replace(/[^0-9.,-]/g, '').replace(/,/g, ''),
+            );
+            if (isNaN(cleanVal)) {
+                setTransferAmount(0);
+            } else {
+                setTransferAmount(cleanVal);
             }
         }
     };
@@ -75,9 +76,6 @@ export default function Conversion({ data }) {
     };
 
     const handleTransfer = () => {
-        // alert(
-        //     `Transferring ${transferAmount}₩ from ${leftSide.label} to ${rightSide.label}`,
-        // );
         axios
             .post(
                 conversionUrl,
@@ -172,7 +170,12 @@ export default function Conversion({ data }) {
                                 sx={{ mb: 4, mt: 2 }}
                             >
                                 <Grid item xs={5}>
-                                    <Typography variant='subtitle1' marginBottom="8px">{leftSide.label}</Typography>
+                                    <Typography
+                                        variant="subtitle1"
+                                        marginBottom="8px"
+                                    >
+                                        {leftSide.label}
+                                    </Typography>
                                     <StyledTextField
                                         fullWidth
                                         variant="outlined"
@@ -191,7 +194,12 @@ export default function Conversion({ data }) {
                                     <ArrowForward />
                                 </Grid>
                                 <Grid item xs={5}>
-                                    <Typography variant='subtitle1' marginBottom="8px">{rightSide.label}</Typography>
+                                    <Typography
+                                        variant="subtitle1"
+                                        marginBottom="8px"
+                                    >
+                                        {rightSide.label}
+                                    </Typography>
                                     <StyledTextField
                                         fullWidth
                                         variant="outlined"
@@ -224,16 +232,17 @@ export default function Conversion({ data }) {
                                         inputMode: 'numeric',
                                         pattern: '[0-9]*',
                                     }}
-                                    value={
-                                        transferAmount === null
-                                            ? ''
-                                            : transferAmount
-                                    }
+                                    value={transferAmount.toLocaleString('ko-KR',
+                                        {
+                                            style: 'currency',
+                                            currency: 'KRW',
+                                        },
+                                    )}
                                     onChange={handleTransferAmountChange}
                                     placeholder="0"
                                 />
                                 <IconButton
-                                    onClick={() => setTransferAmount(null)}
+                                    onClick={() => setTransferAmount(0)}
                                     sx={{ ml: -5, zIndex: 1 }}
                                 >
                                     <Clear />
