@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo, useContext } from 'react';
-import Box from '@mui/material/Box';
+import { CircularProgress, Box } from '@mui/material';
 import Header from '../../layout/Header/Header';
 import Footer from '../../layout/Footer/Footer';
 import CommentList from './components/CommentList';
@@ -45,6 +45,7 @@ const Post = () => {
         };
 
         return axios
+
             .post(protocol + 'api/translate', data, {
                 headers: {
                     Authorization: token,
@@ -137,7 +138,6 @@ const Post = () => {
             })
             .then((res) => {
                 setPost(res.data);
-                console.log(res);
             });
     };
     // ================ [end] post api 호출 부분 ================

@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import CancelSharpIcon from '@mui/icons-material/CancelSharp';
 import axios from 'axios';
 import { AllStateContext } from '../../../App';
-import { Card, Box } from '@mui/material';
+import { Card, Box, CircularProgress } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import JSZip from 'jszip';
 
@@ -147,6 +147,7 @@ const PostEditor = () => {
     const navigate = useNavigate();
 
     const registerApi = (data) => {
+        setLoading(true);
         return axios
             .post(protocol + 'community/register', data, {
                 headers: {
@@ -155,6 +156,7 @@ const PostEditor = () => {
                 },
             })
             .then((res) => {
+                setLoading(false);
                 dialog.alert.openAlertDialog(
                     'Success!',
                     'Go check out your post.',
@@ -162,12 +164,14 @@ const PostEditor = () => {
                 );
             })
             .catch((error) => {
+                setLoading(false);
                 console.error('API 호출 오류:', error);
                 throw error;
             });
     };
 
     const modifyApi = (data) => {
+        setLoading(true);
         return axios
             .put(protocol + 'community/' + postId, data, {
                 headers: {
@@ -176,6 +180,7 @@ const PostEditor = () => {
                 },
             })
             .then((res) => {
+                setLoading(false);
                 dialog.alert.openAlertDialog(
                     'Success!',
                     'Go check out your post.',
@@ -183,6 +188,7 @@ const PostEditor = () => {
                 );
             })
             .catch((error) => {
+                setLoading(false);
                 console.error('API 호출 오류:', error);
                 throw error;
             });
@@ -197,6 +203,7 @@ const PostEditor = () => {
     const [fileImgs, setFileImgs] = useState(location.state?.images || []);
     const [hashtag, setHashtag] = useState(location.state?.hashtag || '');
     const [content, setContent] = useState(location.state?.content || '');
+    const [loading, setLoading] = useState(false);
 
     const handleDeleteImg = (indexToRemove) => {
         setDeleteImgs([...deleteImgs, existingImgs[indexToRemove]]);
@@ -407,6 +414,24 @@ const PostEditor = () => {
                     onClick={onClick}
                 ></BasicButton>
             </div>
+            {loading && (
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        zIndex: 1,
+                    }}
+                >
+                    <CircularProgress sx={{ color: '#4653f9' }} />
+                </Box>
+            )}
             <dialog.alert.AlertDialog></dialog.alert.AlertDialog>
         </div>
     );
