@@ -18,12 +18,11 @@ export default function CardDetail(props) {
         setPaymentType(event.target.checked ? 0 : 1);
     };
 
-    const uri = protocol + 'usercard/detail';
+    const uri = protocol + 'usercard/' + userCardId;
 
-    const getApi = (userCardId) => {
+    const getApi = () => {
         axios
-            .post(uri,
-                { userCardId },
+            .get(uri,
                 {
                     headers: {
                         Authorization: token,
