@@ -22,6 +22,9 @@ export default function TopUpInput({ cardData }) {
     const navigate = useNavigate();
     const { userCardId } = cardData;
     const [userData, setUserData] = useState(null);
+
+    // console.log("topup input userData: ", userData);
+
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem("token");
     const topupUrl = protocol + 'transaction/toptup';
@@ -43,6 +46,7 @@ export default function TopUpInput({ cardData }) {
                     setCurrency({
                         id: 0,
                         code: 'USD',
+                        locales: 'en-US',
                         flag: getCountryImgById('US'),
                         rate: (1 / storedRates.KRW) * storedRates.USD,
                     });
@@ -50,6 +54,7 @@ export default function TopUpInput({ cardData }) {
                     setCurrency({
                         id: 1,
                         code: 'JPY',
+                        locales: 'ja-JP',
                         flag: getCountryImgById('JP'),
                         rate: (1 / storedRates.KRW) * storedRates.JPY,
                     });
@@ -57,6 +62,7 @@ export default function TopUpInput({ cardData }) {
                     setCurrency({
                         id: 2,
                         code: 'CNY',
+                        locales: 'zh-CN',
                         flag: getCountryImgById('CN'),
                         rate: (1 / storedRates.KRW) * storedRates.CNY,
                     });
@@ -174,7 +180,7 @@ export default function TopUpInput({ cardData }) {
                 <TextField
                     fullWidth
                     placeholder="0"
-                    value={foreignAmount.toLocaleString("en-US", {style:"currency", currency:"USD"})}
+                    value={foreignAmount.toLocaleString(currency.locales, {style: "currency", currency: currency.code})}
                     InputProps={{
                         readOnly: true,
                     }}
