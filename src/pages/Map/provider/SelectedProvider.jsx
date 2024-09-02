@@ -15,7 +15,7 @@ export const SelectedProvider = ({ children }) => {
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
     const [like, setLike] = useState(false);
-    const [viewLikeCount, setViewLikeCnt] = useState(0);
+    const [viewLikeCnt, setViewLikeCnt] = useState(0);
     const [apiLoading, setApiLoading] = useState(false);
     const api = axios.create({
         baseURL: protocol,
@@ -55,7 +55,10 @@ export const SelectedProvider = ({ children }) => {
             const response = await api.get(
                 `${protocol}services/like/${selectedService}/check`,
             );
-            setLike(response.data);
+            return {
+                likeStatus: response.data.status,
+                count: response.data.count,
+            };
         } catch (error) {
             console.error('Error fetching services data:', error);
         } finally {
@@ -68,7 +71,7 @@ export const SelectedProvider = ({ children }) => {
             const response = await api.post(
                 `${protocol}services/like/${selectedService}`,
             );
-
+            console.log(response.data);
             if (response.data === 'like add') {
                 setLike(true);
                 setViewLikeCnt((prevCount) => prevCount + 1);
@@ -98,8 +101,8 @@ export const SelectedProvider = ({ children }) => {
                 servicesData,
                 setData,
                 toggleDrawer,
+                viewLikeCnt,
                 setViewLikeCnt,
-                viewLikeCount,
             }}
         >
             {children}

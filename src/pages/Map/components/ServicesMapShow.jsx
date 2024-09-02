@@ -115,7 +115,6 @@ const ServicesMapShow = () => {
                         service.type,
                         service.likeCnt,
                     );
-                    console.log('새로운 좋아요 수' + service.likeCnt);
                 });
 
                 return marker;
