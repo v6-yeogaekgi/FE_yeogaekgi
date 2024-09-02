@@ -56,7 +56,7 @@ const SettingsDrawer = ({ data, onCardDelete, onCardUpdate }) => {
         })
             .then((res) => {
                 if (res.status === 200) {
-                    onCardUpdate({starred: newState});
+                    onCardUpdate({ starred: newState });
                     setChecked(newState);
                 }
             })
@@ -110,7 +110,11 @@ const SettingsDrawer = ({ data, onCardDelete, onCardUpdate }) => {
                                 e.stopPropagation();
                                 handleClick();
                             }}>
-                                <ListItemText primary={'Set as Default Card'} />
+                                {checked ?
+                                    <ListItemText primary={'Remove Default Card'} /> :
+                                    <ListItemText primary={'Set as Default Card'} />
+                                }
+
                             </ListItemButton>
                         </ListItem>
                         <ListItem key={'충전'} disablePadding
@@ -150,10 +154,10 @@ const SettingsDrawer = ({ data, onCardDelete, onCardUpdate }) => {
                             e.stopPropagation();
                             openConfirmDialog();
                         }}>
-                        {/*<ListItemButton onClick={(e) => {*/}
-                        {/*    e.stopPropagation();*/}
-                        {/*    handleCardDelete();*/}
-                        {/*}}>*/}
+                            {/*<ListItemButton onClick={(e) => {*/}
+                            {/*    e.stopPropagation();*/}
+                            {/*    handleCardDelete();*/}
+                            {/*}}>*/}
                             <ListItemText primary={'Delete Card'} />
                         </ListItemButton>
                     </ListItem>
@@ -181,8 +185,8 @@ const SettingsDrawer = ({ data, onCardDelete, onCardUpdate }) => {
                 }
             />
             <ConfirmDialog
-                title={"Delete Card"}
-                content={"Are you sure you want to delete the card?"}
+                title={'Delete Card'}
+                content={'Are you sure you want to delete the card?'}
                 onAgree={() => {
                     handleCardDelete();
                 }}
