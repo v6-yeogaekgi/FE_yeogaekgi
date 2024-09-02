@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import { IconButton } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Music from '../../components/Music/music';
 import './style.css';
@@ -17,6 +17,10 @@ const Header = ({ menuName, areas }) => {
 
     const handleBack = () => {
         navigate(-1);
+    };
+
+    const handleClick = () => {
+        navigate('/faq');
     };
 
     return (
@@ -89,8 +93,37 @@ const Header = ({ menuName, areas }) => {
                     >
                         {menuName}
                     </Typography>
-                    <Box sx={{ position: 'absolute', right: 10 }}>
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            right: 10,
+                            weight: 100,
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                        }}
+                    >
                         <Music />
+                        <Button
+                            onClick={handleClick}
+                            sx={{
+                                display: isHome ? 'inline-flex' : 'none',
+                                border: '1px solid #DDDDDD', // 테두리 색상 설정
+                                color: '#666666', // 텍스트 색상
+                                backgroundColor: '#fff', // 배경 투명하게
+                                padding: '2px', // 패딩 줄이기
+                                minWidth: '50px', // 최소 너비 설정
+                                fontFamily: 'Notosans, sans-serif', // 폰트 설정
+                                marginRight: 1.5,
+                                borderRadius: '8px', // 모서리 둥글게 설정
+
+                                '&:hover': {
+                                    backgroundColor: '#f0f4f8', // 호버 시 배경색 변경
+                                },
+                            }}
+                        >
+                            FAQ
+                        </Button>
                     </Box>
                 </Toolbar>
             </AppBar>
