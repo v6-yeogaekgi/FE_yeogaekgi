@@ -164,7 +164,7 @@ const Post = () => {
 
             <CommentStateContext.Provider value={{ comment, postId }}>
                 <CommentDispatchContext.Provider value={memoizedDispatch}>
-                    <Box sx={{ mr: 2, ml: 2, mt: 1 }}>
+                    <Box sx={{ mr: 2, ml: 2, mt: 1, height: '100vh' }}>
                         <PostItem
                             key={post.postId}
                             postId={post.postId}
