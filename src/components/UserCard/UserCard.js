@@ -195,7 +195,7 @@ export default function UserCard({ data, onCardClick, onStarChange, onCardDelete
                                         Pay
                                     </Typography>
                                     <Typography variant="h6">
-                                        ₩{payBalance}
+                                        ₩{payBalance.toLocaleString()}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={6}>
@@ -209,7 +209,7 @@ export default function UserCard({ data, onCardClick, onStarChange, onCardDelete
                                         Transit
                                     </Typography>
                                     <Typography variant="h6">
-                                        ₩{transitBalance}
+                                        ₩{transitBalance.toLocaleString()}
                                     </Typography>
                                 </Grid>
                             </Grid>
