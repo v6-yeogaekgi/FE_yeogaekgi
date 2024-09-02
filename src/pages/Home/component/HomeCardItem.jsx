@@ -82,6 +82,7 @@ const HomeCardItem = ({ data }) => {
                                             mt: 1,
                                             fontFamily: 'Noto Sans, sans-serif',
                                             fontWeight: 700,
+                                            textAlign: 'left',
                                         }}
                                     >
                                         {cardName}
