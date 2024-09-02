@@ -48,24 +48,26 @@ export default function Main(props) {
     const [hasNext, setHasNext] = useState(true);
     const [search, setSearch] = useState({
         type: location?.state?.hashtag ? 'hashtag' : 'content',
-        keyword: location?.state?.hashtag || '' ,
+        keyword: location?.state?.hashtag || '',
         myPost: false,
         page: 0,
     });
-    const [inputValue, setInputValue] = useState(search.type === 'hashtag' ? `#${search.keyword}` : search.keyword);
+    const [inputValue, setInputValue] = useState(
+        search.type === 'hashtag' ? `#${search.keyword}` : search.keyword,
+    );
 
     // 처음 렌더링 될 때만 실행
     useEffect(() => {
         observer.observe(observeTarget.current); // observe 타겟 요소 관측 시작
         getLikeListApi();
         if (location.state && location.state.hashtag) {
-            setInputValue(`#${location.state.hashtag}`)
+            setInputValue(`#${location.state.hashtag}`);
             handleSearch({
                 type: 'hashtag',
                 keyword: location.state.hashtag,
-                myPost:false,
-                page:0,
-            })
+                myPost: false,
+                page: 0,
+            });
             console.log(search);
             navigate('/community', { replace: true });
         }
@@ -75,19 +77,18 @@ export default function Main(props) {
 
     // 처음 렌더링 && search 조건 바뀔때 실행
     useEffect(() => {
-        console.log("search")
+        console.log('search');
         if (!isLoading) {
-            console.log("search:", search);
+            console.log('search:', search);
             // Api 호출 중이 아닐 때
             getListApi();
         }
         console.log('hasNext: ', hasNext);
-
     }, [search]);
 
     // observe 타겟 요소 관측 시작 및 종료
     useEffect(() => {
-        console.log("isLoading")
+        console.log('isLoading');
         const target = observeTarget.current;
         if (target) {
             if (!isLoading) {
@@ -115,7 +116,9 @@ export default function Main(props) {
                 },
             })
             .then((res) => {
-                setPosts((prevPosts) => [...prevPosts, ...res?.data?.content]); // 데이터 추가
+                setPosts((prevPosts) => [...prevPosts, ...res?.data?.content]);
+                console.log('여기');
+                console.log(res.data.content); // 데이터 추가
                 setIsLoading(false);
                 setHasNext(res.data.hasNext);
                 console.log('res.data:', res.data);
@@ -145,10 +148,10 @@ export default function Main(props) {
 
     const handleSearch = (newSearch) => {
         // PostNav 컴포넌트에서 search 값 set하기 위함.
-        if (JSON.stringify(search) !== JSON.stringify(newSearch)){
-            setPosts([])
-            setHasNext(true)
-            setIsLoading(false)
+        if (JSON.stringify(search) !== JSON.stringify(newSearch)) {
+            setPosts([]);
+            setHasNext(true);
+            setIsLoading(false);
             setSearch(newSearch);
         }
     };
@@ -180,7 +183,11 @@ export default function Main(props) {
     return (
         <div>
             <Box className="PostList" sx={{ mr: 2, ml: 2, mt: 1 }}>
-                <PostNav handleSearch={handleSearch} inputValue={inputValue} setInputValue={setInputValue} ></PostNav>
+                <PostNav
+                    handleSearch={handleSearch}
+                    inputValue={inputValue}
+                    setInputValue={setInputValue}
+                ></PostNav>
             </Box>
 
             <PostList
