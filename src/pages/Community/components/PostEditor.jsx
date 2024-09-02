@@ -1,13 +1,16 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
+
 import BasicTextField from '../../../components/BasicTextField/BasicTextField';
 import BasicButton from '../../../components/BasicButton/BasicButton';
 import Typography from '@mui/material/Typography';
+import InputAdornment from '@mui/material/InputAdornment';
 import CancelSharpIcon from '@mui/icons-material/CancelSharp';
 import axios from 'axios';
 import { AllStateContext } from '../../../App';
 import { Card, Box } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import SearchIcon from '@mui/icons-material/Search';
 
 const SelectImage = ({
     existingImgs,
@@ -170,7 +173,7 @@ const PostEditor = () => {
         return axios
             .put(protocol + 'community/' + postId, data, {
                 headers: {
-                    Authorization: token,
+                    Authoriztagation: token,
                     'Content-Type': 'multipart/form-data', // 데이터 형식을 명시
                 },
             })
@@ -278,6 +281,13 @@ const PostEditor = () => {
                         }}
                         defaultValue={hashtag}
                         inputProps={{ maxLength: 20 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    #
+                                </InputAdornment>
+                            ),
+                        }}
                     ></BasicTextField>
                     <div
                         style={{
