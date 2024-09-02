@@ -376,6 +376,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                     </ListItem>
                                     <ListItem>
                                         <ListItemText primary="Pay Date" secondary={selectedItem.datetime} />
+                                        <ListItemText primary="Pay Date" secondary={format(selectedItem.datetime, 'PPpp')} />
                                     </ListItem>
                                     <ListItem>
                                         <ListItemText primary="Pay Balance Snap" secondary={
@@ -400,7 +401,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                         <ListItemText primary="Transaction Number" secondary={selectedItem.tno} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="Transaction Date" secondary={selectedItem.datetime} />
+                                        <ListItemText primary="Transaction Date" secondary={format(selectedItem.datetime, 'PPpp')} />
                                     </ListItem>
                                     {selectedItem.transferType !== null && (
                                         <ListItem>
