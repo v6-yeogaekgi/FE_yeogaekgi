@@ -31,7 +31,8 @@ export default function Conversion({ data }) {
     const cardData = location.state?.data;
     const { payBalance, transitBalance, userCardId } = cardData;
     // console.log(payBalance);
-    const { protocol, token } = useContext(AllStateContext);
+    const { protocol } = useContext(AllStateContext);
+    const token = localStorage.getItem('token');
     const conversionUrl = protocol + 'transaction/conversion';
     const [transferAmount, setTransferAmount] = useState(null);
     const [transferType, setTransferType] = useState(0);
