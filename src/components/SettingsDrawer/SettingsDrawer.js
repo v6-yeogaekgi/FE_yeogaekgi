@@ -14,6 +14,7 @@ import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { AllStateContext } from '../../App';
 import useConfirmDialog from '../../hooks/useConfirmDialog/useConfirmDialog';
+import { format } from 'date-fns';
 
 const SettingsDrawer = ({ data, onCardDelete, onCardUpdate }) => {
 
@@ -159,6 +160,7 @@ const SettingsDrawer = ({ data, onCardDelete, onCardUpdate }) => {
                 </List>
             </Box>
             <AlertDialog
+                title={'Card Details'}
                 content={
                     <>
                         <List sx={{ color: 'black' }}>
@@ -172,7 +174,7 @@ const SettingsDrawer = ({ data, onCardDelete, onCardUpdate }) => {
                                 <b>Validity</b>
                             </ListItem>
                             <ListItem disablePadding>
-                                {data.expiryDate}
+                                {format(data.expiryDate, 'PPpp')}
                             </ListItem>
                         </List>
                     </>

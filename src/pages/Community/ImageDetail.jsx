@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useParams , useLocation} from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { AllStateContext } from '../../App';
 import Header from '../../layout/Header/Header';
@@ -8,15 +8,20 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-
-
 const ImageDetail = () => {
     const location = useLocation();
     const [images, setImages] = useState(location.state?.images || []);
-
+    console.log(location);
 
     return (
-        <div>
+        <Box
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100%',
+            }}
+        >
             {images.length > 0 ? (
                 <Swiper
                     spaceBetween={50}
@@ -37,7 +42,7 @@ const ImageDetail = () => {
             ) : (
                 <p>Loading...</p>
             )}
-        </div>
+        </Box>
     );
 };
 
