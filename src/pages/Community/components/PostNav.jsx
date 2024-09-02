@@ -12,13 +12,16 @@ import Card from '@mui/material/Card';
 
 export default function PostNav({ handleSearch, inputValue, setInputValue}) {
     const navigate = useNavigate();
-    const onClickMy = () => {
+    const [myPost, setMypost] = new useState(false)
+    const onClickMy = (event) => {
+        setInputValue('');
         handleSearch({
             keyword: '',
-            type: '',
-            myPost: true,
+            type: myPost? 'content': '',
+            myPost: !myPost,
             page: 0,
         });
+        setMypost(!myPost);
         // navigate('/community', { state: { myPost: true } });
     };
     // 키보드 입력 처리
@@ -99,12 +102,13 @@ export default function PostNav({ handleSearch, inputValue, setInputValue}) {
                     btnColor={'#4653f9'}
                 />
                 <BasicButton
+                    state={myPost}
                     className={'my-btn'}
                     variant={'contained'}
                     onClick={onClickMy}
                     startIcon={<PersonIcon />}
                     size={'small'}
-                    text={'My Post'}
+                    text={myPost?'All':'My Post'}
                     width={'45%'}
                     btnColor={'#4653f9'}
                 />
