@@ -60,14 +60,14 @@ export default function UserCardOnDetail({ initialData, onCardClick }) {
             }}
         >
             <BasicButton
-                text={'Balance Conversion'}
+                text={'Top Up'}
                 width={'45%'}
                 variant={'contained'}
                 onClick={handleTopUpClick}
                 disabled={!isActive}
             />
             <BasicButton
-                text={'Top Up'}
+                text={'Balance Conversion'}
                 width={'45%'}
                 variant={'contained'}
                 onClick={handleBalanceConversionClick}
@@ -171,7 +171,7 @@ export default function UserCardOnDetail({ initialData, onCardClick }) {
                                         Pay
                                     </Typography>
                                     <Typography variant="h6">
-                                        ₩{payBalance}
+                                        ₩{payBalance.toLocaleString()}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={6}>
@@ -185,7 +185,7 @@ export default function UserCardOnDetail({ initialData, onCardClick }) {
                                         Transit
                                     </Typography>
                                     <Typography variant="h6">
-                                        ₩{transitBalance}
+                                        ₩{transitBalance.toLocaleString()}
                                     </Typography>
                                 </Grid>
                             </Grid>
