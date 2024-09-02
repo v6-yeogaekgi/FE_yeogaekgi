@@ -1,14 +1,14 @@
 import * as React from 'react';
 import CommentEditor from './components/CommentEditor';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import axios from 'axios';
-import { useContext } from 'react';
-import { AllStateContext } from '../../App';
 import { useEffect } from 'react';
 import { Card, Box } from '@mui/material';
+import { AllStateContext } from '../../App';
 
 const EditComment = () => {
+    const { dialog } = useContext(AllStateContext);
     const [initialComment, setInitialComment] = useState([]);
     const { protocol } = useContext(AllStateContext);
     const navigate = useNavigate();
@@ -44,8 +44,13 @@ const EditComment = () => {
                 },
             })
             .then((res) => {
-                alert('The comment has been edited');
-                navigate('/community/post/' + postId);
+                dialog.alert.openAlertDialog(
+                    'Success!',
+                    'Your comment has been updated!',
+                    () => {
+                        navigate('/community/post/' + postId);
+                    },
+                );
             })
             .catch((error) => {
                 console.error('API 호출 오류:', error);
@@ -64,6 +69,7 @@ const EditComment = () => {
                 initialComment={initialComment}
                 onUpdate={onUpdate}
             />
+            <dialog.alert.AlertDialog></dialog.alert.AlertDialog>
         </Box>
     );
 };

@@ -9,7 +9,6 @@ import BasicTextField from '../../../components/BasicTextField/BasicTextField';
 
 const CommentEditor = ({ initialComment, onUpdate }) => {
     const [commentState, setCommentState] = useState([]);
-
     const navigate = useNavigate();
 
     const handleOnGoBack = () => {

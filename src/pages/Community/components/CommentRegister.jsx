@@ -22,6 +22,7 @@ const CommentRegister = () => {
     };
     const onSubmit = (e) => {
         e.preventDefault(); // 폼 제출 시 새로고침 방지
+        console.log(member.country.code);
 
         if (!content.trim()) {
             inputRef.current.focus();
