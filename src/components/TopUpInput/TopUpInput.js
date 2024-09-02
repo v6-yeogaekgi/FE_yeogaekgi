@@ -163,8 +163,8 @@ export default function TopUpInput({ cardData }) {
                     sx={{ mb: 3 }}
                 />
 
-                <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                    충전 금액
+                <Typography variant="subtitle1" sx={{ mb: 2 }}>
+                    TopUp Amount
                 </Typography>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -236,7 +236,7 @@ export default function TopUpInput({ cardData }) {
                         alignItems: 'center',
                     }}
                 >
-                    <Typography>충전 안내</Typography>
+                    <Typography>Terms and Conditions</Typography>
                     <Typography>&gt;</Typography>
                 </Box>
             </Box>
@@ -258,7 +258,7 @@ export default function TopUpInput({ cardData }) {
                     variant="h6"
                     sx={{ padding: 1, fontWeight: 'bold' }}
                 >
-                    여객기 Terms and Conditions
+                    Terms and Conditions
                 </Typography>
                 <Divider sx={{ mb: 2, borderBottomWidth: 3 }} />
                 <Typography sx={{ whiteSpace: 'pre-wrap', padding: 1 }}>

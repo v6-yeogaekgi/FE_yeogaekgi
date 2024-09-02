@@ -74,8 +74,8 @@ const HomeCardItem = ({ data }) => {
                             />
                         </Grid>
                         <Grid item xs={8}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={8}>
+                            <Grid container spacing={2} sx={{justifyContent: 'flex-start'}}>
+                                <Grid item xs={8} sx={{justifyContent: 'flex-start'}}>
                                     <Typography
                                         variant="h6"
                                         sx={{
@@ -100,12 +100,13 @@ const HomeCardItem = ({ data }) => {
                                         sx={{
                                             fontFamily: 'Noto Sans, sans-serif',
                                             fontWeight: 700,
+                                            textAlign: 'left',
                                         }}
                                     >
                                         Pay
                                     </Typography>
-                                    <Typography variant="h6">
-                                        ₩ {payBalance}
+                                    <Typography variant="h6" sx={{textAlign: 'left',}}>
+                                        ₩ {payBalance.toLocaleString()}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={6}>
@@ -114,12 +115,13 @@ const HomeCardItem = ({ data }) => {
                                         sx={{
                                             fontFamily: 'Noto Sans, sans-serif',
                                             fontWeight: 700,
+                                            textAlign: 'left',
                                         }}
                                     >
                                         Transit
                                     </Typography>
-                                    <Typography variant="h6">
-                                        ₩ {transitBalance}
+                                    <Typography variant="h6" sx={{textAlign: 'left',}}>
+                                        ₩ {transitBalance.toLocaleString()}
                                     </Typography>
                                 </Grid>
                             </Grid>
