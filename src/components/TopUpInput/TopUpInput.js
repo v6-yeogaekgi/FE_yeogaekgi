@@ -22,12 +22,15 @@ export default function TopUpInput({ cardData }) {
     const navigate = useNavigate();
     const { userCardId } = cardData;
     const [userData, setUserData] = useState(null);
+
+    // console.log("topup input userData: ", userData);
+
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem("token");
     const topupUrl = protocol + 'transaction/toptup';
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [krwAmount, setKrwAmount] = useState();
-    const [foreignAmount, setForeignAmount] = useState();
+    const [krwAmount, setKrwAmount] = useState(0);
+    const [foreignAmount, setForeignAmount] = useState(0);
     const [currency, setCurrency] = useState();
 
     useEffect(() => {
@@ -43,6 +46,7 @@ export default function TopUpInput({ cardData }) {
                     setCurrency({
                         id: 0,
                         code: 'USD',
+                        locales: 'en-US',
                         flag: getCountryImgById('US'),
                         rate: (1 / storedRates.KRW) * storedRates.USD,
                     });
@@ -50,6 +54,7 @@ export default function TopUpInput({ cardData }) {
                     setCurrency({
                         id: 1,
                         code: 'JPY',
+                        locales: 'ja-JP',
                         flag: getCountryImgById('JP'),
                         rate: (1 / storedRates.KRW) * storedRates.JPY,
                     });
@@ -57,6 +62,7 @@ export default function TopUpInput({ cardData }) {
                     setCurrency({
                         id: 2,
                         code: 'CNY',
+                        locales: 'zh-CN',
                         flag: getCountryImgById('CN'),
                         rate: (1 / storedRates.KRW) * storedRates.CNY,
                     });
@@ -79,14 +85,26 @@ export default function TopUpInput({ cardData }) {
 
     const handleKrwAmountChange = (e) => {
         let krInput = e.target.value;
-        let frOutput = krInput * currency.rate;
-        setKrwAmount(krInput);
-        setForeignAmount(frOutput.toFixed(2));
+        if(krInput === "") {
+            setKrwAmount(0);
+            setForeignAmount(0);
+        } else {
+            let cleanKrVal = parseFloat(krInput.replace(/[^0-9.,-]/g, '').replace(/,/g, ''));
+        
+            // If parseFloat returns NaN, set the value to 0
+            if (isNaN(cleanKrVal)) {
+                cleanKrVal = 0;
+            }
+            
+            let frOutput = cleanKrVal * currency.rate;
+            setKrwAmount(cleanKrVal);
+            setForeignAmount(frOutput);
+        }      
     };
 
     const onClickClearIcon = (e) => {
-        setKrwAmount('');
-        setForeignAmount('');
+        setKrwAmount(0);
+        setForeignAmount(0);
     };
 
     const openDrawer = () => {
@@ -103,10 +121,10 @@ export default function TopUpInput({ cardData }) {
             .post(
                 topupUrl,
                 {
-                    krwAmount: Number(krwAmount),
+                    krwAmount: krwAmount,
                     currencyType: currencyType,
                     userCardNo: userCardId,
-                    foreignAmount: Number(foreignAmount),
+                    foreignAmount: foreignAmount,
                 },
                 {
                     headers: {
@@ -162,7 +180,7 @@ export default function TopUpInput({ cardData }) {
                 <TextField
                     fullWidth
                     placeholder="0"
-                    value={foreignAmount}
+                    value={foreignAmount.toLocaleString(currency.locales, {style: "currency", currency: currency.code})}
                     InputProps={{
                         readOnly: true,
                     }}
@@ -188,7 +206,7 @@ export default function TopUpInput({ cardData }) {
                 <TextField
                     fullWidth
                     placeholder="0"
-                    value={krwAmount}
+                    value={krwAmount.toLocaleString("ko-KR", {style: "currency", currency: "KRW"})}
                     onChange={handleKrwAmountChange}
                     InputProps={{
                         endAdornment: (
