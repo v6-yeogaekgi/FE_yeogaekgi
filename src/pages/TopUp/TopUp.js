@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import TopUpInput from '../../components/TopUpInput/TopUpInput';
 import { useContext } from 'react';
 import { AllStateContext } from '../../App';
+import UserCardOnRefund from '../../components/UserCardOnRefund/UserCardOnRefund';
 
 export default function TopUp({ data }) {
     // console.log("top up page 확인");
@@ -49,7 +50,7 @@ export default function TopUp({ data }) {
                         marginBottom: '30px',
                     }}
                 >
-                    <UserCardOnDetail initialData={cardData} />
+                    <UserCardOnRefund data={cardData} />
                 </Box>
                 <Box
                     sx={{

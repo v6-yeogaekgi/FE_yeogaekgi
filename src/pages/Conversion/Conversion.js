@@ -123,15 +123,15 @@ export default function Conversion({ data }) {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        width: '90%',
+                        justifyContent: 'center', // Center the items horizontally and vertically
                         margin: '0 auto',
                         gap: 2,
-                        paddingTop: '20px',
+                        paddingTop: '10px',
                         flexGrow: 1,
-                        paddingBottom: '150px', // 하단 여백 추가
+                        paddingBottom: '150px',
                     }}
                 >
-                    <Box maxWidth="sm">
+                    <Box maxWidth="sm" alignItems="center">
                         <Card
                             sx={{
                                 mx: 'auto',
@@ -152,22 +152,21 @@ export default function Conversion({ data }) {
                             sx={{
                                 width: '90%',
                                 backgroundColor: 'white',
-                                // marginLeft: 'calc(-45vw + 50%)',
+                                marginLeft: 'calc(6vw)',
                                 // paddingLeft: 'calc(60vw - 50%)',
-                                paddingRight: 'calc(5vw)',
-                                paddingLeft: 'calc(5vw)',
+                                paddingRight: 'calc(6vw)',
+                                paddingLeft: 'calc(6vw)',
                                 flexDirection: 'column',
-                                justifyContent: 'space-between',
+                                justifyContent: 'center',
                                 paddingBottom: '20px',
                                 borderRadius: '20px',
-                                // borderRadius: '80px',
                             }}
                         >
                             <Grid
                                 container
                                 spacing={2}
                                 alignItems="center"
-                                sx={{ mb: 4, mt: 2 }}
+                                sx={{ mb: 3, mt: 2 }}
                             >
                                 <Grid item xs={5}>
                                     <Typography
@@ -215,15 +214,14 @@ export default function Conversion({ data }) {
                                 variant="contained"
                                 text="Switch"
                                 startIcon={<SwapVert />}
-                                onClick={handleSwitch}
-                                btnColor="#2e85e0"
+                                onClick={handleSwitch}                           
                                 width="100%"
-                                height=""
+                                // height=""
                             >
                                 Switch
                             </BasicButton>
 
-                            <Box sx={{ display: 'flex', mb: 4, mt: 4 }}>
+                            <Box sx={{ display: 'flex', mb: 3, mt: 3 }}>
                                 <TextField
                                     fullWidth
                                     variant="outlined"
@@ -255,8 +253,8 @@ export default function Conversion({ data }) {
                                 onClick={handleTransfer}
                                 text="Transfer"
                                 width="100%"
-                                height=""
-                                btnColor="#2e85e0"
+                                // height=""
+                                // btnColor="#2e85e0"
                             ></BasicButton>
                         </Box>
                     </Box>
