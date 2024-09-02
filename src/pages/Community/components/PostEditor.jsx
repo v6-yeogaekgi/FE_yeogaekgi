@@ -8,6 +8,7 @@ import axios from 'axios';
 import { AllStateContext } from '../../../App';
 import { Card, Box } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import JSZip from 'jszip';
 
 const SelectImage = ({
     existingImgs,
@@ -205,7 +206,24 @@ const PostEditor = () => {
         ]);
     };
 
-    const onClick = (e) => {
+    const makeZip = async (newImgs) => {
+        const zip = new JSZip();
+
+        // 파일들을 압축하기
+        newImgs.forEach((file) => {
+            zip.file(file.name, file);
+        });
+
+        // 압축 파일 생성
+        const compressedBlob = await zip.generateAsync({ type: 'blob' });
+
+        // Blob을 File로 변환
+        return new File([compressedBlob], 'images.zip', {
+            type: 'application/zip',
+        });
+    };
+
+    const onClick = async (e) => {
         e.preventDefault(); // 폼 제출 시 새로고침 방지
 
         if (!content.trim()) {
@@ -214,9 +232,16 @@ const PostEditor = () => {
             return;
         }
         const formData = new FormData();
-        newImgs.forEach((file) => {
-            formData.append('multipartFile', file); // 파일 추가
-        });
+
+        // 압축된 파일을 기다리고 추가
+        try {
+            const compressedFile = await makeZip(newImgs);
+            formData.append('multipartFile', compressedFile);
+        } catch (error) {
+            console.error('Error creating ZIP file:', error);
+            return;
+        }
+
         formData.append('deleteImages', deleteImgs);
         formData.append('existingImages', existingImgs);
         formData.append('hashtag', hashtag);
