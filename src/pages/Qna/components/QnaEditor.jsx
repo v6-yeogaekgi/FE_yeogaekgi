@@ -248,7 +248,7 @@ const QnaEditor = () => {
                 >
                     <BasicTextField
                         name="title"
-                        label={'title'}
+                        label={'Title'}
                         variant={'outlined'}
                         sx={{
                             width: '100%',

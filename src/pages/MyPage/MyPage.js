@@ -33,6 +33,9 @@ export default function MyPage(props) {
     const onClickMyLikes = () => {
         navigate('/mypage/Likes');
     };
+    const onClickQna = () => {
+        navigate('/qna');
+    }
 
     return (
         <div>
@@ -61,6 +64,12 @@ export default function MyPage(props) {
                     <ListItem>
                         <ListItemButton onClick={onClickMyLikes}>
                             My Likes
+                        </ListItemButton>
+                    </ListItem>
+                    <Divider variant="middle" />
+                    <ListItem>
+                        <ListItemButton onClick={onClickQna}>
+                            Q&A
                         </ListItemButton>
                     </ListItem>
                     <Divider variant="middle" />

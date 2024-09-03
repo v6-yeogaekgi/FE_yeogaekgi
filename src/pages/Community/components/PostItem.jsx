@@ -1,6 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect, useContext } from 'react';
-import { Button, CardActionArea, CardActions, Box } from '@mui/material';
+import {
+    Button,
+    CardActionArea,
+    CardActions,
+    Box,
+    CircularProgress,
+} from '@mui/material';
 import { ImageList, ImageListItem } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -114,6 +120,7 @@ const PostItem = ({
     const [translatedContent, setTranslatedContent] = useState(null);
     const [translatedHashtag, setTranslatedHashtag] = useState(null);
     const [isTranslated, setIsTranslated] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const { protocol, dialog } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
@@ -125,8 +132,9 @@ const PostItem = ({
             // 번역 취소 (원래 값으로 복원)
             setIsTranslated(false);
         } else {
-            // 번역 시작
             if (!translatedContent && !translatedHashtag) {
+                // 번역된 내용이 없으면 번역 API 호출
+                setLoading(true);
                 try {
                     console.log(currentMemberCode);
                     const translatedContentText = await deepLApi(
@@ -141,14 +149,18 @@ const PostItem = ({
                     setTranslatedHashtag(translatedHashtagText);
                 } catch (error) {
                     console.error('Translation failed:', error);
+                } finally {
+                    setLoading(false);
                 }
             }
+            // 번역된 내용이 있으면 바로 사용
             setIsTranslated(true);
         }
     };
 
     // post 삭제 api
     const deleteApi = () => {
+        setLoading(true);
         return axios
             .delete(protocol + 'community/' + postId, {
                 headers: {
@@ -157,13 +169,20 @@ const PostItem = ({
                 },
             })
             .then((res) => {
+                setLoading(false);
                 dialog.alert.openAlertDialog(
                     'Success!',
                     'The post has been successfully deleted.',
-                    () => navigate('/community'),
+                    () => navigate('/community', {
+                        state: {
+                            delete: true,
+                            postId: postId,
+                        },
+                    })
                 );
             })
             .catch((error) => {
+                setLoading(false);
                 console.error('API 호출 오류:', error);
                 throw error;
             });
@@ -209,6 +228,7 @@ const PostItem = ({
                     borderRadius: 5,
                     backgroundColor: '#ffffff',
                     mb: 2,
+                    position: 'relative',
                 }}
             >
                 <CardActions
@@ -465,11 +485,25 @@ const PostItem = ({
                         />
                     </Box>
                 </CardActions>
+                {loading && (
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            zIndex: 1,
+                        }}
+                    >
+                        <CircularProgress sx={{ color: '#4653f9' }} />
+                    </Box>
+                )}
             </Card>
-
-            <div className="info_section">
-                {/*<div className="content_wrapper">{content.slice(0, 25)}</div>*/}
-            </div>
         </div>
     );
 };
