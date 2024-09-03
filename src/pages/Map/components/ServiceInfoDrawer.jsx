@@ -36,25 +36,31 @@ const ServiceInfoDrawer = () => {
     const [isInfoExpanded, setIsInfoExpanded] = useState(false); // 정보 섹션의 열림 상태 관리
     const {
         open,
-        handleServiceSelect,
         selectedServiceInfo,
         selectedService,
         like,
+        setLike,
+        setViewLikeCnt,
         handleLikeChange,
         likeCheck,
         toggleDrawer,
-        setViewLikeCnt,
-        viewLikeCount,
+        viewLikeCnt,
     } = useSelected();
     const { totalScore, img } = useReview();
 
     useEffect(() => {
-        if (selectedServiceInfo && selectedServiceInfo.likeCnt !== undefined) {
-            console.log('좋아요수는 : ' + selectedServiceInfo.likeCnt);
-            setViewLikeCnt(selectedServiceInfo.likeCnt);
-            likeCheck();
-        }
-    }, [selectedServiceInfo]);
+        const fetchLikeData = async () => {
+            if (selectedService) {
+                const result = await likeCheck();
+                console.log('likeCheck result:', result); // 콘솔에 반환된 값 출력
+                if (result) {
+                    setLike(result.likeStatus);
+                    setViewLikeCnt(result.count);
+                }
+            }
+        };
+        fetchLikeData();
+    }, [selectedService]);
 
     useEffect(() => {
         if (img.length > 0) {
@@ -155,7 +161,7 @@ const ServiceInfoDrawer = () => {
                         }}
                     >
                         <Checkbox
-                            checked={like}
+                            checked={like || false}
                             icon={<FavoriteBorder />}
                             onChange={handleLikeChange}
                             checkedIcon={<Favorite sx={{ color: 'red' }} />}
@@ -166,7 +172,7 @@ const ServiceInfoDrawer = () => {
                                 justifyContent: 'center',
                             }}
                         />
-                        {viewLikeCount}
+                        {viewLikeCnt}
                     </Box>
                 </Box>
                 <Typography

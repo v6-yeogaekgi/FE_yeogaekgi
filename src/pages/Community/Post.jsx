@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo, useContext } from 'react';
-import Box from '@mui/material/Box';
+import { CircularProgress, Box } from '@mui/material';
 import Header from '../../layout/Header/Header';
 import Footer from '../../layout/Footer/Footer';
 import CommentList from './components/CommentList';
@@ -45,6 +45,7 @@ const Post = () => {
         };
 
         return axios
+
             .post(protocol + 'api/translate', data, {
                 headers: {
                     Authorization: token,
@@ -137,7 +138,6 @@ const Post = () => {
             })
             .then((res) => {
                 setPost(res.data);
-                console.log(res);
             });
     };
     // ================ [end] post api 호출 부분 ================
@@ -164,7 +164,7 @@ const Post = () => {
 
             <CommentStateContext.Provider value={{ comment, postId }}>
                 <CommentDispatchContext.Provider value={memoizedDispatch}>
-                    <Box sx={{ mr: 2, ml: 2, mt: 1 }}>
+                    <Box sx={{ mr: 2, ml: 2, mt: 1, height: '100vh' }}>
                         <PostItem
                             key={post.postId}
                             postId={post.postId}

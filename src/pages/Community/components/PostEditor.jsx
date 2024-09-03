@@ -1,6 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
-
 import BasicTextField from '../../../components/BasicTextField/BasicTextField';
 import BasicButton from '../../../components/BasicButton/BasicButton';
 import Typography from '@mui/material/Typography';
@@ -8,8 +7,9 @@ import InputAdornment from '@mui/material/InputAdornment';
 import CancelSharpIcon from '@mui/icons-material/CancelSharp';
 import axios from 'axios';
 import { AllStateContext } from '../../../App';
-import { Card, Box } from '@mui/material';
+import { Card, Box, CircularProgress } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import JSZip from 'jszip';
 import SearchIcon from '@mui/icons-material/Search';
 
 const SelectImage = ({
@@ -149,6 +149,7 @@ const PostEditor = () => {
     const navigate = useNavigate();
 
     const registerApi = (data) => {
+        setLoading(true);
         return axios
             .post(protocol + 'community/register', data, {
                 headers: {
@@ -157,6 +158,7 @@ const PostEditor = () => {
                 },
             })
             .then((res) => {
+                setLoading(false);
                 dialog.alert.openAlertDialog(
                     'Success!',
                     'Go check out your post.',
@@ -164,20 +166,23 @@ const PostEditor = () => {
                 );
             })
             .catch((error) => {
+                setLoading(false);
                 console.error('API 호출 오류:', error);
                 throw error;
             });
     };
 
     const modifyApi = (data) => {
+        setLoading(true);
         return axios
             .put(protocol + 'community/' + postId, data, {
                 headers: {
-                    Authoriztagation: token,
+                    Authorization: token,
                     'Content-Type': 'multipart/form-data', // 데이터 형식을 명시
                 },
             })
             .then((res) => {
+                setLoading(false);
                 dialog.alert.openAlertDialog(
                     'Success!',
                     'Go check out your post.',
@@ -185,6 +190,7 @@ const PostEditor = () => {
                 );
             })
             .catch((error) => {
+                setLoading(false);
                 console.error('API 호출 오류:', error);
                 throw error;
             });
@@ -199,6 +205,7 @@ const PostEditor = () => {
     const [fileImgs, setFileImgs] = useState(location.state?.images || []);
     const [hashtag, setHashtag] = useState(location.state?.hashtag || '');
     const [content, setContent] = useState(location.state?.content || '');
+    const [loading, setLoading] = useState(false);
 
     const handleDeleteImg = (indexToRemove) => {
         setDeleteImgs([...deleteImgs, existingImgs[indexToRemove]]);
@@ -208,7 +215,24 @@ const PostEditor = () => {
         ]);
     };
 
-    const onClick = (e) => {
+    const makeZip = async (newImgs) => {
+        const zip = new JSZip();
+
+        // 파일들을 압축하기
+        newImgs.forEach((file) => {
+            zip.file(file.name, file);
+        });
+
+        // 압축 파일 생성
+        const compressedBlob = await zip.generateAsync({ type: 'blob' });
+
+        // Blob을 File로 변환
+        return new File([compressedBlob], 'images.zip', {
+            type: 'application/zip',
+        });
+    };
+
+    const onClick = async (e) => {
         e.preventDefault(); // 폼 제출 시 새로고침 방지
 
         if (!content.trim()) {
@@ -217,9 +241,16 @@ const PostEditor = () => {
             return;
         }
         const formData = new FormData();
-        newImgs.forEach((file) => {
-            formData.append('multipartFile', file); // 파일 추가
-        });
+
+        // 압축된 파일을 기다리고 추가
+        try {
+            const compressedFile = await makeZip(newImgs);
+            formData.append('multipartFile', compressedFile);
+        } catch (error) {
+            console.error('Error creating ZIP file:', error);
+            return;
+        }
+
         formData.append('deleteImages', deleteImgs);
         formData.append('existingImages', existingImgs);
         formData.append('hashtag', hashtag);
@@ -392,6 +423,24 @@ const PostEditor = () => {
                     onClick={onClick}
                 ></BasicButton>
             </div>
+            {loading && (
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        zIndex: 1,
+                    }}
+                >
+                    <CircularProgress sx={{ color: '#4653f9' }} />
+                </Box>
+            )}
             <dialog.alert.AlertDialog></dialog.alert.AlertDialog>
         </div>
     );

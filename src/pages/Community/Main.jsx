@@ -15,15 +15,14 @@ import Box from '@mui/material/Box';
 export default function Main(props) {
     // ======================== 무한스크롤 구현 ========================
     const observeTarget = useRef(null); // observe 타겟이 될 요소
-    // const refreshTarget = useRef(null); // observe 타겟이 될 요소
     const callback = (entries) => {
         // target이 화면에 나타날때만 호출됨.
         if (isLoading || !hasNext) {
             return;
         } // 로딩중이면 무사
+        console.log('hasNext: ', hasNext);
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
-                console.log("observing.......")
                 setSearch({
                     ...search,
                     page: search.page + 1 ,
@@ -49,11 +48,13 @@ export default function Main(props) {
     const [hasNext, setHasNext] = useState(true);
     const [search, setSearch] = useState({
         type: location?.state?.hashtag ? 'hashtag' : 'content',
-        keyword: location?.state?.hashtag || '' ,
+        keyword: location?.state?.hashtag || '',
         myPost: false,
         page: 0,
     });
-    const [inputValue, setInputValue] = useState(search.type === 'hashtag' ? `#${search.keyword}` : search.keyword);
+    const [inputValue, setInputValue] = useState(
+        search.type === 'hashtag' ? `#${search.keyword}` : search.keyword,
+    );
 
     // 처음 렌더링 될 때/ location.state 바뀔때 만 실행
     useEffect(() => {
@@ -61,7 +62,7 @@ export default function Main(props) {
         getLikeListApi();
         //
         if (location.state && location.state.delete) {
-            console.log("deeleteeljlsdjl~~~")
+            // console.log("deeleteeljlsdjl~~~")
             setSearch({
                 ...search,
                 page: 0,
@@ -69,7 +70,7 @@ export default function Main(props) {
         }
 
         if (location.state && location.state.hashtag) {
-            setInputValue(`#${location.state.hashtag}`)
+            setInputValue(`#${location.state.hashtag}`);
             handleSearch({
                 type: 'hashtag',
                 keyword: location.state.hashtag,
@@ -88,14 +89,18 @@ export default function Main(props) {
 
     // 처음 렌더링 && search 조건 바뀔때 실행
     useEffect(() => {
+        console.log('search');
         if (!isLoading) {
+            console.log('search:', search);
+            // Api 호출 중이 아닐 때
             getListApi();
         }
-
+        console.log('hasNext: ', hasNext);
     }, [search]);
 
     // observe 타겟 요소 관측 시작 및 종료
     useEffect(() => {
+        console.log("isLoading")
         const target = observeTarget.current;
         if (target) {
             if (!isLoading && hasNext) {
@@ -112,7 +117,7 @@ export default function Main(props) {
     }, [isLoading, hasNext]);
 
     const getListApi = () => {
-        console.log(search)
+        console.log('search : ', search);
         setIsLoading(true); // 데이터 로드 시작 시 로딩 상태를 true로 설정
         axios
             .get(getApiUrl + 'list', {
@@ -126,7 +131,7 @@ export default function Main(props) {
                 setPosts((prevPosts) => [...prevPosts, ...res?.data?.content||[]]); // 데이터 추가
                 setIsLoading(false);
                 setHasNext(res.data.hasNext);
-
+                console.log('res.data:', res.data);
             })
             .catch((error) => {
                 console.error('API 호출 오류:', error);
@@ -179,6 +184,7 @@ export default function Main(props) {
                 },
             })
             .then((res) => {
+                console.log(res.data.translations[0].text);
                 return res.data.translations[0].text;
             })
             .catch((error) => {
@@ -190,7 +196,11 @@ export default function Main(props) {
     return (
         <div>
             <Box className="PostList" sx={{ mr: 2, ml: 2, mt: 1 }}>
-                <PostNav handleSearch={handleSearch} inputValue={inputValue} setInputValue={setInputValue} ></PostNav>
+                <PostNav
+                    handleSearch={handleSearch}
+                    inputValue={inputValue}
+                    setInputValue={setInputValue}
+                ></PostNav>
             </Box>
 
             <PostList
@@ -214,6 +224,5 @@ export default function Main(props) {
                 <br/>
             </div>
         </div>
-
     );
 }

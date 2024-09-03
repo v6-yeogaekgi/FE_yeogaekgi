@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
-import { Box, Card, CardContent } from '@mui/material';
+import { Box, Card, CardContent, CircularProgress } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import { AllStateContext } from '../../../App';
 import { getCountryCodeForTranslate } from '../../../util';
@@ -33,6 +33,7 @@ const CommentItem = ({
     const { dialog } = useContext(AllStateContext);
     const [translatedContent, setTranslatedContent] = useState(null);
     const [isTranslated, setIsTranslated] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const onClickDeleteComment = () => {
         // const isConfirmed = window.confirm(
@@ -56,6 +57,7 @@ const CommentItem = ({
             setIsTranslated(false);
         } else {
             if (!translatedContent) {
+                setLoading(true);
                 try {
                     const translated = await deepLApi(
                         content,
@@ -64,6 +66,8 @@ const CommentItem = ({
                     setTranslatedContent(translated);
                 } catch (error) {
                     console.error('Translation failed:', error);
+                } finally {
+                    setLoading(false);
                 }
             }
             setIsTranslated(true);
@@ -75,6 +79,7 @@ const CommentItem = ({
     return (
         <Card
             sx={{
+                position: 'relative',
                 boxShadow: 'none',
                 borderRadius: '0px 0px 20px 20px',
             }}
@@ -226,6 +231,24 @@ const CommentItem = ({
                     />
                 </div>
             </Box>
+            {loading && (
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        zIndex: 1,
+                    }}
+                >
+                    <CircularProgress sx={{ color: '#4653f9' }} />
+                </Box>
+            )}
         </Card>
     );
 };
