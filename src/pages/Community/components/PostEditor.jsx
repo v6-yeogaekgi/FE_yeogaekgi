@@ -9,7 +9,6 @@ import axios from 'axios';
 import { AllStateContext } from '../../../App';
 import { Card, Box, CircularProgress } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import JSZip from 'jszip';
 import SearchIcon from '@mui/icons-material/Search';
 
 const SelectImage = ({
