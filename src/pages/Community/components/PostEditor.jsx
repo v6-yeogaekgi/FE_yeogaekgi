@@ -168,7 +168,6 @@ const PostEditor = () => {
             .catch((error) => {
                 setLoading(false);
                 console.error('API 호출 오류:', error);
-                throw error;
             });
     };
 
@@ -192,7 +191,6 @@ const PostEditor = () => {
             .catch((error) => {
                 setLoading(false);
                 console.error('API 호출 오류:', error);
-                throw error;
             });
     };
 

@@ -86,7 +86,6 @@ export const ReviewProvider = ({ children }) => {
             return response.data;
         } catch (error) {
             console.error('Error registering review:', error);
-            throw error;
         }
     };
 
@@ -99,7 +98,6 @@ export const ReviewProvider = ({ children }) => {
             return response.data;
         } catch (error) {
             console.error('Error updating review:', error);
-            throw error;
         }
     };
 
@@ -112,7 +110,6 @@ export const ReviewProvider = ({ children }) => {
             return response.data;
         } catch (error) {
             console.error('Error deleting review:', error);
-            throw error;
         }
     };
 
@@ -133,7 +130,6 @@ export const ReviewProvider = ({ children }) => {
             })
             .catch((error) => {
                 console.error('API 호출 오류:', error);
-                throw error;
             });
     };
 
