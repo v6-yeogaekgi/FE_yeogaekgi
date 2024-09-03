@@ -99,13 +99,14 @@ export default function AreaMenu({ areas }) {
                     fontSize: '1.5rem',
                     minWidth: '100px',
                     minHeight: '48px',
-                    fontFamily:
-                        selectArea === '서울'
-                            ? '"Song Myung", sans-serif'
-                            : selectArea === '부산'
-                            ? '"Song Myung", sans-serif'
-                            : 'inherit',
+                    // fontFamily:
+                    //     selectArea === '서울'
+                    //         ? '"Song Myung", sans-serif'
+                    //         : selectArea === '부산'
+                    //         ? '"Song Myung", sans-serif'
+                    //         : 'inherit',
                     fontWeight: 700,
+                    textTransform: 'capitalize'
                 }}
             >
                 {selectArea}

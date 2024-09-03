@@ -12,18 +12,35 @@ import {
 } from '@mui/material';
 import { AllStateContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function MyPage(props) {
     const navigate = useNavigate();
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
-    const userString = localStorage.getItem('user');
-    const user = JSON.parse(userString);
-
-    const [userData, setUserData] = useState(user);
+    const memberString = localStorage.getItem('member');
+    const member = JSON.parse(memberString);
+    const logoutUrl = protocol + 'members/logout';
+    const [userData, setUserData] = useState(member);
 
     const onClickLogout = () => {
-        alert('logout 로직');
+        // alert('logout 클릭');
+        const data = {
+            email: userData.email,
+        }
+        console.log(data);
+        console.log(token);
+        try {
+            axios.post(logoutUrl, data, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                },
+            });
+            navigate('/');
+        } catch (error) {
+            console.log("Logout API 오류:", error);
+        }
     };
 
     const onClickMyReviews = () => {
@@ -64,11 +81,8 @@ export default function MyPage(props) {
                         </ListItemButton>
                     </ListItem>
                     <Divider variant="middle" />
-                    <ListItem
-                        onClick={onClickLogout}
-                        sx={{ paddingBottom: 0, marginBottom: 0 }}
-                    >
-                        <ListItemButton>Logout</ListItemButton>
+                    <ListItem sx={{ paddingBottom: 0, marginBottom: 0 }}>
+                        <ListItemButton onClick={onClickLogout}>Logout</ListItemButton>
                     </ListItem>
                     {/* <ListItem sx={{ paddingTop: 0, marginTop: 0 }}>
                         <Typography
