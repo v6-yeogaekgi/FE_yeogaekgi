@@ -82,7 +82,7 @@ export default function UserCardOnRefund({ data }) {
                                         Pay
                                     </Typography>
                                     <Typography variant="h6">
-                                        ₩{payBalance}
+                                        ₩{payBalance.toLocaleString()}
                                     </Typography>
                                 </Grid>
                             </Grid>
