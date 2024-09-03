@@ -6,6 +6,7 @@ import { useContext, useState } from 'react';
 import PaymentHistory from '../../components/PaymentHistory/PaymentHistory';
 import axios from 'axios';
 import { AllStateContext } from '../../App';
+import { CircularProgress } from '@mui/material';
 
 export default function CardDetail(props) {
     const [paymentType, setPaymentType] = useState(0);
@@ -14,6 +15,7 @@ export default function CardDetail(props) {
     const [cardData, setCardData] = useState();
     const { protocol} = useContext(AllStateContext);
     const token = localStorage.getItem('token');
+    const [loading, setLoading] = useState(false);
 
     const handleSwitchChange = (event) => {
         setPaymentType(event.target.checked ? 0 : 1);
@@ -22,6 +24,7 @@ export default function CardDetail(props) {
     const uri = protocol + 'usercard/' + userCardId;
 
     const getApi = () => {
+        setLoading(true);
         axios
             .get(uri,
                 {
@@ -48,7 +51,9 @@ export default function CardDetail(props) {
             })
             .catch((err) => {
                 console.error('API 요청 중 오류 발생:', err);
-            });
+            }).finally(() => {
+            setLoading(false);
+        });
     };
 
     React.useEffect(() => {
@@ -56,13 +61,29 @@ export default function CardDetail(props) {
     }, []);
 
     if (!cardData) {
-        return <div>Card data not found</div>;
+        return (
+            <Box
+                sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    zIndex: 1,
+                }}
+            >
+                <CircularProgress sx={{ color: '#4653f9' }} />
+            </Box>
+        );
     }
 
     return (
         <>
             <Box sx={{
-                minHeight: '100vh',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -80,6 +101,7 @@ export default function CardDetail(props) {
                         paddingTop: '20px',
                         flexGrow: 1,
                         marginBottom: '30px',
+                        minHeight: '320px',
                     }}
                 >
                     <UserCardOnDetail
@@ -87,6 +109,7 @@ export default function CardDetail(props) {
                 </Box>
                 <PaymentHistory cardData={cardData} paymentType={paymentType} onSwitchChange={handleSwitchChange} />
             </Box>
+
         </>
     );
 }
