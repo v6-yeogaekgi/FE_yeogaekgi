@@ -160,7 +160,12 @@ const PostItem = ({
                 dialog.alert.openAlertDialog(
                     'Success!',
                     'The post has been successfully deleted.',
-                    () => navigate('/community'),
+                    () => navigate('/community', {
+                        state: {
+                            delete: true,
+                            postId: postId,
+                        },
+                    })
                 );
             })
             .catch((error) => {

@@ -15,7 +15,7 @@ import Box from '@mui/material/Box';
 export default function Main(props) {
     // ======================== 무한스크롤 구현 ========================
     const observeTarget = useRef(null); // observe 타겟이 될 요소
-    const refreshTarget = useRef(null); // observe 타겟이 될 요소
+    // const refreshTarget = useRef(null); // observe 타겟이 될 요소
     const callback = (entries) => {
         // target이 화면에 나타날때만 호출됨.
         if (isLoading || !hasNext) {
@@ -60,12 +60,14 @@ export default function Main(props) {
         observer.observe(observeTarget.current); // observe 타겟 요소 관측 시작
         getLikeListApi();
         //
-        // if (location.state && location.state.delete) {
-        //     setSearch({
-        //         ...search,
-        //         page: 0,
-        //     });
-        // }
+        if (location.state && location.state.delete) {
+            console.log("deeleteeljlsdjl~~~")
+            setSearch({
+                ...search,
+                page: 0,
+            });
+        }
+
         if (location.state && location.state.hashtag) {
             setInputValue(`#${location.state.hashtag}`)
             handleSearch({
