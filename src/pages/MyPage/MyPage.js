@@ -50,6 +50,9 @@ export default function MyPage(props) {
     const onClickMyLikes = () => {
         navigate('/mypage/Likes');
     };
+    const onClickQna = () => {
+        navigate('/qna');
+    }
 
     return (
         <div>

@@ -17,6 +17,7 @@ import BasicButton from '../BasicButton/BasicButton';
 import { useNavigate } from 'react-router-dom';
 import { AllStateContext } from '../../App';
 import axios from 'axios';
+import useConfirmDialog from '../../hooks/useConfirmDialog/useConfirmDialog';
 
 export default function TopUpInput({ cardData }) {
     const navigate = useNavigate();
@@ -26,12 +27,13 @@ export default function TopUpInput({ cardData }) {
     // console.log("topup input userData: ", userData);
 
     const { protocol } = useContext(AllStateContext);
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     const topupUrl = protocol + 'transaction/toptup';
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [krwAmount, setKrwAmount] = useState(0);
     const [foreignAmount, setForeignAmount] = useState(0);
     const [currency, setCurrency] = useState();
+    const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
 
     useEffect(() => {
         const storedRates = getExchangeRate();
@@ -85,21 +87,21 @@ export default function TopUpInput({ cardData }) {
 
     const handleKrwAmountChange = (e) => {
         let krInput = e.target.value;
-        if(krInput === "") {
+        if (krInput === '') {
             setKrwAmount(0);
             setForeignAmount(0);
         } else {
             let cleanKrVal = parseFloat(krInput.replace(/[^0-9.,-]/g, '').replace(/,/g, ''));
-        
+
             // If parseFloat returns NaN, set the value to 0
             if (isNaN(cleanKrVal)) {
                 cleanKrVal = 0;
             }
-            
+
             let frOutput = cleanKrVal * currency.rate;
             setKrwAmount(cleanKrVal);
             setForeignAmount(frOutput);
-        }      
+        }
     };
 
     const onClickClearIcon = (e) => {
@@ -133,16 +135,16 @@ export default function TopUpInput({ cardData }) {
                     },
                 },
             )
-            .then(function (res) {
+            .then(function(res) {
                 console.log(res);
                 if (res.ok) {
                     navigate('/wallet/detail', { state: { cardData } });
                 }
             })
-            .catch(function (error) {
+            .catch(function(error) {
                 console.log('axios error');
             })
-            .then(function () {
+            .then(function() {
                 // always
                 navigate('/wallet/detail', { state: { cardData } });
             });
@@ -180,7 +182,10 @@ export default function TopUpInput({ cardData }) {
                 <TextField
                     fullWidth
                     placeholder="0"
-                    value={foreignAmount.toLocaleString(currency.locales, {style: "currency", currency: currency.code})}
+                    value={foreignAmount.toLocaleString(currency.locales, {
+                        style: 'currency',
+                        currency: currency.code,
+                    })}
                     InputProps={{
                         readOnly: true,
                     }}
@@ -206,7 +211,7 @@ export default function TopUpInput({ cardData }) {
                 <TextField
                     fullWidth
                     placeholder="0"
-                    value={krwAmount.toLocaleString("ko-KR", {style: "currency", currency: "KRW"})}
+                    value={krwAmount.toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' })}
                     onChange={handleKrwAmountChange}
                     InputProps={{
                         endAdornment: (
@@ -223,7 +228,7 @@ export default function TopUpInput({ cardData }) {
                     variant={'contained'}
                     btnColor={'#4653f9'}
                     width={'100%'}
-                    onClick={onClickTopUp}
+                    onClick={openConfirmDialog}
                 ></BasicButton>
 
                 <Divider sx={{ mt: 2, mb: 2 }} />
@@ -276,6 +281,16 @@ export default function TopUpInput({ cardData }) {
                     charging) <br />
                 </Typography>
             </Drawer>
+
+            <ConfirmDialog
+                title={'Top Up'}
+                content={'Are you sure you want to top up '+ krwAmount + 'won?'}
+                onAgree={
+                    () => {
+                        onClickTopUp();
+                    }
+                }
+            />
         </>
     );
 }

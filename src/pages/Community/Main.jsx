@@ -25,13 +25,13 @@ export default function Main(props) {
             if (entry.isIntersecting) {
                 setSearch({
                     ...search,
-                    ...{ page: search.page + 1 },
+                    page: search.page + 1 ,
                 });
             }
         });
     };
     const options = {
-        threshold: 1.0, // 타겟 요소가 얼마나 들어왔을때 백함수를 실행할 것인지 결정합니다. 1이면 타겟 요소 전체가 들어와야함.
+        threshold: 0.5, // 타겟 요소가 얼마나 들어왔을때 백함수를 실행할 것인지 결정합니다. 1이면 타겟 요소 전체가 들어와야함.
     };
     const observer = new IntersectionObserver(callback, options);
     // =============================================================
@@ -56,20 +56,32 @@ export default function Main(props) {
         search.type === 'hashtag' ? `#${search.keyword}` : search.keyword,
     );
 
-    // 처음 렌더링 될 때만 실행
+    // 처음 렌더링 될 때/ location.state 바뀔때 만 실행
     useEffect(() => {
         observer.observe(observeTarget.current); // observe 타겟 요소 관측 시작
         getLikeListApi();
+        //
+        if (location.state && location.state.delete) {
+            // console.log("deeleteeljlsdjl~~~")
+            setSearch({
+                ...search,
+                page: 0,
+            });
+        }
+
         if (location.state && location.state.hashtag) {
             setInputValue(`#${location.state.hashtag}`);
             handleSearch({
                 type: 'hashtag',
                 keyword: location.state.hashtag,
-                myPost: false,
-                page: 0,
-            });
-            console.log(search);
-            navigate('/community', { replace: true });
+                myPost:false,
+                page:0,
+            })
+
+            // navigate('/community', { replace: true });
+        }
+        return ()=>{
+            initState();
         }
     }, [location.state]);
     // useEffect(() => {
@@ -88,10 +100,10 @@ export default function Main(props) {
 
     // observe 타겟 요소 관측 시작 및 종료
     useEffect(() => {
-        console.log('isLoading');
+        console.log("isLoading")
         const target = observeTarget.current;
         if (target) {
-            if (!isLoading) {
+            if (!isLoading && hasNext) {
                 observer.observe(target);
             } else {
                 observer.unobserve(target);
@@ -102,7 +114,7 @@ export default function Main(props) {
                 observer.unobserve(target);
             }
         };
-    }, [isLoading]);
+    }, [isLoading, hasNext]);
 
     const getListApi = () => {
         console.log('search : ', search);
@@ -116,9 +128,7 @@ export default function Main(props) {
                 },
             })
             .then((res) => {
-                setPosts((prevPosts) => [...prevPosts, ...res?.data?.content]);
-                console.log('여기');
-                console.log(res.data.content); // 데이터 추가
+                setPosts((prevPosts) => [...prevPosts, ...res?.data?.content||[]]); // 데이터 추가
                 setIsLoading(false);
                 setHasNext(res.data.hasNext);
                 console.log('res.data:', res.data);
@@ -145,13 +155,16 @@ export default function Main(props) {
                 console.error('API 호출 오류:', error);
             });
     };
+    const initState = () => {
+        setPosts([])
+        setHasNext(true)
+        setIsLoading(false)
+    }
 
     const handleSearch = (newSearch) => {
         // PostNav 컴포넌트에서 search 값 set하기 위함.
-        if (JSON.stringify(search) !== JSON.stringify(newSearch)) {
-            setPosts([]);
-            setHasNext(true);
-            setIsLoading(false);
+        if (JSON.stringify(search) !== JSON.stringify(newSearch)){
+            initState();
             setSearch(newSearch);
         }
     };
@@ -200,11 +213,15 @@ export default function Main(props) {
             <div
                 ref={observeTarget}
                 style={{
-                    display: 'flex',
-                    height: '30px',
+                    width:'100%',
+                    height: '50px',
+                    textAlign:"center",
+                    color:"black",
+                    // backgroundColor:"red",
                 }}
             >
-                {/*무한스크롤 : 여기까지 내리면 데이터 로드 */}
+                <p>{isLoading && hasNext ? 'Loading...':''}</p>
+                <br/>
             </div>
         </div>
     );

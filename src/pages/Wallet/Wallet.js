@@ -57,7 +57,7 @@ export default function Wallet(props) {
 
     const renderEmptyBoxes = (count) => {
         return Array(count).fill().map((_, index) => (
-            <Box key={index} sx={{ height: '134px', width: '100%' }} />
+            <Box key={index} sx={{ height: '100px', width: '100%' }} />
         ));
     };
 

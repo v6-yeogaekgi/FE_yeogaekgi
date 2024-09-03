@@ -12,7 +12,8 @@ export default function CardDetail(props) {
     const location = useLocation();
     const userCardId = location.state?.cardData.userCardId;
     const [cardData, setCardData] = useState();
-    const { protocol, token } = useContext(AllStateContext);
+    const { protocol} = useContext(AllStateContext);
+    const token = localStorage.getItem('token');
 
     const handleSwitchChange = (event) => {
         setPaymentType(event.target.checked ? 0 : 1);

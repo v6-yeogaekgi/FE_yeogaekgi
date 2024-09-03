@@ -13,6 +13,7 @@ import { AllStateContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
 import useAlertDialog from '../../hooks/useAlertDialog/useAlertDialog';
 import { convertCurrency } from '../../components/ExchangeRateManager/ExchangeRateManager';
+import useConfirmDialog from '../../hooks/useConfirmDialog/useConfirmDialog';
 
 export default function Refund() {
 
@@ -32,6 +33,8 @@ export default function Refund() {
     const location = useLocation();
     const data = location.state?.data;
     const fee = 3000;
+
+    const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
 
     function getMemberCode() {
         return memberData.country.code;
@@ -365,7 +368,7 @@ export default function Refund() {
                             text={'Refund'}
                             width={'100%'}
                             size={'medium'}
-                            onClick={handleRefundClick}
+                            onClick={openConfirmDialog}
                         ></BasicButton>
 
                         <AlertDialog
@@ -375,6 +378,13 @@ export default function Refund() {
                     </div>
                 </Box>
 
+                <ConfirmDialog
+                    title={"Refund"}
+                    content={"Are you sure you want to proceed with the refund"}
+                    onAgree={() => {
+                        handleRefundClick();
+                    }}
+                />
 
                 <Box
                     sx={{

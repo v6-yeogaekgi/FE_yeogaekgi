@@ -3,12 +3,14 @@ import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import BasicTextField from '../../../components/BasicTextField/BasicTextField';
 import BasicButton from '../../../components/BasicButton/BasicButton';
 import Typography from '@mui/material/Typography';
+import InputAdornment from '@mui/material/InputAdornment';
 import CancelSharpIcon from '@mui/icons-material/CancelSharp';
 import axios from 'axios';
 import { AllStateContext } from '../../../App';
 import { Card, Box, CircularProgress } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import JSZip from 'jszip';
+import SearchIcon from '@mui/icons-material/Search';
 
 const SelectImage = ({
     existingImgs,
@@ -310,6 +312,13 @@ const PostEditor = () => {
                         }}
                         defaultValue={hashtag}
                         inputProps={{ maxLength: 20 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    #
+                                </InputAdornment>
+                            ),
+                        }}
                     ></BasicTextField>
                     <div
                         style={{
