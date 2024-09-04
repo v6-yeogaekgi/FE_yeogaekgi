@@ -149,7 +149,7 @@ function App() {
                         <Route
                             path={'/wallet'}
                             element={
-                                <PageLayout menuName={'wallet'}>
+                                <PageLayout menuName={'Wallet'}>
                                     <Wallet />
                                 </PageLayout>
                             }
@@ -157,7 +157,7 @@ function App() {
                         <Route
                             path={'/map'}
                             element={
-                                <PageLayout menuName={'map'}>
+                                <PageLayout menuName={'Map'}>
                                     <MapProvider>
                                         <Map />
                                     </MapProvider>
@@ -177,7 +177,7 @@ function App() {
                         <Route
                             path={'/map/register/:serviceId/:name'}
                             element={
-                                <PageLayout menuName={'map'}>
+                                <PageLayout menuName={'Map'}>
                                     <SelectedProvider>
                                         <ReviewProvider>
                                             <ReviewRegister />
@@ -189,7 +189,7 @@ function App() {
                         <Route
                             path={'/map/edit/:name/:serviceId/:reviewId'}
                             element={
-                                <PageLayout menuName={'map'}>
+                                <PageLayout menuName={'Map'}>
                                     <SelectedProvider>
                                         <ReviewProvider>
                                             <ReviewEdit />
@@ -201,7 +201,7 @@ function App() {
                         <Route
                             path={'/community'}
                             element={
-                                <PageLayout menuName={'community'}>
+                                <PageLayout menuName={'Community'}>
                                     <Main />
                                 </PageLayout>
                             }
@@ -210,7 +210,7 @@ function App() {
                         <Route
                             path={'/community/regist'}
                             element={
-                                <PageLayout menuName={'community'}>
+                                <PageLayout menuName={'Community'}>
                                     <NewPost />
                                 </PageLayout>
                             }
@@ -218,7 +218,7 @@ function App() {
                         <Route
                             path={'/community/modify/:postId'}
                             element={
-                                <PageLayout menuName={'community'}>
+                                <PageLayout menuName={'Community'}>
                                     <EditPost />
                                 </PageLayout>
                             }
@@ -235,7 +235,7 @@ function App() {
                         <Route
                             path={'/community/comment/edit/:commentId'}
                             element={
-                                <PageLayout menuName={'comment edit'}>
+                                <PageLayout menuName={'Edit'}>
                                     <EditComment />
                                 </PageLayout>
                             }
@@ -259,7 +259,7 @@ function App() {
                         <Route
                             path={'/wallet/detail'}
                             element={
-                                <PageLayout menuName={'detail'}>
+                                <PageLayout menuName={'Detail'}>
                                     <CardDetail />
                                 </PageLayout>
                             }
@@ -267,7 +267,7 @@ function App() {
                         <Route
                             path={'/wallet/detail/refund'}
                             element={
-                                <PageLayout menuName={'refund'}>
+                                <PageLayout menuName={'Refund'}>
                                     <Refund />
                                 </PageLayout>
                             }
@@ -275,7 +275,7 @@ function App() {
                         <Route
                             path={'/wallet/top-up'}
                             element={
-                                <PageLayout menuName={'top-up'}>
+                                <PageLayout menuName={'Top Up'}>
                                     <TopUp />
                                 </PageLayout>
                             }
@@ -284,7 +284,7 @@ function App() {
                         <Route
                             path={'/kiosk'}
                             element={
-                                <PageLayout menuName={'kiosk'}>
+                                <PageLayout menuName={'Kiosk'}>
                                     <Kiosk />
                                 </PageLayout>
                             }

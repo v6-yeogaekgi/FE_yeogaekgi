@@ -33,7 +33,10 @@ const useConfirmDialog = () => {
                 aria-labelledby="confirm-dialog-title"
                 aria-describedby="confirm-dialog-description"
                 PaperProps={{
-                    style : {width : '380px'}
+                    style : {
+                        width : '380px',
+                        borderRadius: '15px',
+                    }
                 }}
             >
                 <DialogTitle id="confirm-dialog-title">

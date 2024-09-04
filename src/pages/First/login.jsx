@@ -50,7 +50,7 @@ function Login() {
             const { user } = memberDetailsResponse.data;
             localStorage.setItem('member', JSON.stringify(user));
             navigate('/home');
-            console.log(localStorage.getItem('member'));
+            console.log("로그", localStorage.getItem('member'));
         } catch (error) {
             console.error('API 호출 오류:', error);
         }

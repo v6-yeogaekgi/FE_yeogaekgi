@@ -109,7 +109,6 @@ export default function Conversion({ data }) {
         <>
             <Box
                 sx={{
-                    minHeight: '100vh',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
@@ -138,6 +137,7 @@ export default function Conversion({ data }) {
                                 width: 160,
                                 height: 280,
                                 borderRadius: 2,
+                                marginBottom: '20px',
                             }}
                         >
                             <CardMedia
@@ -150,14 +150,13 @@ export default function Conversion({ data }) {
                         {/* ----- 절취선 ----- */}
                         <Box
                             sx={{
-                                width: '90%',
+                                width: '93%',
                                 backgroundColor: 'white',
-                                marginLeft: 'calc(6vw)',
-                                // paddingLeft: 'calc(60vw - 50%)',
-                                paddingRight: 'calc(6vw)',
-                                paddingLeft: 'calc(6vw)',
+                                margin: 'auto',
+                                padding: '15px',
                                 flexDirection: 'column',
                                 justifyContent: 'center',
+                                paddingTop: '0px',
                                 paddingBottom: '20px',
                                 borderRadius: '20px',
                             }}

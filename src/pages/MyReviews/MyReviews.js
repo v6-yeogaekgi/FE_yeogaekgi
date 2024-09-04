@@ -19,10 +19,7 @@ export default function MyReviews(props) {
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
     const myReviewUrl = protocol + 'review/list';
-    const userString = localStorage.getItem('user');
-    const user = JSON.parse(userString);
     const [reviews, setReviews] = useState([]);
-    // console.log(reviews);
 
     function formatReviewDates(reviews) {
         return reviews.map((review) => ({
@@ -48,10 +45,8 @@ export default function MyReviews(props) {
             )
             .then(function (res) {
                 if (res.data) {
-                    // console.log(res.data);
                     const formattedReviews = formatReviewDates(res.data);
                     setReviews(formattedReviews);
-                    // console.log(reviews);
                 }
             })
             .catch(function (error) {
@@ -67,18 +62,19 @@ export default function MyReviews(props) {
         <>
             <Box
                 sx={{
+                    width: '100%',
                     minHeight: '100vh',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
+                    alignItems: 'center',
                     position: 'relative',
                     overflow: 'hidden',
-                    backgroundColor: '#f0f4f8',
-                    // paddingBottom: '70px',
+                    backgroundColor: reviews.length === 0 ? 'white' : '#f0f4f8', // Conditional background color
                 }}
             >
                 {reviews && reviews.length > 0 ? (
-                    <Paper elevation={3} sx={{ margin: '15px' }}>
+                    <Paper elevation={3} sx={{ margin: '15px', width: '100%' }}>
                         <List>
                             {reviews.map((review, index) => (
                                 <ListItem key={index} divider>
@@ -107,15 +103,17 @@ export default function MyReviews(props) {
                                                         flexItem
                                                         sx={{
                                                             ml: 1,
-                                                            background: '#DDE1E6',
-                                                            borderBottomWidth: '5',
+                                                            background:
+                                                                '#DDE1E6',
+                                                            borderBottomWidth:
+                                                                '5',
                                                             height: '15px',
                                                         }}
                                                     />
                                                     <Typography
                                                         component="span"
                                                         variant="body2"
-                                                        sx={{ml: 1}}
+                                                        sx={{ ml: 1 }}
                                                     >
                                                         {review.formatRegDate ||
                                                             'N/A'}
@@ -143,7 +141,15 @@ export default function MyReviews(props) {
                         </List>
                     </Paper>
                 ) : (
-                    <p>No reviews written yet!</p>
+                    <div
+                        style={{
+                            backgroundColor: 'white',
+                            width: '100%',
+                            textAlign: 'center',
+                        }}
+                    >
+                        <h4>No reviews written yet!</h4>
+                    </div>
                 )}
             </Box>
         </>
