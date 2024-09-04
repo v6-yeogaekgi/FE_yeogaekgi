@@ -25,7 +25,7 @@
 .swiper-slide img {
     display: block;
     max-width: 400px;
-    height: 400px;
+    height: 300px;
     object-fit: cover;
     border-radius: 15px; /* 이미지의 모서리를 둥글게 */
 }

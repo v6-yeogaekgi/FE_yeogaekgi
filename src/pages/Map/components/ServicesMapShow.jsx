@@ -4,13 +4,15 @@ import useServicesMarkerApi from '../api/UseServicesMarkerApi';
 import Box from '@mui/material/Box';
 import { useSelected } from '../provider/SelectedProvider';
 import { useMap } from '../provider/MapProvider';
+import { useParams } from 'react-router-dom';
 
 const ServicesMapShow = () => {
     const mapRef = useRef(null);
+    const { activity } = useParams();
     const { state } = useMap();
     const { handleServiceSelect } = useSelected();
     const { currentMyLocation, locationLoading } = useGeolocation();
-    const { servicesData, apiLoading } = useServicesMarkerApi(state);
+    const { servicesData, apiLoading } = useServicesMarkerApi(state, activity);
     const { naver } = window;
     const [map, setMap] = useState(null);
     const [markers, setMarkers] = useState([]);

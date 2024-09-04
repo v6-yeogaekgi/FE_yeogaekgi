@@ -14,8 +14,13 @@ import PhonelinkRingRoundedIcon from '@mui/icons-material/PhonelinkRingRounded';
 import TabletAndroidIcon from '@mui/icons-material/TabletAndroid';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import dgy from '../../../img/땡겨요_회색.png';
+import { useNavigate } from 'react-router-dom';
 
 const HomeCardItem = () => {
+    const navigate = useNavigate();
+    function handleNavigate() {
+        navigate('/map/activity');
+    }
     return (
         <Card
             sx={{
@@ -46,6 +51,7 @@ const HomeCardItem = () => {
                         alignItems: 'center',
                         justifyContent: 'center',
                     }}
+                    onClick={handleNavigate}
                 >
                     <LocalActivityRoundedIcon
                         sx={{ fontSize: 70, color: '#808080' }}

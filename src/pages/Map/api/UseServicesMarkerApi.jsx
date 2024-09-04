@@ -1,10 +1,8 @@
 import { useEffect, useState, useCallback, useContext } from 'react';
 import axios from 'axios';
 import { AllStateContext } from '../../../App';
-import { useReview } from '../provider/ReviewProvider';
-import { useSelected } from '../provider/SelectedProvider';
 
-const useServicesMarkerApi = (state) => {
+const useServicesMarkerApi = (state, activity) => {
     const [servicesData, setServicesData] = useState(null);
     const [apiLoading, setApiLoading] = useState(false);
     const { protocol } = useContext(AllStateContext);
@@ -16,6 +14,7 @@ const useServicesMarkerApi = (state) => {
         if (state.Tour) params.push('type=TouristAttraction');
         if (state.ACTIVITY) params.push('type=ACTIVITY');
         if (state.ETC) params.push('type=ETC');
+        if (activity) params.push('type=ACTIVITY');
         return params.length > 0 ? `?${params.join('&')}` : '';
     }, [state]);
 
