@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import axios from 'axios';
 import * as React from 'react';
-import { Grid, IconButton, Paper, Typography } from '@mui/material';
+import { Box, CircularProgress, Grid, IconButton, Paper, Typography } from '@mui/material';
 import CustomizedSwitches from '../CustomizedSwitches/CustomizedSwitches';
 import Divider from '@mui/material/Divider';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -22,6 +22,8 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
     const [filteredData, setFilteredData] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [selectedItem, setselectedItem] = useState(null);
+    const [loading, setLoading] = useState(false);
+
 
     const groupDataByDate = (data) => {
         const grouped = {};
@@ -50,9 +52,9 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
     const uri = protocol + 'payTrack/list';
 
     const getApi = (userCardNo, year, month) => {
-
+        setLoading(true);
         axios
-            .get(uri+'?'+'userCardNo='+userCardNo+'&year='+year+'&month='+month,
+            .get(uri + '?' + 'userCardNo=' + userCardNo + '&year=' + year + '&month=' + month,
                 {
                     headers: {
                         Authorization: token,
@@ -89,7 +91,9 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
             })
             .catch((err) => {
                 console.error('API 요청 중 오류 발생:', err);
-            });
+            }).finally(() => {
+            setLoading(false);
+        });
     };
 
     React.useEffect(() => {
@@ -168,7 +172,9 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                     ></Grid>
                 </Grid>
 
-                <Grid container spacing={1}>
+                <Grid container spacing={1}
+                      sx={{paddingBottom: 0}}
+                >
                     <Grid item xs={10}>
                     </Grid>
                     <Grid item xs={2}>
@@ -204,14 +210,18 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                         onClick={() => handleItemClick(item)}
                                     >
                                         <Grid item xs={1} sx={{ display: 'flex', alignItems: 'center' }}>
-                                            {item.payment ? <RemoveIcon sx={{color: '#E84B54'}} /> :
+                                            {item.payment ? <RemoveIcon sx={{ color: '#E84B54' }} /> :
                                                 (item.tranType === 0 ?
                                                         (paymentType === 0 ?
-                                                                (item.transferType === 0 ? <RemoveIcon sx={{color: '#E84B54'}}  /> :
-                                                                    <AddIcon sx={{color: '#6899ED'}}/>) :
-                                                                (item.transferType === 0 ? <AddIcon sx={{color: '#6899ED'}} /> : <RemoveIcon sx={{color: '#E84B54'}} />)
+                                                                (item.transferType === 0 ?
+                                                                    <RemoveIcon sx={{ color: '#E84B54' }} /> :
+                                                                    <AddIcon sx={{ color: '#6899ED' }} />) :
+                                                                (item.transferType === 0 ?
+                                                                    <AddIcon sx={{ color: '#6899ED' }} /> :
+                                                                    <RemoveIcon sx={{ color: '#E84B54' }} />)
                                                         ) :
-                                                        (item.tranType === 1 ? <AddIcon sx={{color: '#6899ED'}} /> : <RemoveIcon sx={{color: '#E84B54'}}/>)
+                                                        (item.tranType === 1 ? <AddIcon sx={{ color: '#6899ED' }} /> :
+                                                            <RemoveIcon sx={{ color: '#E84B54' }} />)
                                                 )
                                             }
                                         </Grid>
@@ -227,7 +237,18 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                                     </Typography>
                                                 </Grid>
                                                 <Grid item>
-                                                    <Typography variant="body2" color="textSecondary">
+                                                    <Typography variant="body2"
+                                                                color="textSecondary"
+                                                                sx={{
+                                                                    overflow: 'hidden',
+                                                                    textOverflow: 'ellipsis',
+                                                                    display: '-webkit-box',
+                                                                    WebkitLineClamp: 2,
+                                                                    WebkitBoxOrient: 'vertical',
+                                                                    lineHeight: '1.2em',
+                                                                    height: '2.4em'
+                                                                }}
+                                                    >
                                                         {item.payment ? item.serviceName :
                                                             (item.tranType === 0 ? 'Conversion' :
                                                                 item.tranType === 1 ? 'Top Up' : 'Refund')}
@@ -260,8 +281,8 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                             <Grid container direction="column" spacing={1}
                                                   style={{
                                                       textAlign: 'right',
-                                                      paddingTop: '7px'
-                                            }}>
+                                                      paddingTop: '7px',
+                                                  }}>
                                                 <Grid item>
                                                     <Typography variant="body2" color="textSecondary">
                                                         {item.payment ?
@@ -328,6 +349,25 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                         </Typography>
                     </Grid>
                 )}
+
+                {loading && (
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            zIndex: 1,
+                        }}
+                    >
+                        <CircularProgress sx={{ color: '#4653f9' }} />
+                    </Box>
+                )}
             </Paper>
             <Drawer
                 anchor="bottom"
@@ -364,7 +404,7 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                 <>
                                     <ListItem>
                                         <ListItemText primary="Pay Type"
-                                                      secondary={selectedItem.payType === 0 ? '일반' : '교통'} />
+                                                      secondary={selectedItem.payType === 0 ? 'Pay' : 'Transit'} />
                                     </ListItem>
                                     <ListItem>
                                         <ListItemText primary="Pay Number" secondary={selectedItem.pno} />
@@ -375,8 +415,8 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                         />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="Pay Date" secondary={selectedItem.datetime} />
-                                        <ListItemText primary="Pay Date" secondary={format(selectedItem.datetime, 'PPpp')} />
+                                        <ListItemText primary="Pay Date"
+                                                      secondary={format(selectedItem.datetime, 'PPpp')} />
                                     </ListItem>
                                     <ListItem>
                                         <ListItemText primary="Pay Balance Snap" secondary={
@@ -401,7 +441,8 @@ const PaymentHistory = ({ cardData, paymentType, onSwitchChange }) => {
                                         <ListItemText primary="Transaction Number" secondary={selectedItem.tno} />
                                     </ListItem>
                                     <ListItem>
-                                        <ListItemText primary="Transaction Date" secondary={format(selectedItem.datetime, 'PPpp')} />
+                                        <ListItemText primary="Transaction Date"
+                                                      secondary={format(selectedItem.datetime, 'PPpp')} />
                                     </ListItem>
                                     {selectedItem.transferType !== null && (
                                         <ListItem>

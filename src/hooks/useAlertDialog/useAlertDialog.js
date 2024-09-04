@@ -32,7 +32,10 @@ const useAlertDialog = () => {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
                 PaperProps={{
-                    style : {width : '380px'}
+                    style : {
+                        width : '380px',
+                        borderRadius: '15px',
+                    }
                 }}
             >
                 <DialogTitle id="alert-dialog-title">
