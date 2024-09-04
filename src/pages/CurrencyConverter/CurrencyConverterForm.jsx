@@ -19,7 +19,7 @@ const CurrencyConverterForm = () => {
             const rate =
                 (1 / storedRates.KRW) *
                 storedRates[getCountryCodeToCurrency(member)];
-            const foreignAmount = Math.ceil(krInput * rate * 100) / 1000;
+            const foreignAmount = Math.ceil(krInput * rate * 100) / 100;
             setKrwAmount(krInput);
             setForeignAmount(foreignAmount.toLocaleString());
             console.log(foreignAmount);
@@ -33,7 +33,7 @@ const CurrencyConverterForm = () => {
             const rate =
                 (1 / storedRates[getCountryCodeToCurrency(member)]) *
                 storedRates.KRW;
-            const krwAmount = Math.ceil(frInput * rate * 100) / 1000;
+            const krwAmount = Math.ceil(frInput * rate * 100) / 100;
             setForeignAmount(frInput);
             setKrwAmount(krwAmount.toLocaleString());
             console.log(krwAmount);
