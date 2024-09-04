@@ -38,7 +38,7 @@ export default function TopUpInput({ cardData }) {
     useEffect(() => {
         const storedRates = getExchangeRate();
         console.log(storedRates);
-        const userString = localStorage.getItem('user');
+        const userString = localStorage.getItem('member');
         const user = JSON.parse(userString);
         if (user && storedRates) {
             try {
