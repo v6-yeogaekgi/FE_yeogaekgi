@@ -165,6 +165,16 @@ function App() {
                             }
                         />
                         <Route
+                            path={'/map/:activity'}
+                            element={
+                                <PageLayout menuName={'map'}>
+                                    <MapProvider>
+                                        <Map />
+                                    </MapProvider>
+                                </PageLayout>
+                            }
+                        />
+                        <Route
                             path={'/map/register/:serviceId/:name'}
                             element={
                                 <PageLayout menuName={'map'}>
