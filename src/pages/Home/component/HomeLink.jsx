@@ -76,33 +76,40 @@ const HomeCardItem = () => {
                     textAlign: 'center',
                 }}
             >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}
+                <a
+                    href="https://www.ddangyo.com/#0"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ textDecoration: 'none' }}
                 >
-                    <img
-                        src={dgy}
-                        alt="Delivery"
-                        style={{
-                            width: 70,
-                            height: 70,
-                            objectFit: 'contain',
-                        }}
-                    />
-                    <Typography
+                    <Box
                         sx={{
-                            fontFamily: 'Noto Sans, sans-serif',
-                            color: '#808080',
-                            mt: 1.5,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                         }}
                     >
-                        Delivery
-                    </Typography>
-                </Box>
+                        <img
+                            src={dgy}
+                            alt="Delivery"
+                            style={{
+                                width: 70,
+                                height: 70,
+                                objectFit: 'contain',
+                            }}
+                        />
+                        <Typography
+                            sx={{
+                                fontFamily: 'Noto Sans, sans-serif',
+                                color: '#808080',
+                                mt: 1.5,
+                            }}
+                        >
+                            Delivery
+                        </Typography>
+                    </Box>
+                </a>
             </Box>
             <Box
                 sx={{
