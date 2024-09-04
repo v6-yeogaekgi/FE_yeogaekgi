@@ -271,6 +271,7 @@ const QnaDetail = () => {
                         label={'Reply'}
                         variant={'outlined'}
                         sx={{
+                            mt:2,
                             width: '100%',
                             fontFamily: 'Noto Sans',
                             borderRadius: 2,
