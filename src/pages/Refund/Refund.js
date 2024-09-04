@@ -107,6 +107,12 @@ export default function Refund() {
             return;
         }
 
+        if(data.transitBalance > 0) {
+            setAlertContent('Make sure there is no existing transit balance before refund.');
+            openAlertDialog();
+            return;
+        }
+
         doRefund();
     };
 
@@ -372,7 +378,7 @@ export default function Refund() {
                         ></BasicButton>
 
                         <AlertDialog
-                            title={'Can\'t Refund'}
+                            title={'Refund Notice'}
                             content={alertContent}
                         />
                     </div>
