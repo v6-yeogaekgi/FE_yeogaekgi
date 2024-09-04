@@ -70,7 +70,7 @@ export default function Refund() {
     }
 
     useEffect(() => {
-        const getUser = localStorage.getItem('user');
+        const getUser = localStorage.getItem('member');
         if (getUser) {
             try {
                 setMemberData(JSON.parse(getUser));
