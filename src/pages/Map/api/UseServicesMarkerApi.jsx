@@ -21,7 +21,7 @@ const useServicesMarkerApi = (state) => {
 
     // Function to fetch service list data
     const fetchServiceList = useCallback(() => {
-        const area = selectArea === '서울' ? 'SEOUL' : 'BUSAN';
+        const area = selectArea === 'Seoul' ? 'Seoul' : 'Jeju';
         setApiLoading(true);
         const queryString = buildQueryString();
         axios

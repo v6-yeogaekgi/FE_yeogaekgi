@@ -107,7 +107,9 @@ function App() {
                 if (res) {
                     console.log(res.data);
                     setArea(res.data);
-                    const defaultArea = res.data[0];
+                    const defaultArea = res.data.includes('Seoul')
+                        ? 'Seoul'
+                        : res.data[0];
                     localStorage.setItem('selectArea', defaultArea);
                 }
             })

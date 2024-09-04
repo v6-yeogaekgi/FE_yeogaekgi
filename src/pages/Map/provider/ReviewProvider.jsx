@@ -60,6 +60,7 @@ export const ReviewProvider = ({ children }) => {
                     nickname: item.nickname,
                     countryCode: item.country.code,
                     score: item.score,
+                    totalScore: item.totalScore,
                 })),
             );
 
@@ -67,6 +68,7 @@ export const ReviewProvider = ({ children }) => {
                 (acc, curr) => acc + curr.score,
                 0,
             );
+
             setTotalScore(totalScore);
 
             setImg(parsedData);
@@ -83,6 +85,7 @@ export const ReviewProvider = ({ children }) => {
                 `review/${serviceId}/register`,
                 reviewData,
             );
+            console.log(response.data);
             return response.data;
         } catch (error) {
             console.error('Error registering review:', error);
