@@ -15,26 +15,27 @@ const CurrencyConverterForm = () => {
 
     const handleKrwAmountChange = (e) => {
         if (e.currentTarget.id === 'krw') {
-            const krInput = e.currentTarget.value;
-            setKrwAmount(krInput);
+            const krInput = parseFloat(e.currentTarget.value.replace(/,/g, ''));
             const rate =
                 (1 / storedRates.KRW) *
                 storedRates[getCountryCodeToCurrency(member)];
-            const foreignAmount = krInput * rate;
-            setForeignAmount(foreignAmount);
+            const foreignAmount = Math.ceil(krInput * rate * 100) / 100;
+            setKrwAmount(krInput);
+            setForeignAmount(foreignAmount.toLocaleString());
             console.log(foreignAmount);
         }
     };
 
     const handleForeingAmountChange = (e) => {
         if (e.currentTarget.id === 'forein') {
-            const frInput = e.currentTarget.value;
-            setForeignAmount(e.currentTarget.value);
+            const frInput = parseFloat(e.currentTarget.value.replace(/,/g, ''));
+
             const rate =
                 (1 / storedRates[getCountryCodeToCurrency(member)]) *
                 storedRates.KRW;
-            const krwAmount = frInput * rate;
-            setKrwAmount(krwAmount);
+            const krwAmount = Math.ceil(frInput * rate * 100) / 100;
+            setForeignAmount(frInput);
+            setKrwAmount(krwAmount.toLocaleString());
             console.log(krwAmount);
         }
     };
