@@ -6,11 +6,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useMap } from '../provider/MapProvider';
+import { useParams } from 'react-router-dom';
 
 export default function MapMarkerCheck() {
     const { state, handleFilterChange } = useMap();
     const { Tour, ACTIVITY, ETC } = state;
-
     return (
         <FormControl
             sx={{
