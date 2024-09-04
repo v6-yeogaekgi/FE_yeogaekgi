@@ -62,7 +62,9 @@ const ReviewRegister = () => {
                 );
             })
             .catch((error) => {
-                openAlertDialog('Error', 'Failed to register review');
+                openAlertDialog('Fail!', 'You already registered Review!', () =>
+                    navigate(-1),
+                );
             });
 
         setContent('');
