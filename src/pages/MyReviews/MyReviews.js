@@ -15,6 +15,8 @@ import {
     Alert,
     Button,
 } from '@mui/material';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 import { format } from 'date-fns';
 import ImageSwiper from '../../components/ImageSwiper/ImageSwiper';
 
@@ -128,20 +130,23 @@ export default function MyReviews(props) {
                     You can write reviews for {unwrittens.length} places!
                 </Alert>
                 {reviews && reviews.length > 0 ? (
-                    <Paper elevation={3} sx={{ margin: '15px', width: '100%' }}>
-                        <List>
+                    <>
                             {reviews.map((review, index) => (
-                                <ListItem key={index} divider>
-                                    <ListItemText
-                                        primary={
-                                            <>
-                                                <Typography sx={{ ml: 0.4 }}>
+                                <Card key={index}
+                                      sx={{
+                                          padding: '10px',
+                                          boxShadow: 'none',
+                                          borderRadius: 5,
+                                          backgroundColor: '#ffffff',
+                                          position: 'relative',
+                                          margin:2,
+                                      }}
+                                >
+                                    <CardContent>
+                                                <Typography sx={{ ml: 0.4, fontWeight: 'bold' }}>
                                                     {review.serviceName}
                                                 </Typography>
-                                            </>
-                                        }
-                                        secondary={
-                                            <>
+
                                                 <Box
                                                     sx={{
                                                         display: 'flex',
@@ -150,6 +155,7 @@ export default function MyReviews(props) {
                                                 >
                                                     <Rating
                                                         value={review.score}
+                                                        readOnly
                                                     />
                                                     <Divider
                                                         orientation="vertical"
@@ -165,8 +171,11 @@ export default function MyReviews(props) {
                                                         }}
                                                     />
                                                     <Typography
+
                                                         component="span"
-                                                        variant="body2"
+                                                        variant="caption"
+                                                        color="text.secondary"
+                                                        // variant="body2"
                                                         sx={{ ml: 1 }}
                                                     >
                                                         {review.formatRegDate ||
@@ -187,13 +196,11 @@ export default function MyReviews(props) {
                                                 </Typography>
                                                 <br />
                                                 {/* <ReviewImages images={review.images}/> */}
-                                            </>
-                                        }
-                                    />
-                                </ListItem>
+                                    </CardContent>
+                                </Card>
                             ))}
-                        </List>
-                    </Paper>
+                    </>
+
                 ) : (
                     <div
                         style={{

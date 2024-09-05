@@ -5,6 +5,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import TranslateIcon from '@mui/icons-material/Translate';
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
 import { getCountryCodeForTranslate, getCountryImgById } from '../../../util';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/swiper-bundle.css';
 import { useNavigate } from 'react-router-dom';
 import {
     Card,
@@ -17,9 +19,13 @@ import {
     IconButton,
     Button,
     Box,
+    Rating,
+    CardActions,
+    CardMedia,
 } from '@mui/material';
 import { AllStateContext } from '../../../App';
 import useConfirmDialog from '../../../hooks/useConfirmDialog/useConfirmDialog';
+import Stack from '@mui/material/Stack';
 
 const ReviewList = () => {
     const {
@@ -176,8 +182,54 @@ const ReviewList = () => {
                                 )}
                             </Box>
                         }
-                        subheader={`Score: ${review.score} ${review.modDate.substring(0, 10)}`}
+                        subheader={
+                            <Box
+                                sx={{ display: 'block', alignItems: 'center' }}
+                            >
+                                <Stack
+                                    spacing={1}
+                                    sx={{
+                                        display: 'block',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <Rating
+                                        name="half-rating-read"
+                                        value={review.score}
+                                        precision={0.5}
+                                        readOnly
+                                        size="small"
+                                    />
+                                </Stack>
+                            </Box>
+                        }
                     />
+                    {review.images && review.images.length > 0 && (
+                        <CardMedia>
+                            <Swiper
+                                spaceBetween={1}
+                                slidesPerView={1}
+                                style={{ height: '200px' }}
+                                border-radius={'30px'}
+                            >
+                                {review.images.map((image, index) => (
+                                    <SwiperSlide key={index}>
+                                        <img
+                                            src={image}
+                                            alt={`Review image ${index}`}
+                                            style={{
+                                                width: '100%',
+                                                height: '200px',
+                                                maxWidth: '100%',
+                                                objectFit: 'contain',
+                                                borderRadius: '50px',
+                                            }}
+                                        />
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+                        </CardMedia>
+                    )}
                     <CardContent
                         sx={{
                             display: 'flex',
@@ -185,11 +237,28 @@ const ReviewList = () => {
                             justifyContent: 'space-between',
                         }}
                     >
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            fontSize={'20px'}
+                        >
                             {translationStates[review.reviewId]?.isTranslated
                                 ? translationStates[review.reviewId]
                                       .translatedContent
                                 : review.content}
+                        </Typography>
+                    </CardContent>
+                    <CardActions
+                        disableSpacing
+                        sx={{
+                            ml: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <Typography fontSize={'15px'} color="text.secondary">
+                            {review.modDate.substring(0, 10)}
                         </Typography>
                         <Button
                             id="translate-button"
@@ -218,7 +287,7 @@ const ReviewList = () => {
                                 )
                             }
                         />
-                    </CardContent>
+                    </CardActions>
                 </Card>
             ))}
             <div ref={target} style={{ height: '20px' }} />

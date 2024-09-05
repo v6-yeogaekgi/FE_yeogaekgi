@@ -14,8 +14,13 @@ import PhonelinkRingRoundedIcon from '@mui/icons-material/PhonelinkRingRounded';
 import TabletAndroidIcon from '@mui/icons-material/TabletAndroid';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import dgy from '../../../img/땡겨요_회색.png';
+import { useNavigate } from 'react-router-dom';
 
 const HomeCardItem = () => {
+    const navigate = useNavigate();
+    function handleNavigate() {
+        navigate('/map/activity');
+    }
     return (
         <Card
             sx={{
@@ -46,6 +51,7 @@ const HomeCardItem = () => {
                         alignItems: 'center',
                         justifyContent: 'center',
                     }}
+                    onClick={handleNavigate}
                 >
                     <LocalActivityRoundedIcon
                         sx={{ fontSize: 70, color: '#808080' }}
@@ -70,33 +76,40 @@ const HomeCardItem = () => {
                     textAlign: 'center',
                 }}
             >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}
+                <a
+                    href="https://www.ddangyo.com/#0"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ textDecoration: 'none' }}
                 >
-                    <img
-                        src={dgy}
-                        alt="Delivery"
-                        style={{
-                            width: 70,
-                            height: 70,
-                            objectFit: 'contain',
-                        }}
-                    />
-                    <Typography
+                    <Box
                         sx={{
-                            fontFamily: 'Noto Sans, sans-serif',
-                            color: '#808080',
-                            mt: 1.5,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                         }}
                     >
-                        Delivery
-                    </Typography>
-                </Box>
+                        <img
+                            src={dgy}
+                            alt="Delivery"
+                            style={{
+                                width: 70,
+                                height: 70,
+                                objectFit: 'contain',
+                            }}
+                        />
+                        <Typography
+                            sx={{
+                                fontFamily: 'Noto Sans, sans-serif',
+                                color: '#808080',
+                                mt: 1.5,
+                            }}
+                        >
+                            Delivery
+                        </Typography>
+                    </Box>
+                </a>
             </Box>
             <Box
                 sx={{

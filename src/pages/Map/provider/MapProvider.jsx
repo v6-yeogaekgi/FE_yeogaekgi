@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const MapContext = createContext();
 
@@ -10,11 +11,23 @@ export const MapProvider = ({ children }) => {
         ETC: false,
     });
 
+    const { activity } = useParams();
+
+    // activity 파라미터에 따라 상태 변경
+    useEffect(() => {
+        if (activity) {
+            setState((prevState) => ({
+                ...prevState,
+                ACTIVITY: true,
+            }));
+        }
+    }, [activity]);
+
     const handleFilterChange = (event) => {
-        setState({
-            ...state,
+        setState((prevState) => ({
+            ...prevState,
             [event.target.name]: event.target.checked,
-        });
+        }));
     };
 
     Object.keys(state).forEach((key) => {

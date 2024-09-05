@@ -130,6 +130,7 @@ const SelectImage = ({
                                     style={{ height: '120px', width: '120px' }}
                                 />
                                 <CancelSharpIcon
+                                    sx={{ color: '#FF69B4' }}
                                     onClick={() => handleCancel(index)}
                                     style={cancelBtnStyle}
                                 ></CancelSharpIcon>

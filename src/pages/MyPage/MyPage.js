@@ -84,6 +84,12 @@ export default function MyPage(props) {
                         </ListItemButton>
                     </ListItem>
                     <Divider variant="middle" />
+                    <ListItem>
+                        <ListItemButton onClick={onClickQna}>
+                            Q&A
+                        </ListItemButton>
+                    </ListItem>
+                    <Divider variant="middle" />
                     <ListItem sx={{ paddingBottom: 0, marginBottom: 0 }}>
                         <ListItemButton onClick={onClickLogout}>Logout</ListItemButton>
                     </ListItem>
