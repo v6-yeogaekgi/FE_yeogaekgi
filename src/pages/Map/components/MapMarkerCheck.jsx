@@ -7,8 +7,10 @@ import Checkbox from '@mui/material/Checkbox';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useMap } from '../provider/MapProvider';
 import { IconButton, Menu, Tooltip } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import RateReviewIcon from '@mui/icons-material/RateReview';
 import MenuItem from '@mui/material/MenuItem';
+import Avatar from '@mui/material/Avatar';
 
 export default function MapMarkerCheck() {
     const {
@@ -190,21 +192,32 @@ export default function MapMarkerCheck() {
             </FormControl>
 
             {/* Tooltip Section */}
-            <Tooltip title="Account settings" name="toolTip">
+            <Tooltip title="Account settings">
                 <IconButton
                     onClick={handleClick}
                     size="small"
                     sx={{
-                        mb: 2,
                         position: 'absolute',
                         right: '0',
-                        top: -12,
+                        top: '-12px',
+                        borderRadius: '50%',
                     }}
                     aria-controls={open ? 'account-menu' : undefined}
                     aria-haspopup="true"
                     aria-expanded={open ? 'true' : undefined}
                 >
-                    <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                    <Avatar
+                        sx={{
+                            width: 40,
+                            height: 40,
+                            fontSize: '16px',
+                            fontWeight: 'bold',
+                            backgroundColor: '#007AFF', // 아이폰 스타일의 파란색
+                            color: 'white',
+                        }}
+                    >
+                        My
+                    </Avatar>
                 </IconButton>
             </Tooltip>
 
@@ -215,31 +228,12 @@ export default function MapMarkerCheck() {
                 open={open}
                 onClose={handleFilter}
                 onClick={handleFilter}
-                slotProps={{
-                    paper: {
-                        elevation: 0,
-                        sx: {
-                            overflow: 'visible',
-                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                            mt: 1.5,
-                            '& .MuiAvatar-root': {
-                                width: 32,
-                                height: 32,
-                                ml: -0.5,
-                                mr: 1,
-                            },
-                            '&::before': {
-                                content: '""',
-                                display: 'block',
-                                position: 'absolute',
-                                top: 0,
-                                right: 14,
-                                width: 10,
-                                height: 10,
-                                bgcolor: 'background.paper',
-                                transform: 'translateY(-50%) rotate(45deg)',
-                                zIndex: 0,
-                            },
+                PaperProps={{
+                    sx: {
+                        backgroundColor: 'transparent', // 메뉴 배경 제거
+                        boxShadow: 'none', // 그림자 제거
+                        '& .MuiList-root': {
+                            padding: 0,
                         },
                     },
                 }}
@@ -252,11 +246,39 @@ export default function MapMarkerCheck() {
                     vertical: 'bottom',
                 }}
             >
-                <MenuItem onClick={handleLike}>
-                    <Avatar /> LIKE
+                <MenuItem
+                    onClick={handleLike}
+                    sx={{
+                        justifyContent: 'center',
+                        padding: '10px',
+                        '&:hover': {
+                            backgroundColor: 'transparent', // hover시 배경색 제거
+                        },
+                    }}
+                >
+                    <FavoriteIcon
+                        sx={{
+                            color: '#FF3B30', // 하트 빨간색
+                            fontSize: 30, // 크기를 키움
+                        }}
+                    />
                 </MenuItem>
-                <MenuItem onClick={handleReview}>
-                    <Avatar /> My Review
+                <MenuItem
+                    onClick={handleReview}
+                    sx={{
+                        justifyContent: 'center',
+                        padding: '10px',
+                        '&:hover': {
+                            backgroundColor: 'transparent', // hover시 배경색 제거
+                        },
+                    }}
+                >
+                    <RateReviewIcon
+                        sx={{
+                            color: '#4CD964', // 리뷰 아이콘 초록색
+                            fontSize: 30, // 크기를 키움
+                        }}
+                    />
                 </MenuItem>
             </Menu>
         </Box>

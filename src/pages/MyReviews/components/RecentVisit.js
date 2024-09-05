@@ -10,9 +10,14 @@ import {
     Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import { useNavigate } from 'react-router-dom';
 
 export default function RecentVisit({ data }) {
     const { serviceNo, serviceName, payPrice, formatPayDate } = data;
+    const navigate = useNavigate();
+    const handleClick = () => {
+        navigate(`/map/register/${serviceNo}/${serviceName}/${formatPayDate}`);
+    };
     return (
         <Card
             key={serviceNo}
@@ -71,7 +76,7 @@ export default function RecentVisit({ data }) {
                         startIcon={<EditIcon />}
                         variant="text"
                         color="primary"
-                        onClick={() => alert('리뷰 쓰기 클릭')}
+                        onClick={handleClick}
                         sx={{ textTransform: 'capitalize' }}
                     >
                         Write Review

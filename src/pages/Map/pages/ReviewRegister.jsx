@@ -1,16 +1,17 @@
 import React, { useRef, useState, useContext } from 'react';
-import { Box, IconButton, Rating, Typography } from '@mui/material';
+import { Badge, Box, IconButton, Rating, Typography } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import { useReview } from '../provider/ReviewProvider';
 import { useNavigate, useParams } from 'react-router-dom';
 import BasicButton from '../../../components/BasicButton/BasicButton';
 import useAlertDialog from '../../../hooks/useAlertDialog/useAlertDialog'; // useAlertDialog import
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 
 const ReviewRegister = () => {
     const [content, setContent] = useState('');
     const [images, setImages] = useState([]);
-    const { serviceId, name } = useParams();
+    const { serviceId, name, formatPayDate } = useParams();
     const { createReview } = useReview();
     const [score, setScore] = useState(0);
     const inputRef = useRef();
@@ -93,17 +94,19 @@ const ReviewRegister = () => {
                 height: '720px',
             }}
         >
-            <Typography
-                variant="h6"
-                gutterBottom
-                sx={{
-                    fontWeight: '500',
-                    color: '#333',
-                }}
-            >
-                {name}
-            </Typography>
-
+            <Box sx={{ display: 'flex' }}>
+                <Typography
+                    variant="h6"
+                    gutterBottom
+                    sx={{
+                        fontWeight: '500',
+                        color: '#333',
+                        display: 'inline-block',
+                    }}
+                >
+                    {name}
+                </Typography>
+            </Box>
             <Rating
                 name="simple-controlled"
                 value={score}
@@ -209,7 +212,33 @@ const ReviewRegister = () => {
                     </Box>
                 ))}
             </Box>
-
+            {formatPayDate && (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        width: '100%',
+                        justifyContent: 'space-between',
+                    }}
+                >
+                    <Typography sx={{ fontSize: '26px' }}>🙇🏻‍♂️️🙇🏼‍♂️🙇🏽‍♂️</Typography>
+                    <Box
+                        sx={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: '#007AFF', // 배경색
+                            color: 'white', // 글씨색
+                            fontSize: '16px',
+                            padding: '4px 8px', // 내부 여백
+                            borderRadius: '12px', // 배지처럼 둥글게
+                            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', // 그림자 효과
+                        }}
+                    >
+                        Paid!
+                    </Box>
+                </Box>
+            )}
             <textarea
                 ref={inputRef}
                 style={{

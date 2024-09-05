@@ -156,17 +156,7 @@ function App() {
                             }
                         />
                         <Route
-                            path={'/map'}
-                            element={
-                                <PageLayout menuName={'Map'}>
-                                    <MapProvider>
-                                        <Map />
-                                    </MapProvider>
-                                </PageLayout>
-                            }
-                        />
-                        <Route
-                            path={'/map/:activity'}
+                            path={'/map/:activity?'}
                             element={
                                 <PageLayout menuName={'map'}>
                                     <MapProvider>
@@ -176,7 +166,9 @@ function App() {
                             }
                         />
                         <Route
-                            path={'/map/register/:serviceId/:name'}
+                            path={
+                                '/map/register/:serviceId/:name/:formatPayDate?'
+                            }
                             element={
                                 <PageLayout menuName={'Map'}>
                                     <SelectedProvider>
