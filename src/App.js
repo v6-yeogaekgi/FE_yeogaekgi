@@ -43,6 +43,7 @@ import QnaEdit from './pages/Qna/QnaEdit';
 import { ThemeProvider } from '@mui/material';
 import theme from './theme';
 import CssBaseline from '@mui/material/CssBaseline';
+import WriteReview from './pages/MyReviews/WriteReview';
 
 const PageLayout = ({ children, menuName, areas }) => {
     return (
@@ -314,7 +315,14 @@ function App() {
                                 </PageLayout>
                             }
                         />
-
+                        <Route
+                            path={'/mypage/review/write'}
+                            element={
+                                <PageLayout menuName={'Recent Visits'}>
+                                    <WriteReview />
+                                </PageLayout>
+                            }
+                        />
                         <Route
                             path={'/mypage/likes'}
                             element={

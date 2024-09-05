@@ -11,13 +11,16 @@ import {
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import ClearIcon from '@mui/icons-material/Clear';
-import { getCountryImgById } from '../../util';
-import { getExchangeRate, convertCurrency } from '../ExchangeRateManager/ExchangeRateManager';
-import BasicButton from '../BasicButton/BasicButton';
+import { getCountryImgById } from '../../../util';
+import {
+    getExchangeRate,
+    convertCurrency,
+} from '../../../components/ExchangeRateManager/ExchangeRateManager';
+import BasicButton from '../../../components/BasicButton/BasicButton';
 import { useNavigate } from 'react-router-dom';
-import { AllStateContext } from '../../App';
+import { AllStateContext } from '../../../App';
 import axios from 'axios';
-import useConfirmDialog from '../../hooks/useConfirmDialog/useConfirmDialog';
+import useConfirmDialog from '../../../hooks/useConfirmDialog/useConfirmDialog';
 
 export default function TopUpInput({ cardData }) {
     const navigate = useNavigate();
@@ -91,7 +94,9 @@ export default function TopUpInput({ cardData }) {
             setKrwAmount(0);
             setForeignAmount(0);
         } else {
-            let cleanKrVal = parseFloat(krInput.replace(/[^0-9.,-]/g, '').replace(/,/g, ''));
+            let cleanKrVal = parseFloat(
+                krInput.replace(/[^0-9.,-]/g, '').replace(/,/g, ''),
+            );
 
             // If parseFloat returns NaN, set the value to 0
             if (isNaN(cleanKrVal)) {
@@ -135,16 +140,16 @@ export default function TopUpInput({ cardData }) {
                     },
                 },
             )
-            .then(function(res) {
+            .then(function (res) {
                 console.log(res);
                 if (res.ok) {
                     navigate('/wallet/detail', { state: { cardData } });
                 }
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log('axios error');
             })
-            .then(function() {
+            .then(function () {
                 // always
                 navigate('/wallet/detail', { state: { cardData } });
             });
@@ -211,7 +216,10 @@ export default function TopUpInput({ cardData }) {
                 <TextField
                     fullWidth
                     placeholder="0"
-                    value={krwAmount.toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' })}
+                    value={krwAmount.toLocaleString('ko-KR', {
+                        style: 'currency',
+                        currency: 'KRW',
+                    })}
                     onChange={handleKrwAmountChange}
                     InputProps={{
                         endAdornment: (
@@ -285,12 +293,12 @@ export default function TopUpInput({ cardData }) {
 
             <ConfirmDialog
                 title={'Top Up'}
-                content={'Are you sure you want to top up '+ krwAmount + 'won?'}
-                onAgree={
-                    () => {
-                        onClickTopUp();
-                    }
+                content={
+                    'Are you sure you want to top up ' + krwAmount + 'won?'
                 }
+                onAgree={() => {
+                    onClickTopUp();
+                }}
             />
         </>
     );

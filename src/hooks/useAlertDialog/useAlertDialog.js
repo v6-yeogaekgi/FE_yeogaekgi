@@ -47,7 +47,7 @@ const useAlertDialog = () => {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions style={{ justifyContent: 'center' }}>
-                    <BasicButton text={'close'} width={170} onClick={closeAlertDialog}></BasicButton>
+                    <BasicButton text={'close'} width={150} onClick={closeAlertDialog}></BasicButton>
                 </DialogActions>
             </Dialog>
         );

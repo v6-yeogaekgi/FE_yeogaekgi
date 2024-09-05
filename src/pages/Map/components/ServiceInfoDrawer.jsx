@@ -46,7 +46,7 @@ const ServiceInfoDrawer = () => {
         toggleDrawer,
         viewLikeCnt,
     } = useSelected();
-    const { totalScore, img } = useReview();
+    const { avgScore, img } = useReview();
 
     useEffect(() => {
         const fetchLikeData = async () => {
@@ -63,15 +63,13 @@ const ServiceInfoDrawer = () => {
     }, [selectedService]);
 
     useEffect(() => {
+        console.log('총 리뷰 수 ' + avgScore);
         if (img.length > 0) {
-            const numberOfReviews = img.length;
-            const avgScore =
-                Math.round((totalScore / numberOfReviews) * 10) / 10;
             setScore(avgScore);
         } else {
             setScore(0);
         }
-    }, [img, totalScore]);
+    }, [img, avgScore]);
 
     const handleNavigateToRegister = () => {
         const name = selectedServiceInfo.name;
@@ -88,7 +86,7 @@ const ServiceInfoDrawer = () => {
             <Global
                 styles={{
                     '.MuiDrawer-root > .MuiPaper-root': {
-                        height: `calc(60% - ${drawerBleeding}px)`,
+                        height: `calc(70% - ${drawerBleeding}px)`,
                         overflow: 'visible',
                     },
                 }}
@@ -118,7 +116,7 @@ const ServiceInfoDrawer = () => {
                     },
                 }}
             >
-                <Box sx={{ mb: 2 }}>
+                <Box sx={{ mb: 3 }}>
                     <Puller />
                 </Box>
 
