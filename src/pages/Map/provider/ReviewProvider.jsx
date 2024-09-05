@@ -13,7 +13,7 @@ export const ReviewProvider = ({ children }) => {
     const [apiLoading, setApiLoading] = useState(false);
     const { protocol } = useContext(AllStateContext);
     const { selectedService } = useSelected();
-    const [totalScore, setTotalScore] = useState(0);
+    const [avgScore, setAvgScore] = useState(0);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
 
@@ -60,16 +60,21 @@ export const ReviewProvider = ({ children }) => {
                     nickname: item.nickname,
                     countryCode: item.country.code,
                     score: item.score,
-                    totalScore: item.totalScore,
                 })),
             );
 
-            const totalScore = parsedData.reduce(
+            const totalScore = response.data.reduce(
                 (acc, curr) => acc + curr.score,
                 0,
             );
+            const numberOfReviews = response.data.length;
 
-            setTotalScore(totalScore);
+            const avgScore = parseFloat(
+                (totalScore / numberOfReviews).toFixed(1),
+            );
+            setAvgScore(avgScore);
+
+            setAvgScore(avgScore);
 
             setImg(parsedData);
         } catch (error) {
@@ -147,7 +152,7 @@ export const ReviewProvider = ({ children }) => {
                 setSelectedReview,
                 list,
                 setList,
-                totalScore,
+                avgScore,
                 img,
                 setImg,
                 apiLoading,

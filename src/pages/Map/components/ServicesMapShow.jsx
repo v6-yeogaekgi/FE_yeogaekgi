@@ -100,7 +100,7 @@ const ServicesMapShow = () => {
                         service.lat,
                         service.lon,
                     );
-                    const OFFSET_Y = -150;
+                    const OFFSET_Y = -250;
                     const mapCenterWithOffset = map
                         .getProjection()
                         .fromCoordToOffset(markerPosition);

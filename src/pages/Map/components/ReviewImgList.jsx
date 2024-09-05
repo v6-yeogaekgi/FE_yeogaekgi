@@ -5,6 +5,8 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { useReview } from '../provider/ReviewProvider';
+import { Rating } from '@mui/material';
+import Stack from '@mui/material/Stack';
 
 const style = {
     position: 'absolute',
@@ -107,12 +109,21 @@ const ReviewImgList = () => {
                                 <Typography variant="h6" color="textPrimary">
                                     {selectedImage.nickname}
                                 </Typography>
-                                <Typography
-                                    variant="body1"
-                                    color="textSecondary"
+                                <Stack
+                                    spacing={1}
+                                    sx={{
+                                        display: 'block',
+                                        alignItems: 'center',
+                                    }}
                                 >
-                                    Score: {selectedImage.score}
-                                </Typography>
+                                    <Rating
+                                        name="half-rating-read"
+                                        value={selectedImage.score}
+                                        precision={0.5}
+                                        readOnly
+                                        size="medium"
+                                    />
+                                </Stack>
                             </Box>
                         </>
                     )}

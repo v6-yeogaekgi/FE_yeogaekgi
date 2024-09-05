@@ -56,7 +56,7 @@ export default function MapMarkerCheck() {
                                     <LocationOnIcon
                                         fontSize="small"
                                         sx={{
-                                            color: '#CCCCCC',
+                                            color: '#AAAAAA',
                                         }}
                                     />
                                 }
@@ -102,7 +102,7 @@ export default function MapMarkerCheck() {
                                     <LocationOnIcon
                                         fontSize="small"
                                         sx={{
-                                            color: '#CCCCCC',
+                                            color: '#AAAAAA',
                                         }}
                                     />
                                 }
@@ -148,7 +148,7 @@ export default function MapMarkerCheck() {
                                     <LocationOnIcon
                                         fontSize="small"
                                         sx={{
-                                            color: '#CCCCCC',
+                                            color: '#AAAAAA',
                                         }}
                                     />
                                 }
