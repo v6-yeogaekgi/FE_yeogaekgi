@@ -13,7 +13,6 @@ export default function WriteReview() {
     return (
         <>
             <Box>
-                <Typography variant='h5'>Recent Visits</Typography>
                 {unwrittenData.map((unwritten, index) => (
                     <RecentVisit data={unwritten} />
                 ))}

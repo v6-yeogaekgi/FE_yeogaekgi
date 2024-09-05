@@ -101,17 +101,14 @@ export default function MyReviews(props) {
 
     return (
         <>
-            <Box
+            <Card
                 sx={{
-                    width: '100%',
-                    minHeight: '100vh',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
+                    // padding: '10px',
+                    boxShadow: 'none',
+                    borderRadius: 5,
+                    backgroundColor: '#ffffff',
                     position: 'relative',
-                    overflow: 'hidden',
-                    backgroundColor: reviews.length === 0 ? 'white' : '#f0f4f8', // Conditional background color
+                    margin: 2,
                 }}
             >
                 <Alert
@@ -122,6 +119,7 @@ export default function MyReviews(props) {
                             size="small"
                             variant="outlined"
                             onClick={onWriteReview}
+                            sx={{marginTop: '10px', marginRight: '10px'}}
                         >
                             GO
                         </Button>
@@ -129,90 +127,83 @@ export default function MyReviews(props) {
                 >
                     You can write reviews for {unwrittens.length} places!
                 </Alert>
-                {reviews && reviews.length > 0 ? (
-                    <>
-                            {reviews.map((review, index) => (
-                                <Card key={index}
-                                      sx={{
-                                          padding: '10px',
-                                          boxShadow: 'none',
-                                          borderRadius: 5,
-                                          backgroundColor: '#ffffff',
-                                          position: 'relative',
-                                          margin:2,
-                                      }}
+            </Card>
+            {reviews && reviews.length > 0 ? (
+                <>
+                    {reviews.map((review, index) => (
+                        <Card
+                            key={index}
+                            sx={{
+                                padding: '10px',
+                                boxShadow: 'none',
+                                borderRadius: 5,
+                                backgroundColor: '#ffffff',
+                                position: 'relative',
+                                margin: 2,
+                            }}
+                        >
+                            <CardContent>
+                                <Typography
+                                    sx={{ ml: 0.4, fontWeight: 'bold' }}
                                 >
-                                    <CardContent>
-                                                <Typography sx={{ ml: 0.4, fontWeight: 'bold' }}>
-                                                    {review.serviceName}
-                                                </Typography>
+                                    {review.serviceName}
+                                </Typography>
 
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                    }}
-                                                >
-                                                    <Rating
-                                                        value={review.score}
-                                                        readOnly
-                                                    />
-                                                    <Divider
-                                                        orientation="vertical"
-                                                        variant="middle"
-                                                        flexItem
-                                                        sx={{
-                                                            ml: 1,
-                                                            background:
-                                                                '#DDE1E6',
-                                                            borderBottomWidth:
-                                                                '5',
-                                                            height: '15px',
-                                                        }}
-                                                    />
-                                                    <Typography
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <Rating value={review.score} readOnly />
+                                    <Divider
+                                        orientation="vertical"
+                                        variant="middle"
+                                        flexItem
+                                        sx={{
+                                            ml: 1,
+                                            background: '#DDE1E6',
+                                            borderBottomWidth: '5',
+                                            height: '15px',
+                                        }}
+                                    />
+                                    <Typography
+                                        component="span"
+                                        variant="caption"
+                                        color="text.secondary"
+                                        // variant="body2"
+                                        sx={{ ml: 1 }}
+                                    >
+                                        {review.formatRegDate || 'N/A'}
+                                    </Typography>
+                                </Box>
 
-                                                        component="span"
-                                                        variant="caption"
-                                                        color="text.secondary"
-                                                        // variant="body2"
-                                                        sx={{ ml: 1 }}
-                                                    >
-                                                        {review.formatRegDate ||
-                                                            'N/A'}
-                                                    </Typography>
-                                                </Box>
+                                <ImageSwiper images={review.images} />
 
-                                                <ImageSwiper
-                                                    images={review.images}
-                                                />
-
-                                                <Typography
-                                                    component="span"
-                                                    variant="body2"
-                                                    color="text.primary"
-                                                >
-                                                    {review.content || 'N/A'}
-                                                </Typography>
-                                                <br />
-                                                {/* <ReviewImages images={review.images}/> */}
-                                    </CardContent>
-                                </Card>
-                            ))}
-                    </>
-
-                ) : (
-                    <div
-                        style={{
-                            backgroundColor: 'white',
-                            width: '100%',
-                            textAlign: 'center',
-                        }}
-                    >
-                        <h4>No reviews written yet!</h4>
-                    </div>
-                )}
-            </Box>
+                                <Typography
+                                    component="span"
+                                    variant="body2"
+                                    color="text.primary"
+                                >
+                                    {review.content || 'N/A'}
+                                </Typography>
+                                <br />
+                                {/* <ReviewImages images={review.images}/> */}
+                            </CardContent>
+                        </Card>
+                    ))}
+                </>
+            ) : (
+                <div
+                    style={{
+                        backgroundColor: 'white',
+                        width: '100%',
+                        textAlign: 'center',
+                    }}
+                >
+                    <h4>No reviews written yet!</h4>
+                </div>
+            )}
         </>
     );
 }

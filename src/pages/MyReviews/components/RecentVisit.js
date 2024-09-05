@@ -1,50 +1,83 @@
 import React from 'react';
 import BasicButton from '../../../components/BasicButton/BasicButton';
-import { Box, Button, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Divider,
+    Rating,
+    Typography,
+} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
 export default function RecentVisit({ data }) {
     const { serviceNo, serviceName, payPrice, formatPayDate } = data;
     return (
-        <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            border="1px solid #e0e0e0"
-            borderRadius="8px"
-            padding="16px"
-            marginBottom="16px"
+        <Card
+            key={serviceNo}
+            sx={{
+                padding: '10px 10px 10px 10px',
+                boxShadow: 'none',
+                borderRadius: 5,
+                backgroundColor: '#ffffff',
+                position: 'relative',
+                margin: 2,
+            }}
         >
-            <Box>
-                <Typography variant="h6" component="div">
+            <CardContent sx={{ marginBottom: '0px', paddingBottom: '0px' }}>
+                <Typography sx={{ ml: 0.8, fontWeight: 'bold' }}>
                     {serviceName}
                 </Typography>
-                <Typography variant="body2" color="textSecondary">
-                    Visited on {formatPayDate}
-                </Typography>
-            </Box>
 
-            <Box display="flex" alignItems="center">
-                <Button
-                    startIcon={<EditIcon />}
-                    variant="text"
-                    color="primary"
-                    onClick={() => alert('리뷰 쓰기 클릭')}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        width: '70%',
+                    }}
                 >
-                    리뷰 쓰기
-                </Button>
-                <Typography variant="h6" style={{ marginLeft: '16px' }}>
-                    {payPrice}원
-                </Typography>
-            </Box>
-        </Box>
-        // <>
-        //     받아온 값: {serviceNo}<br/>
-        //     장소 이름: {serviceName}<br/>
-        //     방문 일자: {formatPayDate}<br/>
-        //     금액: {payPrice}<br/>
-        //     <BasicButton text={"Write Review"}></BasicButton>
-        //     <br/><br/>
-        // </>
+                    <Typography
+                        component="span"
+                        variant="caption"
+                        color="text.secondary"
+                        // variant="body2"
+                        sx={{ ml: 1 }}
+                    >
+                        {formatPayDate || 'N/A'}
+                    </Typography>
+                </Box>
+
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        width: '70%',
+                    }}
+                >
+                    <Typography
+                        component="span"
+                        variant="caption"
+                        color="text.secondary"
+                        // variant="body2"
+                        sx={{ ml: 1 }}
+                    >
+                        {payPrice}원
+                    </Typography>
+                </Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button
+                        startIcon={<EditIcon />}
+                        variant="text"
+                        color="primary"
+                        onClick={() => alert('리뷰 쓰기 클릭')}
+                        sx={{ textTransform: 'capitalize' }}
+                    >
+                        Write Review
+                    </Button>
+                </Box>
+            </CardContent>
+        </Card>
     );
 }
