@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AllStateContext } from '../../App';
+import { useNavigate } from 'react-router-dom';
 import {
     Box,
     List,
@@ -11,6 +12,8 @@ import {
     Typography,
     Rating,
     Divider,
+    Alert,
+    Button,
 } from '@mui/material';
 import { format } from 'date-fns';
 import ImageSwiper from '../../components/ImageSwiper/ImageSwiper';
@@ -19,7 +22,11 @@ export default function MyReviews(props) {
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
     const myReviewUrl = protocol + 'review/list';
+    const getUnwrittenUrl =
+        protocol + 'wallet/detail/getPaymentsWithoutReviews';
     const [reviews, setReviews] = useState([]);
+    const [unwrittens, setUnwrittens] = useState([]);
+    const navigate = useNavigate();
 
     function formatReviewDates(reviews) {
         return reviews.map((review) => ({
@@ -29,6 +36,19 @@ export default function MyReviews(props) {
                 ? format(review.regDate, 'PPpp')
                 : 'N/A',
         }));
+    }
+
+    function formatUnwrittenDates(datas) {
+        return datas.map((data) => ({
+            ...data,
+            formatPayDate: data.payDate ? format(data.payDate, 'PPPP') : 'N/A',
+        }));
+    }
+
+    function onWriteReview() {
+        // alert('리뷰 작성 클릭');
+        console.log(unwrittens);
+        navigate('/mypage/review/write', { state: { unwrittens } });
     }
 
     useEffect(() => {
@@ -55,8 +75,27 @@ export default function MyReviews(props) {
     }, []);
 
     useEffect(() => {
-        console.log('current reviews state:', reviews);
-    }, [reviews]);
+        axios
+            .get(getUnwrittenUrl, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(function (res) {
+                if (res.data) {
+                    const formattedUnwritten = formatUnwrittenDates(res.data);
+                    setUnwrittens(formattedUnwritten);
+                }
+            })
+            .catch(function (err) {
+                console.error('get unwritten - axios get error: ', err);
+            });
+    }, []);
+
+    // useEffect(() => {
+    //     console.log('current reviews state:', reviews);
+    // }, [reviews]);
 
     return (
         <>
@@ -73,6 +112,21 @@ export default function MyReviews(props) {
                     backgroundColor: reviews.length === 0 ? 'white' : '#f0f4f8', // Conditional background color
                 }}
             >
+                <Alert
+                    severity="info"
+                    action={
+                        <Button
+                            color="inherit"
+                            size="small"
+                            variant="outlined"
+                            onClick={onWriteReview}
+                        >
+                            GO
+                        </Button>
+                    }
+                >
+                    You can write reviews for {unwrittens.length} places!
+                </Alert>
                 {reviews && reviews.length > 0 ? (
                     <Paper elevation={3} sx={{ margin: '15px', width: '100%' }}>
                         <List>
