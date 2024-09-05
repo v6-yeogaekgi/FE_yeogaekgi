@@ -62,9 +62,9 @@ const ServiceInfoDrawer = () => {
         fetchLikeData();
     }, [selectedService]);
 
-    useEffect(() => {
+  useEffect(() => {
         console.log('총 리뷰 수 ' + avgScore);
-        if (img.length > 0) {
+        if (avgScore) {
             setScore(avgScore);
         } else {
             setScore(0);
