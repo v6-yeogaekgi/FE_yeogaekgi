@@ -17,7 +17,7 @@ export default function RecentVisit({ data }) {
         <Card
             key={serviceNo}
             sx={{
-                padding: '10px 10px 10px 10px',
+                padding: '14px 10px 0px 10px',
                 boxShadow: 'none',
                 borderRadius: 5,
                 backgroundColor: '#ffffff',
