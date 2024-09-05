@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useLocation } from 'react-router';
 import UserCardOnDetail from '../../components/UserCardOnDetail/UserCardOnDetail';
 import Box from '@mui/material/Box';
-import TopUpInput from '../../components/TopUpInput/TopUpInput';
+import TopUpInput from './components/TopUpInput';
 import { useContext } from 'react';
 import { AllStateContext } from '../../App';
 import UserCardOnRefund from '../../components/UserCardOnRefund/UserCardOnRefund';
