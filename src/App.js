@@ -318,7 +318,7 @@ function App() {
                         <Route
                             path={'/mypage/review/write'}
                             element={
-                                <PageLayout menuName={'Write Review'}>
+                                <PageLayout menuName={'Recent Visits'}>
                                     <WriteReview />
                                 </PageLayout>
                             }
