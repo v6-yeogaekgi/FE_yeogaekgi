@@ -9,14 +9,13 @@ import {
     Avatar,
     Menu,
     MenuItem,
+    Button,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { red } from '@mui/material/colors';
 import { useReview } from '../provider/ReviewProvider';
 import { useSelected } from '../provider/SelectedProvider';
 import { getCountryCodeForTranslate, getCountryImgById } from '../../../util';
 import TranslateIcon from '@mui/icons-material/Translate';
-import Button from '@mui/material/Button';
 
 const ReviewList = () => {
     const {
@@ -28,12 +27,10 @@ const ReviewList = () => {
         reviewList,
         deepLApi,
     } = useReview();
-    const { selectedServiceInfo, selectedService, toggleDrawer } =
-        useSelected();
+    const { selectedServiceInfo, selectedService } = useSelected();
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
-    const [isTranslated, setIsTranslated] = useState(false);
-    const [translatedContent, setTranslatedContent] = useState(null);
+    const [translationStates, setTranslationStates] = useState({});
 
     useEffect(() => {
         ReviewImgList();
@@ -72,19 +69,29 @@ const ReviewList = () => {
         }
     };
 
-    const handleTranslate = async (content, lang) => {
+    const handleTranslate = async (reviewId, content, lang) => {
+        const isTranslated = translationStates[reviewId]?.isTranslated;
+
         if (isTranslated) {
-            // Cancel translation (restore original content)
-            setIsTranslated(false);
-            setTranslatedContent(null);
+            setTranslationStates({
+                ...translationStates,
+                [reviewId]: { isTranslated: false, translatedContent: null },
+            });
         } else {
             try {
                 const translatedContentText = await deepLApi(
                     content,
                     getCountryCodeForTranslate(lang),
                 );
-                setTranslatedContent(translatedContentText);
-                setIsTranslated(true);
+                console.log('번역된 언어' + translatedContentText);
+                console.log('번환된 코드' + getCountryCodeForTranslate(lang));
+                setTranslationStates({
+                    ...translationStates,
+                    [reviewId]: {
+                        isTranslated: true,
+                        translatedContent: translatedContentText,
+                    },
+                });
             } catch (error) {
                 console.error('Translation failed:', error);
             }
@@ -118,7 +125,9 @@ const ReviewList = () => {
                             </IconButton>
                         }
                         title={review.nickname}
-                        subheader={`Score: ${review.score} ${review.modDate.substring(0, 10)}`}
+                        subheader={`Score: ${
+                            review.score
+                        } ${review.modDate.substring(0, 10)}`}
                     />
                     <CardContent
                         sx={{
@@ -128,7 +137,10 @@ const ReviewList = () => {
                         }}
                     >
                         <Typography variant="body2" color="text.secondary">
-                            {isTranslated ? translatedContent : review.content}
+                            {translationStates[review.reviewId]?.isTranslated
+                                ? translationStates[review.reviewId]
+                                      .translatedContent
+                                : review.content}
                         </Typography>
                         <Button
                             id="translate-button"
@@ -151,6 +163,7 @@ const ReviewList = () => {
                             }}
                             onClick={() =>
                                 handleTranslate(
+                                    review.reviewId,
                                     review.content,
                                     review.country.code,
                                 )
