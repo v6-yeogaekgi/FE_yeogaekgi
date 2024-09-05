@@ -13,7 +13,11 @@ const QnaItem = ({qnaId ,title, qnaDate, status }) => {
     const navigate = useNavigate();
     const targetDate = new Date(qnaDate);
     return (
-        <ListItem>
+        <ListItem
+            onClick={() => {
+                navigate('/qna/'+qnaId); // 네비게이션할 경로
+            }}
+        >
             <ListItemAvatar>
                 {status ? (
                     <CheckCircleIcon sx={{ color: '#4653f9' }} />
@@ -34,11 +38,7 @@ const QnaItem = ({qnaId ,title, qnaDate, status }) => {
                     },
                 }}
             />
-            <ListItemSecondaryAction
-                onClick={() => {
-                    navigate('/qna/'+qnaId); // 네비게이션할 경로
-                }}
-            >
+            <ListItemSecondaryAction>
                 <ChevronRightIcon sx={{ color: '#6E7072' }} />
             </ListItemSecondaryAction>
         </ListItem>
