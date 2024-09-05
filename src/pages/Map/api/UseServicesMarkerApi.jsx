@@ -2,29 +2,36 @@ import { useEffect, useState, useCallback, useContext } from 'react';
 import axios from 'axios';
 import { AllStateContext } from '../../../App';
 
-const useServicesMarkerApi = (state, activity) => {
+const useServicesMarkerApi = (state, activity, myState) => {
     const [servicesData, setServicesData] = useState(null);
     const [apiLoading, setApiLoading] = useState(false);
     const { protocol } = useContext(AllStateContext);
     const selectArea = localStorage.getItem('selectArea');
+    const token = localStorage.getItem('token');
 
-    // Build the query string based on the state
     const buildQueryString = useCallback(() => {
         const params = [];
         if (state.Tour) params.push('type=TouristAttraction');
         if (state.ACTIVITY) params.push('type=ACTIVITY');
         if (state.ETC) params.push('type=ETC');
         if (activity) params.push('type=ACTIVITY');
+        if (myState.myLike) params.push('myLike=true');
+        if (myState.myReview) params.push('myReview=true');
         return params.length > 0 ? `?${params.join('&')}` : '';
-    }, [state]);
+    }, [state, myState]);
 
     // Function to fetch service list data
     const fetchServiceList = useCallback(() => {
         const area = selectArea === 'Seoul' ? 'Seoul' : 'Jeju';
         setApiLoading(true);
         const queryString = buildQueryString();
+        console.log(queryString);
         axios
-            .get(`${protocol}services/servicesList/${area}${queryString}`)
+            .get(`${protocol}services/servicesList/${area}${queryString}`, {
+                headers: {
+                    Authorization: token,
+                },
+            })
             .then((res) => {
                 setServicesData(res.data);
                 console.log(res.data);

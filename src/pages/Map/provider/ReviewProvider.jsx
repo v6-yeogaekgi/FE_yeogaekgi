@@ -62,7 +62,7 @@ export const ReviewProvider = ({ children }) => {
                     score: item.score,
                 })),
             );
-
+            console.log(response.data);
             const totalScore = response.data.reduce(
                 (acc, curr) => acc + curr.score,
                 0,
