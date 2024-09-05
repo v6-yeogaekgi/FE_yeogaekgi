@@ -254,20 +254,21 @@ export default function TopUpInput({ cardData }) {
                     style: {
                         maxWidth: '400px',
                         width: '100%',
-                        height: '80%',
+                        height: '56%',
                         margin: '0 auto',
                     },
                 }}
             >
                 <Typography
                     variant="h6"
-                    sx={{ padding: 1, fontWeight: 'bold' }}
+                    sx={{ padding: 2, fontWeight: 'bold' }}
                 >
                     Terms and Conditions
                 </Typography>
                 <Divider sx={{ mb: 2, borderBottomWidth: 3 }} />
-                <Typography sx={{ whiteSpace: 'pre-wrap', padding: 1 }}>
-                    ✅ Notices when topping up with 'Wire Transfer' in the app{' '}
+                <Typography sx={{ whiteSpace: 'pre-wrap', paddingLeft: 2, paddingRight: 2  }}>
+                {/*<Typography sx={{ whiteSpace: 'pre-wrap', padding: 1 }}>*/}
+                    Notices when topping up with 'Wire Transfer' in the app{' '}
                     <br />
                     <br />※ Wire Transfer can be topped up with a minimum of
                     1,000 won <br />
