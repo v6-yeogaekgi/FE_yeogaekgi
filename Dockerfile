@@ -16,8 +16,5 @@ COPY . .
 # 3000번 포트 노출
 EXPOSE 3000
 
-# Node.js 메모리 할당 증가
-ENV NODE_OPTIONS="--max-old-space-size=4096"
-
 # npm start를 실행
 CMD ["npm", "start"]
