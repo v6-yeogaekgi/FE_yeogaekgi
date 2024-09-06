@@ -22,7 +22,7 @@ jobs:
         id: cache
         with:
           path: node_modules
-          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
           restore-keys: |
             ${{ runner.OS }}-node-
 
