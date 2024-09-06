@@ -55,16 +55,27 @@ const ReviewRegister = () => {
         });
 
         createReview(serviceId, reviewData)
-            .then(() => {
-                openAlertDialog(
-                    'Success!',
-                    'Your review has been successfully submitted',
-                    () => navigate(-1),
-                );
+            .then((data) => {
+                if (data === -1) {
+                    openAlertDialog(
+                        'Fail!',
+                        'You already registered Review!',
+                        () => navigate(-1),
+                    );
+                } else {
+                    console.log('Review created successfully:', data);
+                    openAlertDialog(
+                        'Success!',
+                        'Your review has been successfully submitted',
+                        () => navigate(-1),
+                    );
+                }
             })
             .catch((error) => {
-                openAlertDialog('Fail!', 'You already registered Review!', () =>
-                    navigate(-1),
+                openAlertDialog(
+                    'Fail!',
+                    'An error occurred while submitting your review!',
+                    () => navigate(-1),
                 );
             });
 
