@@ -45,6 +45,8 @@ import theme from './theme';
 import CssBaseline from '@mui/material/CssBaseline';
 import WriteReview from './pages/MyReviews/WriteReview';
 
+// cicd test3
+
 const PageLayout = ({ children, menuName, areas }) => {
     return (
         <Box
@@ -131,14 +133,7 @@ function App() {
                 <Router>
                     <ScrollToTop />
                     <Routes>
-                        <Route
-                            path={'/'}
-                            element={
-                                <FirstPage>
-                                    <First />
-                                </FirstPage>
-                            }
-                        />
+                        <Route path={'/'} element={<Login />} />
                         <Route
                             path={'/home'}
                             element={
@@ -156,17 +151,7 @@ function App() {
                             }
                         />
                         <Route
-                            path={'/map'}
-                            element={
-                                <PageLayout menuName={'Map'}>
-                                    <MapProvider>
-                                        <Map />
-                                    </MapProvider>
-                                </PageLayout>
-                            }
-                        />
-                        <Route
-                            path={'/map/:activity'}
+                            path={'/map/:activity?'}
                             element={
                                 <PageLayout menuName={'map'}>
                                     <MapProvider>
@@ -176,7 +161,9 @@ function App() {
                             }
                         />
                         <Route
-                            path={'/map/register/:serviceId/:name'}
+                            path={
+                                '/map/register/:serviceId/:name/:formatPayDate?'
+                            }
                             element={
                                 <PageLayout menuName={'Map'}>
                                     <SelectedProvider>
