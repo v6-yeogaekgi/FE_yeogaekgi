@@ -138,6 +138,11 @@ function Login() {
                                     href="#"
                                     sx={{
                                         fontFamily: 'Noto Sans',
+                                        color: 'gray',
+                                        textDecoration: 'none',
+                                        '&:hover': {
+                                            textDecoration: 'underline',
+                                        },
                                     }}
                                 >
                                     Forgot password?
@@ -148,6 +153,11 @@ function Login() {
                                     href="#"
                                     sx={{
                                         fontFamily: 'Noto Sans',
+                                        color: 'gray',
+                                        textDecoration: 'none',
+                                        '&:hover': {
+                                            textDecoration: 'underline',
+                                        },
                                     }}
                                 >
                                     Sign up
