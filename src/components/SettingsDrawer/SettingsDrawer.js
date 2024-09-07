@@ -186,7 +186,10 @@ const SettingsDrawer = ({ data, onCardDelete, onCardUpdate }) => {
             />
             <ConfirmDialog
                 title={'Delete Card'}
-                content={'Are you sure you want to delete the card?'}
+                content={data.status !== 0 && data.payBalance!==0?
+                    'You have a remaining balance. Are you sure you want to delete the card?':
+                    'Are you sure you want to delete the card?'
+            }
                 onAgree={() => {
                     handleCardDelete();
                 }}

@@ -18,6 +18,8 @@ import axios from 'axios';
 import { AllStateContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
 import BasicButton from '../../components/BasicButton/BasicButton';
+import useConfirmDialog from '../../hooks/useConfirmDialog/useConfirmDialog';
+import useAlertDialog from '../../hooks/useAlertDialog/useAlertDialog';
 
 const StyledTextField = styled(TextField)({
     '& .MuiInputBase-input': {
@@ -30,13 +32,13 @@ export default function Conversion({ data }) {
     const location = useLocation();
     const cardData = location.state?.data;
     const { payBalance, transitBalance, userCardId } = cardData;
-    // console.log(payBalance);
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
     const conversionUrl = protocol + 'transaction/conversion';
     const [transferAmount, setTransferAmount] = useState(0);
     const [transferType, setTransferType] = useState(0);
-    // console.log(transferType);
+    const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
+    const { openAlertDialog, AlertDialog } = useAlertDialog();
 
     const [leftSide, setLeftSide] = useState({
         label: 'Pay',
@@ -91,16 +93,16 @@ export default function Conversion({ data }) {
                     },
                 },
             )
-            .then(function (res) {
+            .then(function(res) {
                 if (res.ok) {
                     console.log('conversion success');
                     navigate('/wallet/detail', { state: { cardData } });
                 }
             })
-            .catch(function (error) {
+            .catch(function(error) {
                 console.log('axios api error');
             })
-            .then(function () {
+            .then(function() {
                 // always
                 navigate('/wallet/detail', { state: { cardData } });
             });
@@ -213,7 +215,7 @@ export default function Conversion({ data }) {
                                 variant="contained"
                                 text="Switch"
                                 startIcon={<SwapVert />}
-                                onClick={handleSwitch}                           
+                                onClick={handleSwitch}
                                 width="100%"
                                 // height=""
                             >
@@ -249,7 +251,14 @@ export default function Conversion({ data }) {
                             <BasicButton
                                 variant="contained"
                                 color="primary"
-                                onClick={handleTransfer}
+                                onClick={() => {
+                                    if (transferAmount === 0) {
+                                        openAlertDialog();
+                                    } else {
+                                        openConfirmDialog();
+                                    }
+
+                                }}
                                 text="Transfer"
                                 width="100%"
                                 // height=""
@@ -259,6 +268,41 @@ export default function Conversion({ data }) {
                     </Box>
                 </Box>
             </Box>
+            <AlertDialog
+                title={'Conversion'}
+                content={'Please enter the conversion amount'}
+            />
+            <ConfirmDialog
+                title={'Conversion'}
+                content={
+                    <>
+                        <Typography
+                            sx={{
+                                paddingBottom: '10px',
+                            }}
+                        >
+                            Are you sure you want to proceed with the conversion?
+                        </Typography>
+                        <Typography
+                            sx={{
+                                paddingBottom: '10px',
+                            }}
+                        >
+                            Conversion amount: {transferAmount.toLocaleString()}₩
+                        </Typography>
+                        <Typography
+                            variant={'h6'}
+                        >
+                            {leftSide.label}:
+                            ₩{(leftSide.balance - transferAmount).toLocaleString()} → {rightSide.label}:
+                            ₩{(rightSide.balance + transferAmount).toLocaleString()}
+                        </Typography>
+                    </>
+                }
+                onAgree={() => {
+                    handleTransfer();
+                }}
+            />
         </>
     );
 }

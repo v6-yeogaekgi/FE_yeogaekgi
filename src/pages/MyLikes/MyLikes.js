@@ -4,7 +4,7 @@ import { AllStateContext } from '../../App';
 import Box from '@mui/material/Box';
 import {
     CardActions,
-    CardHeader,
+    CardHeader, CircularProgress,
     IconButton,
     List,
     ListItem,
@@ -12,9 +12,9 @@ import {
     Paper,
     Typography,
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import MyLikeItem from './components/MyLikeItem';
 
 export default function MyLikes(props) {
     const { protocol } = useContext(AllStateContext);
@@ -22,18 +22,10 @@ export default function MyLikes(props) {
 
     const [data, setData] = useState([]); // Initialize with an empty array
     const [error, setError] = useState(null);
-
-    function typeFilter(type) {
-        if (type === 0) return 'All';
-
-        if (type === 1) return 'Tourist Attraction';
-
-        if (type === 2) return 'Activity';
-
-        return 'ETC';
-    }
+    const [loading, setLoading] = useState(false);
 
     const getApi = () => {
+        setLoading(true);
         axios
             .get(protocol + 'servicesLike/list', {
                 headers: {
@@ -60,7 +52,11 @@ export default function MyLikes(props) {
             })
             .catch((err) => {
                 console.error('API 요청 중 오류 발생:', err);
-            });
+            }).finally(
+            () => {
+                setLoading(false);
+            })
+        ;
     };
 
     const onDelete = (servicesLikeId) => {
@@ -94,61 +90,60 @@ export default function MyLikes(props) {
                 alignItems: 'center',
                 position: 'relative',
                 overflow: 'hidden',
-                backgroundColor: data.length === 0 ? 'white' : '#f0f4f8',
+                backgroundColor: '#f0f4f8',
             }}
         >
-            <Paper elevation={0} sx={{ marginTop: '10px' , width: '100%'}}>
-                {data.length > 0 ? (
-                    data.map((likeData, index) => (
+            <Paper elevation={0} sx={{
+                marginTop: '10px',
+                width: '90%',
+                backgroundColor: '#f0f4f8',
+            }}>
+                {!loading && (
+                    data.length > 0 ? (
+                        data.map((likeData, index) => (
+                            <MyLikeItem key={index} likeData={likeData} handleDelete={onDelete} />
+                        ))
+                    ) : (
                         <Card
                             sx={{
-                                margin: '15px',
+                                padding: '10px',
+                                boxShadow: 'none',
+                                borderRadius: 5,
+                                backgroundColor: '#ffffff',
+                                mb: 2,
+                                position: 'relative',
                             }}
                         >
-                            <CardHeader
-                                action={
-                                    <IconButton
-                                        aria-label="delete"
-                                        onClick={() =>
-                                            onDelete(likeData.servicesLikeId)
-                                        }
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-                                }
-                                title={likeData.name}
-                                subheader={typeFilter(likeData.type)}
-                            />
                             <CardContent>
                                 <Typography
                                     variant="body2"
-                                    sx={{ color: 'text.secondary' }}
+                                    sx={{ color: 'text.secondary', textAlign: 'center' }}
                                 >
-                                    {likeData.content}
+                                    No likes yet!
                                 </Typography>
                             </CardContent>
-                            <CardActions>
-                                <Typography
-                                    variant="body2"
-                                    sx={{ color: 'text.secondary' }}
-                                >
-                                    {likeData.address}
-                                </Typography>
-                            </CardActions>
                         </Card>
-                    ))
-                ) : (
-                    <div
-                        style={{
-                            backgroundColor: 'white',
-                            width: '100%',
-                            textAlign: 'center',
-                        }}
-                    >
-                        <h4>No likes yet!</h4>
-                    </div>
+                    )
                 )}
             </Paper>
+            {loading && (
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        zIndex: 1,
+                    }}
+                >
+                    <CircularProgress sx={{ color: '#4653f9' }} />
+                </Box>
+            )}
         </Box>
     );
 }
