@@ -133,14 +133,7 @@ function App() {
                 <Router>
                     <ScrollToTop />
                     <Routes>
-                        <Route
-                            path={'/'}
-                            element={
-                                <FirstPage>
-                                    <First />
-                                </FirstPage>
-                            }
-                        />
+                        <Route path={'/'} element={<Login />} />
                         <Route
                             path={'/home'}
                             element={
