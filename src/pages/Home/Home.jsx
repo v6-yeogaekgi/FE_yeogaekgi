@@ -143,6 +143,10 @@ const Home = () => {
         navigate('/home/currency');
     };
 
+    const handleCardClick = (cardData) => {
+        navigate('/wallet/detail', {state: {cardData}});
+    };
+
     return (
         <Box sx={STYLES.pageLayout}>
             <Box sx={STYLES.contentBox}>
@@ -157,7 +161,7 @@ const Home = () => {
                         {data &&
                             data.map((cardData, index) => (
                                 <SwiperSlide key={index}>
-                                    <HomeCardItem data={cardData} />
+                                    <HomeCardItem data={cardData} onCardClick={handleCardClick} />
                                 </SwiperSlide>
                             ))}
                     </Swiper>
