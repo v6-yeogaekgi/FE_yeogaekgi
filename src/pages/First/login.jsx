@@ -69,7 +69,6 @@ function Login() {
                 display: 'flex',
                 alignItems: 'center',
                 height: '90vh',
-                mr: 2,
             }}
         >
             <Container component="main" sx={{ width: '360px' }}>
