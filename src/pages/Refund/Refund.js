@@ -22,19 +22,19 @@ export default function Refund() {
     const [isAgreed, setIsAgreed] = useState(false);
     const [expanded, setExpanded] = useState(false);
     const { openAlertDialog, AlertDialog } = useAlertDialog();
+    const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
+
     const [alertContent, setAlertContent] = useState('');
 
     const navigate = useNavigate();
-
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
-    const uri = protocol + 'transaction/refund';
 
+    const uri = protocol + 'transaction/refund';
     const location = useLocation();
     const data = location.state?.data;
-    const fee = 3000;
 
-    const { openConfirmDialog, ConfirmDialog } = useConfirmDialog();
+    const fee = 3000;
 
     function getMemberCode() {
         return memberData.country.code;
@@ -62,7 +62,7 @@ export default function Refund() {
         return null;
     }
 
-    function getCurrencyType(){
+    function getCurrencyType() {
         if (getMemberCode() === 'US') return 0;
         if (getMemberCode() === 'JP') return 1;
         if (getMemberCode() === 'CN') return 2;
@@ -101,14 +101,8 @@ export default function Refund() {
         }
 
 
-        if (data.payBalance < 3000) {
+        if (data.payBalance < fee) {
             setAlertContent('The remaining card balance is less than the processing fee. Please check your balance and try again.');
-            openAlertDialog();
-            return;
-        }
-
-        if(data.transitBalance > 0) {
-            setAlertContent('Make sure there is no existing transit balance before refund.');
             openAlertDialog();
             return;
         }
@@ -179,7 +173,7 @@ export default function Refund() {
                         <Grid container spacing={2} sx={{ width: '100%', margin: 'auto', paddingTop: '20px' }}>
                             <Grid item xs={12}>
                                 <Typography component="h1"
-                                            variant="h5">Balance <b>₩{data.payBalance > fee ? fee.toLocaleString() : 0} </b></Typography>
+                                            variant="h5">Balance <b>₩{data.payBalance > fee ? data.payBalance.toLocaleString() : 0} </b></Typography>
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography component="h1" variant="h5">Fee <b>₩{fee.toLocaleString()}</b></Typography>
@@ -201,7 +195,6 @@ export default function Refund() {
                                         filterCurrency(),
                                     ).toFixed(filterToFixed())
                                 }
-                                    {/*{(data.payBalance - fee) < 0 ? 0 :((data.payBalance - fee)/10).toLocaleString()}*/}
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -301,60 +294,75 @@ export default function Refund() {
                                             <Typography> I agree to the above terms </Typography>
                                         </Box>
                                     </AccordionSummary>
-                                    <AccordionDetails sx={{ padding: '15px'}}>
-                                        <Typography sx={{fontSize:'12px'}}>
-                                            At Yeogaekgi, we are committed to ensuring a transparent and straightforward refund process for our prepaid card services. Please read our refund policy carefully to understand your rights and obligations regarding the refund of unused card balances.
+                                    <AccordionDetails sx={{ padding: '15px' }}>
+                                        <Typography sx={{ fontSize: '12px' }}>
+                                            At Yeogaekgi, we are committed to ensuring a transparent and straightforward
+                                            refund process for our prepaid card services. Please read our refund policy
+                                            carefully to understand your rights and obligations regarding the refund of
+                                            unused card balances.
                                         </Typography>
-                                        <Typography sx={{ marginTop: '10px', fontSize:'15px'}}>
+                                        <Typography sx={{ marginTop: '10px', fontSize: '15px' }}>
                                             1. Eligibility for Refunds
                                         </Typography>
-                                        <Typography sx={{fontSize:'12px'}}>
-                                            Refunds are available for the unused balance on your prepaid card under the following conditions:
+                                        <Typography sx={{ fontSize: '12px' }}>
+                                            Refunds are available for the unused balance on your prepaid card under the
+                                            following conditions:
                                         </Typography>
-                                        <Typography sx={{fontSize:'12px'}}>
-                                            • The remaining balance on the card is above the minimum refundable amount of 3,000 KRW.
+                                        <Typography sx={{ fontSize: '12px' }}>
+                                            • The remaining balance on the card is above the minimum refundable amount
+                                            of 3,000 KRW.
                                         </Typography>
-                                        <Typography sx={{fontSize:'12px'}}>
+                                        <Typography sx={{ fontSize: '12px' }}>
                                             • The prepaid card is active and has not expired.
                                         </Typography>
-                                        <Typography sx={{fontSize:'12px'}}>
+                                        <Typography sx={{ fontSize: '12px' }}>
                                             • The refund request is made by the registered cardholder.
                                         </Typography>
-                                        <Typography sx={{fontSize:'12px'}}>
-                                            Please note that if the remaining balance is below the minimum refundable amount, a refund may not be processed.
+                                        <Typography sx={{ fontSize: '12px' }}>
+                                            Please note that if the remaining balance is below the minimum refundable
+                                            amount, a refund may not be processed.
                                         </Typography>
-                                        <Typography sx={{ marginTop: '10px', fontSize:'15px'}}>
+                                        <Typography sx={{ marginTop: '10px', fontSize: '15px' }}>
                                             2. Refund Request Process
                                         </Typography>
-                                        <Typography sx={{fontSize:'12px'}}>
+                                        <Typography sx={{ fontSize: '12px' }}>
                                             To request a refund of the remaining balance on your prepaid card:
                                         </Typography>
-                                        <Typography sx={{fontSize:'12px'}}>
-                                            1. Contact our customer service team via our official website or customer service email.
+                                        <Typography sx={{ fontSize: '12px' }}>
+                                            1. Contact our customer service team via our official website or customer
+                                            service email.
                                         </Typography>
-                                        <Typography sx={{fontSize:'12px'}}>
-                                            2. Provide the necessary information, including your full name, contact information, prepaid card number, and the reason for the refund request.
+                                        <Typography sx={{ fontSize: '12px' }}>
+                                            2. Provide the necessary information, including your full name, contact
+                                            information, prepaid card number, and the reason for the refund request.
                                         </Typography>
-                                        <Typography sx={{fontSize:'12px'}}>
-                                            3. Submit a valid identification document to verify your identity as the registered cardholder.
+                                        <Typography sx={{ fontSize: '12px' }}>
+                                            3. Submit a valid identification document to verify your identity as the
+                                            registered cardholder.
                                         </Typography>
-                                        <Typography sx={{ marginTop: '10px', fontSize:'15px'}}>
+                                        <Typography sx={{ marginTop: '10px', fontSize: '15px' }}>
                                             3. Processing Time
                                         </Typography>
-                                        <Typography sx={{fontSize:'12px'}}>
-                                            Once we receive your refund request and all required information, we will review the request and provide a response within 3 business days. If the refund is approved, the remaining balance will be processed for a refund.
+                                        <Typography sx={{ fontSize: '12px' }}>
+                                            Once we receive your refund request and all required information, we will
+                                            review the request and provide a response within 3 business days. If the
+                                            refund is approved, the remaining balance will be processed for a refund.
                                         </Typography>
-                                        <Typography sx={{ marginTop: '10px', fontSize:'15px'}}>
+                                        <Typography sx={{ marginTop: '10px', fontSize: '15px' }}>
                                             4. Refund Fees
                                         </Typography>
-                                        <Typography sx={{fontSize:'12px'}}>
-                                            A non-refundable processing fee of 3,000 KRW will be deducted from the refundable balance. This fee is applied to cover the administrative costs associated with processing your refund.
+                                        <Typography sx={{ fontSize: '12px' }}>
+                                            A non-refundable processing fee of 3,000 KRW will be deducted from the
+                                            refundable balance. This fee is applied to cover the administrative costs
+                                            associated with processing your refund.
                                         </Typography>
-                                        <Typography sx={{ marginTop: '10px', fontSize:'15px'}}>
+                                        <Typography sx={{ marginTop: '10px', fontSize: '15px' }}>
                                             5. Policy Updates
                                         </Typography>
-                                        <Typography sx={{fontSize:'12px'}}>
-                                            yeogaekgi reserves the right to update or modify this refund policy at any time. Any changes will be posted on our website, and it is the customer's responsibility to review the policy periodically.
+                                        <Typography sx={{ fontSize: '12px' }}>
+                                            yeogaekgi reserves the right to update or modify this refund policy at any
+                                            time. Any changes will be posted on our website, and it is the customer's
+                                            responsibility to review the policy periodically.
                                         </Typography>
 
 
@@ -385,8 +393,36 @@ export default function Refund() {
                 </Box>
 
                 <ConfirmDialog
-                    title={"Refund"}
-                    content={"Are you sure you want to proceed with the refund"}
+                    title={'Refund'}
+                    content={
+                        data.transitBalance !== 0 ?
+                            <>
+                                <Typography
+                                    variant={'h5'}
+                                >
+                                    Please double check
+                                </Typography>
+                                <Typography
+                                    variant={'h6'}
+                                >
+                                    Your remaining transit balance
+                                </Typography>
+                                <Typography
+                                    variant={'h6'}
+                                    sx={{
+                                        paddingBottom: '10px',
+                                    }}
+                                >
+                                    ₩{data.transitBalance.toLocaleString()}
+                                </Typography>
+                                <Typography>
+                                    Are you sure you want to proceed with the refund, even though there is a remaining
+                                    balance on your transit card
+                                </Typography>
+                            </>
+                            :
+                            'Are you sure you want to proceed with the refund'
+                    }
                     onAgree={() => {
                         handleRefundClick();
                     }}
