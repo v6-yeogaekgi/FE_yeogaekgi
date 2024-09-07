@@ -17,11 +17,14 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import yeogakgi from '../../img/yeogakgi_full.png';
 import BasicButton from '../../components/BasicButton/BasicButton';
+import { CircularProgress } from '@mui/material';
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { protocol } = useContext(AllStateContext);
+    const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate();
 
     const getApiUrl = protocol + 'members/login';
@@ -36,6 +39,7 @@ function Login() {
         };
 
         try {
+            setLoading(true);
             const response = await axios.post(getApiUrl, data, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -54,6 +58,7 @@ function Login() {
             navigate('/home');
             console.log('로그', localStorage.getItem('member'));
         } catch (error) {
+            setLoading(false);
             console.error('API 호출 오류:', error);
         }
     };
@@ -167,6 +172,24 @@ function Login() {
                     </Box>
                 </Box>
             </Container>
+            {loading && (
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        zIndex: 1,
+                    }}
+                >
+                    <CircularProgress sx={{ color: '#4653f9' }} />
+                </Box>
+            )}
         </Box>
     );
 }
