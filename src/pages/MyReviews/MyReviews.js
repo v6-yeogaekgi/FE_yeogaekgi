@@ -20,7 +20,7 @@ import CardContent from '@mui/material/CardContent';
 import { format } from 'date-fns';
 import ImageSwiper from '../../components/ImageSwiper/ImageSwiper';
 
-export default function MyReviews(props) {
+export default function MyReviews() {
     const { protocol } = useContext(AllStateContext);
     const token = localStorage.getItem('token');
     const myReviewUrl = protocol + 'review/list';
@@ -111,7 +111,8 @@ export default function MyReviews(props) {
                     margin: 2,
                 }}
             >
-                <Alert
+                {unwrittens && unwrittens.length > 0 ? (
+                    <Alert
                     severity="info"
                     action={
                         <Button
@@ -126,7 +127,8 @@ export default function MyReviews(props) {
                     }
                 >
                     You can write reviews for {unwrittens.length} places!
-                </Alert>
+                </Alert>                    
+                ) : <></>}
             </Card>
             {reviews && reviews.length > 0 ? (
                 <>
