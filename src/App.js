@@ -45,6 +45,8 @@ import theme from './theme';
 import CssBaseline from '@mui/material/CssBaseline';
 import WriteReview from './pages/MyReviews/WriteReview';
 
+// cicd test3
+
 const PageLayout = ({ children, menuName, areas }) => {
     return (
         <Box
@@ -131,14 +133,7 @@ function App() {
                 <Router>
                     <ScrollToTop />
                     <Routes>
-                        <Route
-                            path={'/'}
-                            element={
-                                <FirstPage>
-                                    <First />
-                                </FirstPage>
-                            }
-                        />
+                        <Route path={'/'} element={<Login />} />
                         <Route
                             path={'/home'}
                             element={
