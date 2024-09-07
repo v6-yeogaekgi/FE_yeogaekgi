@@ -15,6 +15,8 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import yeogakgi from '../../img/yeogakgi_full.png';
+import BasicButton from '../../components/BasicButton/BasicButton';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -50,15 +52,22 @@ function Login() {
             const { user } = memberDetailsResponse.data;
             localStorage.setItem('member', JSON.stringify(user));
             navigate('/home');
-            console.log("로그", localStorage.getItem('member'));
+            console.log('로그', localStorage.getItem('member'));
         } catch (error) {
             console.error('API 호출 오류:', error);
         }
     };
 
     return (
-        <div>
-            <Container component="main" maxWidth="xs">
+        <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '90vh',
+            }}
+        >
+            <Container component="main" sx={{ width: '360px' }}>
                 <Box
                     sx={{
                         marginTop: 8,
@@ -67,12 +76,12 @@ function Login() {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Sign in
-                    </Typography>
+                    <img
+                        src={yeogakgi} // 여기에 이미지 경로를 넣으세요
+                        alt="yeogakgi"
+                        style={{ width: 360 }}
+                    />
+
                     <Box
                         component="form"
                         onSubmit={handleSubmit}
@@ -89,6 +98,13 @@ function Login() {
                             margin="normal"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            InputProps={{
+                                sx: {
+                                    borderRadius: 5,
+                                    backgroundColor: 'white',
+                                    fontFamily: 'Noto Sans',
+                                },
+                            }}
                         />
                         <TextField
                             margin="normal"
@@ -100,33 +116,48 @@ function Login() {
                             autoComplete="current-password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            InputProps={{
+                                sx: {
+                                    borderRadius: 5,
+                                    backgroundColor: 'white',
+                                    fontFamily: 'Noto Sans',
+                                },
+                            }}
                         />
-                        <FormControlLabel
-                            control={
-                                <Checkbox value="remember" color="primary" />
-                            }
-                            label="Remember me"
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            Sign In
-                        </Button>
-                        <Grid container>
+
+                        <BasicButton
+                            type={'submit'}
+                            text={'Sign In'}
+                            size={'small'}
+                            width={'100%'}
+                            variant={'contained'}
+                        ></BasicButton>
+                        <Grid container sx={{ mt: 2 }}>
                             <Grid item xs>
-                                <Link href="#">Forgot password?</Link>
+                                <Link
+                                    href="#"
+                                    sx={{
+                                        fontFamily: 'Noto Sans',
+                                    }}
+                                >
+                                    Forgot password?
+                                </Link>
                             </Grid>
                             <Grid item>
-                                <Link href="#">Sign up</Link>
+                                <Link
+                                    href="#"
+                                    sx={{
+                                        fontFamily: 'Noto Sans',
+                                    }}
+                                >
+                                    Sign up
+                                </Link>
                             </Grid>
                         </Grid>
                     </Box>
                 </Box>
             </Container>
-        </div>
+        </Box>
     );
 }
 
