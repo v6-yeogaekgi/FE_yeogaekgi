@@ -11,7 +11,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import StarCheckbox from '../../../components/StarCheckbox/StarCheckBox';
 
-const HomeCardItem = ({ data }) => {
+const HomeCardItem = ({ data, onCardClick }) => {
 
     const navigate = useNavigate();
     const [cardData, setCardData] = useState(data);
@@ -33,6 +33,18 @@ const HomeCardItem = ({ data }) => {
         navigate('/wallet/detail', { state: { cardData } });
     }
 
+    const handleCardClick = (e) => {
+        e.stopPropagation();
+        if(e.target.closest('.star-checkbox') || e.target.closest('.conversion-btn') || e.target.closest('.top-up-btn')) {
+            return;
+        } else {
+            if(onCardClick) {
+                onCardClick(data);
+            }
+        }
+
+    }
+
     return (
         <Box
             sx={{
@@ -49,6 +61,7 @@ const HomeCardItem = ({ data }) => {
                     boxShadow: 'none',
                     borderRadius: 5,
                 }}
+                onClick={handleCardClick}
             >
                 <CardContent
                     sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}
@@ -89,7 +102,7 @@ const HomeCardItem = ({ data }) => {
                                     </Typography>
                                 </Grid>
 
-                                <Grid item xs={2}>
+                                <Grid item xs={2} className='star-checkbox'>
                                     <StarCheckbox initialChecked={starred === 1} userCardId={userCardId} isActive={status === 1}/>
                                 </Grid>
                             </Grid>
@@ -130,7 +143,7 @@ const HomeCardItem = ({ data }) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                        <Grid item xs={6}>
+                        <Grid item xs={6} className='top-up-btn'>
                             <Button
                                 variant="contained"
                                 sx={{
@@ -151,7 +164,7 @@ const HomeCardItem = ({ data }) => {
                                 Top Up
                             </Button>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={6} className='conversion-btn'>
                             <Button
                                 variant="contained"
                                 sx={{
