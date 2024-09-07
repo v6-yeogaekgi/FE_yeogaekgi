@@ -58,11 +58,7 @@ const StyledMenu = styled((props) => (
 export default function AreaMenu({ areas }) {
     // console.log("areamenu: ", areas);
     // console.log("localstorage select area: ", localStorage.getItem('selectArea'));
-    const [selectArea, setSelectArea] = useState(
-        localStorage.getItem('selectArea') || areas[0],
-    );
-    // const selectArea = localStorage.getItem('selectArea');
-    // const [area, setArea] = useState(areas);
+    const [selectArea, setSelectArea] = useState(localStorage.getItem('selectArea') || areas[0]);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
@@ -77,7 +73,7 @@ export default function AreaMenu({ areas }) {
     const handleMenuItemClick = (item) => {
         setSelectArea(item);
         localStorage.setItem('selectArea', item);
-        console.log(selectArea);
+        console.log('handleMenuItemClick', selectArea);
         handleClose();
 
         // 커스텀 이벤트 발생
