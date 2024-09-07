@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useMap } from '../provider/MapProvider';
 import { IconButton, Menu, Tooltip } from '@mui/material';
@@ -25,6 +23,48 @@ export default function MapMarkerCheck() {
     } = useMap();
 
     const { Tour, ACTIVITY, ETC } = state;
+    useEffect(() => {}, [state]);
+    const FilterButton = ({ name, checked, color, label }) => (
+        <Box
+            onClick={() =>
+                handleFilterChange({ target: { name, checked: !checked } })
+            }
+            sx={{
+                backgroundColor: checked ? '#AAAAAA' : color,
+                display: 'flex',
+                alignItems: 'center',
+                mr: 1,
+                borderRadius: '15px',
+                width: 'auto',
+                height: '20px',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s',
+                '&:hover': {
+                    opacity: 0.8,
+                },
+            }}
+        >
+            &nbsp; &nbsp;
+            <LocationOnIcon
+                fontSize="small"
+                sx={{
+                    color: '#FFFFFF',
+                    mr: 0.5,
+                }}
+            />
+            <span
+                style={{
+                    fontSize: '0.75rem',
+                    color: '#fff',
+                    fontWeight: 'bold',
+                    marginRight: '8px',
+                }}
+            >
+                {label}
+            </span>
+            &nbsp; &nbsp;
+        </Box>
+    );
 
     return (
         <Box
@@ -38,160 +78,33 @@ export default function MapMarkerCheck() {
                 position: 'absolute',
             }}
         >
-            {/* FormControl Section */}
             <FormControl
                 component="fieldset"
                 variant="standard"
                 sx={{ display: 'inline-block' }}
             >
                 <FormGroup row>
-                    {/* Tour Checkbox */}
-                    <Box
-                        sx={{
-                            backgroundColor: '#5356FF',
-                            display: 'flex',
-                            alignItems: 'center',
-                            mr: 1,
-                            borderRadius: '15px',
-                            width: 'auto',
-                            height: '20px',
-                        }}
-                    >
-                        &nbsp; &nbsp;
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={Tour}
-                                    onChange={handleFilterChange}
-                                    name="Tour"
-                                    icon={
-                                        <LocationOnIcon
-                                            fontSize="small"
-                                            sx={{
-                                                color: '#DFF5FF',
-                                            }}
-                                        />
-                                    }
-                                    checkedIcon={
-                                        <LocationOnIcon
-                                            fontSize="small"
-                                            sx={{
-                                                color: '#AAAAAA',
-                                            }}
-                                        />
-                                    }
-                                />
-                            }
-                            label="Tour"
-                            sx={{
-                                '& .MuiTypography-root': {
-                                    fontSize: '0.75rem',
-                                    color: '#fff',
-                                    fontWeight: 'bold',
-                                },
-                            }}
-                        />
-                    </Box>
-
-                    {/* ACTIVITY Checkbox */}
-                    <Box
-                        sx={{
-                            backgroundColor: '#378CE7',
-                            display: 'flex',
-                            alignItems: 'center',
-                            mr: 1,
-                            borderRadius: '15px',
-                            width: 'auto',
-                            height: '20px',
-                        }}
-                    >
-                        &nbsp; &nbsp;
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={ACTIVITY}
-                                    onChange={handleFilterChange}
-                                    name="ACTIVITY"
-                                    icon={
-                                        <LocationOnIcon
-                                            fontSize="small"
-                                            sx={{
-                                                color: '#DFF5FF',
-                                            }}
-                                        />
-                                    }
-                                    checkedIcon={
-                                        <LocationOnIcon
-                                            fontSize="small"
-                                            sx={{
-                                                color: '#AAAAAA',
-                                            }}
-                                        />
-                                    }
-                                />
-                            }
-                            label="ACTIVITY"
-                            sx={{
-                                '& .MuiTypography-root': {
-                                    fontSize: '0.75rem',
-                                    color: '#fff',
-                                    fontWeight: 'bold',
-                                },
-                            }}
-                        />
-                    </Box>
-
-                    {/* ETC Checkbox */}
-                    <Box
-                        sx={{
-                            backgroundColor: '#67C6E3',
-                            display: 'flex',
-                            alignItems: 'center',
-                            mr: 1,
-                            borderRadius: '15px',
-                            width: 'auto',
-                            height: '20px',
-                        }}
-                    >
-                        &nbsp; &nbsp;
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={ETC}
-                                    onChange={handleFilterChange}
-                                    name="ETC"
-                                    icon={
-                                        <LocationOnIcon
-                                            fontSize="small"
-                                            sx={{
-                                                color: '#DFF5FF',
-                                            }}
-                                        />
-                                    }
-                                    checkedIcon={
-                                        <LocationOnIcon
-                                            fontSize="small"
-                                            sx={{
-                                                color: '#AAAAAA',
-                                            }}
-                                        />
-                                    }
-                                />
-                            }
-                            label="ETC"
-                            sx={{
-                                '& .MuiTypography-root': {
-                                    fontSize: '0.75rem',
-                                    color: '#fff',
-                                    fontWeight: 'bold',
-                                },
-                            }}
-                        />
-                    </Box>
+                    <FilterButton
+                        name="Tour"
+                        checked={Tour}
+                        color="#5356FF"
+                        label="Tour"
+                    />
+                    <FilterButton
+                        name="ACTIVITY"
+                        checked={ACTIVITY}
+                        color="#378CE7"
+                        label="ACTIVITY"
+                    />
+                    <FilterButton
+                        name="ETC"
+                        checked={ETC}
+                        color="#67C6E3"
+                        label="ETC"
+                    />
                 </FormGroup>
             </FormControl>
 
-            {/* Tooltip Section */}
             <Tooltip title="Account settings">
                 <IconButton
                     onClick={handleClick}
@@ -212,7 +125,7 @@ export default function MapMarkerCheck() {
                             height: 40,
                             fontSize: '16px',
                             fontWeight: 'bold',
-                            backgroundColor: '#007AFF', // 아이폰 스타일의 파란색
+                            backgroundColor: '#007AFF',
                             color: 'white',
                         }}
                     >
@@ -221,7 +134,6 @@ export default function MapMarkerCheck() {
                 </IconButton>
             </Tooltip>
 
-            {/* Menu Section */}
             <Menu
                 anchorEl={anchorEl}
                 id="account-menu"
@@ -230,8 +142,8 @@ export default function MapMarkerCheck() {
                 onClick={handleFilter}
                 PaperProps={{
                     sx: {
-                        backgroundColor: 'transparent', // 메뉴 배경 제거
-                        boxShadow: 'none', // 그림자 제거
+                        backgroundColor: 'transparent',
+                        boxShadow: 'none',
                         '& .MuiList-root': {
                             padding: 0,
                         },
@@ -252,14 +164,14 @@ export default function MapMarkerCheck() {
                         justifyContent: 'center',
                         padding: '10px',
                         '&:hover': {
-                            backgroundColor: 'transparent', // hover시 배경색 제거
+                            backgroundColor: 'transparent',
                         },
                     }}
                 >
                     <FavoriteIcon
                         sx={{
-                            color: '#FF3B30', // 하트 빨간색
-                            fontSize: 30, // 크기를 키움
+                            color: '#FF3B30',
+                            fontSize: 30,
                         }}
                     />
                 </MenuItem>
@@ -269,14 +181,14 @@ export default function MapMarkerCheck() {
                         justifyContent: 'center',
                         padding: '10px',
                         '&:hover': {
-                            backgroundColor: 'transparent', // hover시 배경색 제거
+                            backgroundColor: 'transparent',
                         },
                     }}
                 >
                     <RateReviewIcon
                         sx={{
-                            color: '#4CD964', // 리뷰 아이콘 초록색
-                            fontSize: 30, // 크기를 키움
+                            color: '#4CD964',
+                            fontSize: 30,
                         }}
                     />
                 </MenuItem>
