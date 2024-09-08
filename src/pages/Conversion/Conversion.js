@@ -288,7 +288,7 @@ export default function Conversion({ data }) {
                                 paddingBottom: '10px',
                             }}
                         >
-                            Conversion amount: {transferAmount.toLocaleString()}₩
+                            Conversion amount: ₩{transferAmount.toLocaleString()}
                         </Typography>
                         <Typography
                             variant={'h6'}
