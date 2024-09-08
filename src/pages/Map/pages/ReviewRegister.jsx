@@ -3,15 +3,19 @@ import { Badge, Box, IconButton, Rating, Typography } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import { useReview } from '../provider/ReviewProvider';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import BasicButton from '../../../components/BasicButton/BasicButton';
 import useAlertDialog from '../../../hooks/useAlertDialog/useAlertDialog'; // useAlertDialog import
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 
 const ReviewRegister = () => {
+    const location = useLocation();
+    const data = location.state?.data;
+    console.log("review register data: ", data);
+
     const [content, setContent] = useState('');
     const [images, setImages] = useState([]);
-    const { serviceId, name, formatPayDate } = useParams();
+    const { payNo, serviceNo, serviceName, formatPayDate } = data;
     const { createReview } = useReview();
     const [score, setScore] = useState(0);
     const inputRef = useRef();
@@ -49,22 +53,23 @@ const ReviewRegister = () => {
         const reviewData = new FormData();
         reviewData.append('content', content);
         reviewData.append('score', score);
+        reviewData.append('payNo', payNo);
 
         images.forEach((image) => {
             reviewData.append('files', image);
         });
 
-        createReview(serviceId, reviewData)
+        createReview(serviceNo, reviewData)
             .then(() => {
                 openAlertDialog(
                     'Success!',
                     'Your review has been successfully submitted',
-                    () => navigate(-1),
+                    () => navigate('/mypage/review'),
                 );
             })
             .catch((error) => {
                 openAlertDialog('Fail!', 'You already registered Review!', () =>
-                    navigate(-1),
+                    navigate('/mypage/review'),
                 );
             });
 
@@ -104,7 +109,7 @@ const ReviewRegister = () => {
                         display: 'inline-block',
                     }}
                 >
-                    {name}
+                    {serviceName}
                 </Typography>
             </Box>
             <Rating

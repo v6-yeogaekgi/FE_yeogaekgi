@@ -14,6 +14,7 @@ import {
     Divider,
     Alert,
     Button,
+    CircularProgress,
 } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -29,6 +30,7 @@ export default function MyReviews() {
     const [reviews, setReviews] = useState([]);
     const [unwrittens, setUnwrittens] = useState([]);
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     function formatReviewDates(reviews) {
         return reviews.map((review) => ({
@@ -53,7 +55,8 @@ export default function MyReviews() {
         navigate('/mypage/review/write', { state: { unwrittens } });
     }
 
-    useEffect(() => {
+    const getMyReviews = () => {
+        setLoading(true);
         axios
             .post(
                 myReviewUrl,
@@ -73,10 +76,13 @@ export default function MyReviews() {
             })
             .catch(function (error) {
                 console.error('reviews - axios post error:', error);
+            })
+            .finally(() => {
+                setLoading(false);
             });
-    }, []);
+    };
 
-    useEffect(() => {
+    const getUnwrittenReviews = () => {
         axios
             .get(getUnwrittenUrl, {
                 headers: {
@@ -92,12 +98,62 @@ export default function MyReviews() {
             })
             .catch(function (err) {
                 console.error('get unwritten - axios get error: ', err);
+            })
+            .finally(() => {
+                setLoading(false);
             });
-    }, []);
+    };
+
+    // useEffect(() => {
+    //     axios
+    //         .post(
+    //             myReviewUrl,
+    //             {},
+    //             {
+    //                 headers: {
+    //                     Authorization: token,
+    //                     'Content-Type': 'application/json',
+    //                 },
+    //             },
+    //         )
+    //         .then(function (res) {
+    //             if (res.data) {
+    //                 const formattedReviews = formatReviewDates(res.data);
+    //                 setReviews(formattedReviews);
+    //             }
+    //         })
+    //         .catch(function (error) {
+    //             console.error('reviews - axios post error:', error);
+    //         });
+    // }, []);
+
+    // useEffect(() => {
+    //     axios
+    //         .get(getUnwrittenUrl, {
+    //             headers: {
+    //                 Authorization: token,
+    //                 'Content-Type': 'application/json',
+    //             },
+    //         })
+    //         .then(function (res) {
+    //             if (res.data) {
+    //                 const formattedUnwritten = formatUnwrittenDates(res.data);
+    //                 setUnwrittens(formattedUnwritten);
+    //             }
+    //         })
+    //         .catch(function (err) {
+    //             console.error('get unwritten - axios get error: ', err);
+    //         });
+    // }, []);
 
     // useEffect(() => {
     //     console.log('current reviews state:', reviews);
     // }, [reviews]);
+
+    useEffect(() => {
+        getMyReviews();
+        getUnwrittenReviews();
+    }, []);
 
     return (
         <>
@@ -113,24 +169,26 @@ export default function MyReviews() {
             >
                 {unwrittens && unwrittens.length > 0 ? (
                     <Alert
-                    severity="info"
-                    action={
-                        <Button
-                            color="inherit"
-                            size="small"
-                            variant="outlined"
-                            onClick={onWriteReview}
-                            sx={{marginTop: '10px', marginRight: '10px'}}
-                        >
-                            GO
-                        </Button>
-                    }
-                >
-                    You can write reviews for {unwrittens.length} places!
-                </Alert>                    
-                ) : <></>}
+                        severity="info"
+                        action={
+                            <Button
+                                color="inherit"
+                                size="small"
+                                variant="outlined"
+                                onClick={onWriteReview}
+                                sx={{ marginTop: '10px', marginRight: '10px' }}
+                            >
+                                GO
+                            </Button>
+                        }
+                    >
+                        You can write reviews for {unwrittens.length} places!
+                    </Alert>
+                ) : (
+                    <></>
+                )}
             </Card>
-            {reviews && reviews.length > 0 ? (
+            {!loading && reviews.length > 0 ? (
                 <>
                     {reviews.map((review, index) => (
                         <Card
@@ -196,15 +254,47 @@ export default function MyReviews() {
                     ))}
                 </>
             ) : (
-                <div
-                    style={{
-                        backgroundColor: 'white',
-                        width: '100%',
-                        textAlign: 'center',
+                <Card
+                    sx={{
+                        padding: '40px',
+                        margin: 2,
+                        boxShadow: 'none',
+                        borderRadius: 5,
+                        backgroundColor: '#ffffff',
+                        mb: 2,
+                        position: 'relative',
                     }}
                 >
-                    <h4>No reviews written yet!</h4>
-                </div>
+                    <CardContent>
+                        <Typography
+                            variant="body2"
+                            sx={{
+                                color: 'text.secondary',
+                                textAlign: 'center',
+                            }}
+                        >
+                            No reviews written yet!
+                        </Typography>
+                    </CardContent>
+                </Card>
+            )}
+            {loading && (
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        zIndex: 1,
+                    }}
+                >
+                    <CircularProgress sx={{ color: '#4653f9' }} />
+                </Box>
             )}
         </>
     );
