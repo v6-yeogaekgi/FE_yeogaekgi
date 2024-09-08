@@ -50,6 +50,9 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: build.tar.gz
           target: /tmp
+        
+      - name: Verify build.tar.gz exists
+        run: ls -l build.tar.gz
 
       - name: Deploy to /var/www/html
         uses: appleboy/ssh-action@master
