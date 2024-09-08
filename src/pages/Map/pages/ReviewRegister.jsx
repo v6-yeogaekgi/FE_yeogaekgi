@@ -10,12 +10,19 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 
 const ReviewRegister = () => {
     const location = useLocation();
-    const data = location.state?.data;
-    console.log("review register data: ", data);
+    const { name, serviceId } = useParams();
+    const data = {
+        serviceName: location.state?.data?.serviceName ?? name,
+        serviceNo: location.state?.data?.serviceNo ?? serviceId,
+        payNo: location.state?.data?.payNo,
+        formatPayDate: location.state?.data?.formatPayDate,
+    };
+    console.log('review register data: ', data);
 
     const [content, setContent] = useState('');
     const [images, setImages] = useState([]);
     const { payNo, serviceNo, serviceName, formatPayDate } = data;
+
     const { createReview } = useReview();
     const [score, setScore] = useState(0);
     const inputRef = useRef();
@@ -53,8 +60,9 @@ const ReviewRegister = () => {
         const reviewData = new FormData();
         reviewData.append('content', content);
         reviewData.append('score', score);
-        reviewData.append('payNo', payNo);
-
+        if (payNo) {
+            reviewData.append('payNo', payNo);
+        }
         images.forEach((image) => {
             reviewData.append('files', image);
         });
@@ -64,12 +72,15 @@ const ReviewRegister = () => {
                 openAlertDialog(
                     'Success!',
                     'Your review has been successfully submitted',
-                    () => navigate('/mypage/review', {state: {refresh: true}}),
+                    () =>
+                        navigate('/mypage/review', {
+                            state: { refresh: true },
+                        }),
                 );
             })
             .catch((error) => {
                 openAlertDialog('Fail!', 'You already registered Review!', () =>
-                    navigate('/mypage/review', {state: {refresh: true}}),
+                    navigate('/mypage/review', { state: { refresh: true } }),
                 );
             });
 

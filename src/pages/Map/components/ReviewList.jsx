@@ -113,7 +113,7 @@ const ReviewList = () => {
 
     const handleTranslate = async (reviewId, content, lang) => {
         const isTranslated = translationStates[reviewId]?.isTranslated;
-
+        console.log(reviewId, content, lang);
         if (isTranslated) {
             setTranslationStates((prev) => ({
                 ...prev,
@@ -132,6 +132,7 @@ const ReviewList = () => {
                         translatedContent: translatedContentText,
                     },
                 }));
+                console.log(translatedContentText);
             } catch (error) {
                 dialog.alert.openAlertDialog(
                     'Translation Failed',
@@ -240,7 +241,7 @@ const ReviewList = () => {
                         <Typography
                             variant="body2"
                             color="text.secondary"
-                            fontSize={'20px'}
+                            fontSize={'15px'}
                         >
                             {translationStates[review.reviewId]?.isTranslated
                                 ? translationStates[review.reviewId]
@@ -257,7 +258,7 @@ const ReviewList = () => {
                             justifyContent: 'space-between',
                         }}
                     >
-                        <Typography fontSize={'15px'} color="text.secondary">
+                        <Typography fontSize={'12px'} color="text.secondary">
                             {review.modDate.substring(0, 10)}
                         </Typography>
                         <Button
@@ -283,7 +284,7 @@ const ReviewList = () => {
                                 handleTranslate(
                                     review.reviewId,
                                     review.content,
-                                    review.country.code,
+                                    user.country.code,
                                 )
                             }
                         />

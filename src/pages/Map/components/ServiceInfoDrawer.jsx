@@ -72,8 +72,9 @@ const ServiceInfoDrawer = () => {
     }, [img, avgScore]);
 
     const handleNavigateToRegister = () => {
-        const name = selectedServiceInfo.name;
-        navigate(`/map/register/${selectedService}/${name}`);
+        const name = selectedServiceInfo.name; // service name
+        const serviceId = selectedService;
+        navigate(`/map/register/${name}/${serviceId}`);
     };
 
     const toggleInfoExpansion = () => {

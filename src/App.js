@@ -161,9 +161,7 @@ function App() {
                             }
                         />
                         <Route
-                            path={
-                                '/map/register'
-                            }
+                            path={'/map/register/:name?/:serviceId?'}
                             element={
                                 <PageLayout menuName={'Map'}>
                                     <SelectedProvider>
