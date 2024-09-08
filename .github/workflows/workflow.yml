@@ -50,4 +50,5 @@ jobs:
             # Remove old files from /var/www/html
             sudo rm -rf /var/www/html/*
             # Copy new build files
-            sudo rsync -avz -e "ssh -i ${{ secrets.SSH_KEY }} -o StrictHostKeyChecking=no" ./build/ ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:/var/www/html/
+            scp -i ${{ secrets.SSH_KEY }} -r ./build/* ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:/var/www/html/
+            # sudo rsync -avz -e "ssh -i ${{ secrets.SSH_KEY }} -o StrictHostKeyChecking=no" ./build/ ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:/var/www/html/
