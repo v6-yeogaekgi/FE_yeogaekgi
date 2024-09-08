@@ -13,11 +13,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 
 export default function RecentVisit({ data }) {
-    const { serviceNo, serviceName, payPrice, formatPayDate } = data;
+    const { payNo, serviceNo, serviceName, payPrice, formatPayDate } = data;
     const navigate = useNavigate();
+    
     const handleClick = () => {
-        navigate(`/map/register/${serviceNo}/${serviceName}/${formatPayDate}`);
+        navigate('/map/register', {state: {data}});
     };
+
     return (
         <Card
             key={serviceNo}

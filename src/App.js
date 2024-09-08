@@ -162,7 +162,7 @@ function App() {
                         />
                         <Route
                             path={
-                                '/map/register/:serviceId/:name/:formatPayDate?'
+                                '/map/register'
                             }
                             element={
                                 <PageLayout menuName={'Map'}>
