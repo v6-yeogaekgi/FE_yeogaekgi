@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AllStateContext } from '../../App';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
     Box,
     List,
@@ -27,6 +27,8 @@ export default function MyReviews() {
     const myReviewUrl = protocol + 'review/list';
     const getUnwrittenUrl =
         protocol + 'wallet/detail/getPaymentsWithoutReviews';
+    const location = useLocation();
+
     const [reviews, setReviews] = useState([]);
     const [unwrittens, setUnwrittens] = useState([]);
     const navigate = useNavigate();
@@ -102,58 +104,12 @@ export default function MyReviews() {
             .finally(() => {
                 setLoading(false);
             });
-    };
-
-    // useEffect(() => {
-    //     axios
-    //         .post(
-    //             myReviewUrl,
-    //             {},
-    //             {
-    //                 headers: {
-    //                     Authorization: token,
-    //                     'Content-Type': 'application/json',
-    //                 },
-    //             },
-    //         )
-    //         .then(function (res) {
-    //             if (res.data) {
-    //                 const formattedReviews = formatReviewDates(res.data);
-    //                 setReviews(formattedReviews);
-    //             }
-    //         })
-    //         .catch(function (error) {
-    //             console.error('reviews - axios post error:', error);
-    //         });
-    // }, []);
-
-    // useEffect(() => {
-    //     axios
-    //         .get(getUnwrittenUrl, {
-    //             headers: {
-    //                 Authorization: token,
-    //                 'Content-Type': 'application/json',
-    //             },
-    //         })
-    //         .then(function (res) {
-    //             if (res.data) {
-    //                 const formattedUnwritten = formatUnwrittenDates(res.data);
-    //                 setUnwrittens(formattedUnwritten);
-    //             }
-    //         })
-    //         .catch(function (err) {
-    //             console.error('get unwritten - axios get error: ', err);
-    //         });
-    // }, []);
-
-    // useEffect(() => {
-    //     console.log('current reviews state:', reviews);
-    // }, [reviews]);
+    };  
 
     useEffect(() => {
         getMyReviews();
         getUnwrittenReviews();
-    }, []);
+    }, [location.key]);
 
     return (
         <>

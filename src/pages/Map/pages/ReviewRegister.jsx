@@ -64,12 +64,12 @@ const ReviewRegister = () => {
                 openAlertDialog(
                     'Success!',
                     'Your review has been successfully submitted',
-                    () => navigate('/mypage/review'),
+                    () => navigate('/mypage/review', {state: {refresh: true}}),
                 );
             })
             .catch((error) => {
                 openAlertDialog('Fail!', 'You already registered Review!', () =>
-                    navigate('/mypage/review'),
+                    navigate('/mypage/review', {state: {refresh: true}}),
                 );
             });
 
