@@ -39,6 +39,11 @@ jobs:
         env:
           CI: false
 
+      - name: Add server to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
         if: contains(github.ref, 'develop')
