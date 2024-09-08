@@ -38,8 +38,8 @@ jobs:
         run: npm run build
         env:
           CI: false
-          
-      - name: remove old file from EC2
+
+      - name: Deploy to Server
         uses: appleboy/ssh-action@master
         if: contains(github.ref, 'develop')
         with:
@@ -49,31 +49,5 @@ jobs:
           script: |
             # Remove old files from /var/www/html
             sudo rm -rf /var/www/html/*
-            
-      - name: scp to EC2
-        uses: appleboy/scp-action@master
-        if: contains(github.ref, 'develop')
-        with:
-          host: ${{ secrets.HOST }}
-          username: ubuntu
-          key: ${{ secrets.SSH_KEY }}
-          source: client/build/*
-          target: /var/www/html
-
-      # - name: Add server to known_hosts
-      #   run: |
-      #     mkdir -p ~/.ssh
-      #     ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-
-      # - name: Deploy to Server
-      #   uses: appleboy/ssh-action@master
-      #   if: contains(github.ref, 'develop')
-      #   with:
-      #     host: ${{ secrets.HOST }}
-      #     username: ${{ secrets.SSH_USER }}
-      #     key: ${{ secrets.SSH_KEY }}
-      #     script: |
-      #       # Remove old files from /var/www/html
-      #       sudo rm -rf /var/www/html/*
-      #       # Copy new build files
-      #       rsync -avz --delete -e "ssh -i ${{ secrets.SSH_KEY }} -o StrictHostKeyChecking=no" ./build/ ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:/var/www/html/
+            # Copy new build files
+            sudo rsync -avz -e "ssh -i ${{ secrets.SSH_KEY }} -o StrictHostKeyChecking=no" ./build/ ubuntu@${{ secrets.HOST }}:/var/www/html/
