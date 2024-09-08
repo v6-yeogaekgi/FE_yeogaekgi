@@ -55,7 +55,7 @@ jobs:
         if: contains(github.ref, 'develop')
         with:
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USER }}
+          username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           source: client/build/*
           target: /var/www/html
