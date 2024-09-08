@@ -8,15 +8,10 @@ import { useParams } from 'react-router-dom';
 
 const ServicesMapShow = () => {
     const mapRef = useRef(null);
-    const { activity } = useParams();
     const { state, myState } = useMap();
     const { handleServiceSelect } = useSelected();
     const { currentMyLocation, locationLoading } = useGeolocation();
-    const { servicesData, apiLoading } = useServicesMarkerApi(
-        state,
-        activity,
-        myState,
-    );
+    const { servicesData, apiLoading } = useServicesMarkerApi(state, myState);
     const { naver } = window;
     const [map, setMap] = useState(null);
     const [markers, setMarkers] = useState([]);
