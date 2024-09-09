@@ -43,32 +43,18 @@ jobs:
         run: tar -czvf build.tar.gz -C build .
 
       - name: Transfer build to EC2
+        uses: appleboy/scp-action@master
         if: contains(github.ref, 'develop')
-        id: transfer
-        run: |
-          max_attempts=3
-          attempt=0
-          success=false
-          while [ $attempt -lt $max_attempts ]; do
-            echo "Starting SCP transfer (Attempt $((attempt+1)))..."
-            scp -i ${{ secrets.SSH_KEY }} build.tar.gz ubuntu@${{ secrets.HOST }}:/tmp
-            if [ $? -eq 0 ]; then
-              echo "SCP transfer succeeded (Attempt $((attempt+1)))"
-              success=true
-              break
-            else
-              echo "SCP transfer failed (Attempt $((attempt+1)))"
-              attempt=$((attempt+1))
-            fi
-          done
-          if [ "$success" = false ]; then
-            echo "SCP transfer failed after $max_attempts attempts"
-            exit 1
-          fi
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.SSH_KEY }}
+          source: build.tar.gz
+          target: /tmp
 
       - name: Deploy to /var/www/html
-        if: steps.transfer.outcome == 'success' && contains(github.ref, 'develop')
         uses: appleboy/ssh-action@master
+        if: contains(github.ref, 'develop')
         with:
           host: ${{ secrets.HOST }}
           username: ubuntu
