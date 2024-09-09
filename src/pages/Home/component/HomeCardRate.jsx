@@ -102,7 +102,7 @@ const HomaCardRate = () => {
                                 fontWeight: 600,
                             }}
                         >
-                            {191.1} {'KRW'}
+                            {storedRates.KRW.toFixed(2)} {'KRW'}
                         </Typography>
                     </Box>
                 </div>
