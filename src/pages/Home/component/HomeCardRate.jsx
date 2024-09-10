@@ -10,7 +10,7 @@ import {
 import StarIcon from '@mui/icons-material/Star';
 import cardImg from '../../../img/Design.png';
 import Avatar from '@mui/material/Avatar';
-import { useState, React } from 'react';
+import { useState, React, useEffect } from 'react';
 import { getCountryImgById, getCountryCodeToCurrency } from '../../../util';
 import { getExchangeRate } from '../../../components/ExchangeRateManager/ExchangeRateManager';
 
@@ -34,7 +34,57 @@ const HomaCardRate = () => {
         JSON.parse(localStorage.getItem('member')),
     );
 
+    const [userData, setUserData] = useState(null);
+
+    const [currency, setCurrency] = useState();
+
     const storedRates = getExchangeRate();
+
+    useEffect(() => {
+        const storedRates = getExchangeRate();
+        const userString = localStorage.getItem('member');
+        const user = JSON.parse(userString);
+        if (user && storedRates) {
+            try {
+                setUserData(user);
+                if (user.country.code === 'JP') {
+                    setCurrency({
+                        id: 1,
+                        code: 'JPY',
+                        locales: 'ja-JP',
+                        flag: getCountryImgById('JP'),
+                        rate: storedRates.KRW / storedRates.JPY,
+                    });
+                } else if (user.country.code === 'CN') {
+                    setCurrency({
+                        id: 2,
+                        code: 'CNY',
+                        locales: 'zh-CN',
+                        flag: getCountryImgById('CN'),
+                        rate: storedRates.KRW / storedRates.CNY,
+                    });
+                } else {
+                    setCurrency({
+                        id: 0,
+                        code: 'USD',
+                        locales: 'en-US',
+                        flag: getCountryImgById('US'),
+                        rate: storedRates.KRW / storedRates.USD,
+                    });
+                }
+            } catch (e) {
+                console.error(
+                    'Failed to parse member data from localStorage',
+                    e,
+                );
+            }
+        }
+    }, []);
+
+    if (!userData) {
+        // 데이터가 아직 로드되지 않았을 때 로딩 메시지 표시
+        return <Typography>Loading...</Typography>;
+    }
 
     return (
         <div>
@@ -102,7 +152,7 @@ const HomaCardRate = () => {
                                 fontWeight: 600,
                             }}
                         >
-                            {storedRates.KRW.toFixed(2)} {'KRW'}
+                            {currency.rate.toFixed(2)} {'KRW'}
                         </Typography>
                     </Box>
                 </div>
