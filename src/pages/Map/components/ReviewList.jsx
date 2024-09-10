@@ -223,7 +223,6 @@ const ReviewList = () => {
                                                 height: '200px',
                                                 maxWidth: '100%',
                                                 objectFit: 'contain',
-                                                borderRadius: '50px',
                                             }}
                                         />
                                     </SwiperSlide>
