@@ -15,7 +15,7 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import yeogakgi from '../../img/yeogakgi_full.png';
+import yeogaekgi from '../../img/yeogaekgi_full.png';
 import BasicButton from '../../components/BasicButton/BasicButton';
 import { CircularProgress } from '@mui/material';
 
@@ -82,7 +82,7 @@ function Login() {
                     }}
                 >
                     <img
-                        src={yeogakgi} // 여기에 이미지 경로를 넣으세요
+                        src={yeogaekgi} // 여기에 이미지 경로를 넣으세요
                         alt="yeogakgi"
                         style={{ width: 360 }}
                     />
