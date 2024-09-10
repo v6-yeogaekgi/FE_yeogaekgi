@@ -68,18 +68,29 @@ const ReviewRegister = () => {
         });
 
         createReview(serviceNo, reviewData)
-            .then(() => {
-                openAlertDialog(
-                    'Success!',
-                    'Your review has been successfully submitted',
-                    () =>
-                        navigate('/mypage/review', {
-                            state: { refresh: true },
-                        }),
-                );
+            .then((response) => {
+                if (response === -1) {
+                    openAlertDialog(
+                        'Fail!',
+                        'You already registered a review!',
+                        () =>
+                            navigate('/mypage/review', {
+                                state: { refresh: true },
+                            }),
+                    );
+                } else {
+                    openAlertDialog(
+                        'Success!',
+                        'Your review has been successfully submitted',
+                        () =>
+                            navigate('/mypage/review', {
+                                state: { refresh: true },
+                            }),
+                    );
+                }
             })
             .catch((error) => {
-                openAlertDialog('Fail!', 'You already registered Review!', () =>
+                openAlertDialog('Error!', 'An unexpected error occurred', () =>
                     navigate('/mypage/review', { state: { refresh: true } }),
                 );
             });
